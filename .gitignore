@@ -3,6 +3,10 @@ CMakeLists.txt
 cmake-build-debug
 .idea
 
+valgrind.txt
+build/
+s21_tests
+
 # Prerequisites
 *.d
 
