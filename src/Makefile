@@ -17,6 +17,7 @@ BUILD_PATH = ./build/
 SRC_LIB_FILES = $(wildcard $(SRC_LIB)*.cc)
 TEST_FILES = s21_tests.cc
 SRC_LIB_HEADERS = $(wildcard include/*.h)
+LIB_HEADER = s21_containers.h
 
 SRC_LIB_OBJ = $(patsubst $(SRC_LIB)%.cc, $(BUILD_PATH)%.o, $(SRC_LIB_FILES))
 TEST_OBJ = $(BUILD_PATH)s21_tests.o
@@ -51,8 +52,8 @@ clean:
 
 style: $(CLANG_FORMAT) $(CPPLINT)
 
-$(CPPLINT): $(SRC_LIB_HEADERS) $(SRC_LIB_FILES)
-	$(CPPLINT) $(SRC_LIB_FILES) $(SRC_LIB_HEADERS)
+$(CPPLINT): $(SRC_LIB_HEADERS) $(SRC_LIB_FILES) $(LIB_HEADER)
+	$(CPPLINT) $(SRC_LIB_FILES) $(SRC_LIB_HEADERS) $(LIB_HEADER)
 
 $(CLANG_FORMAT):
 	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.h *.h)
