@@ -7,9 +7,10 @@
 #include <initializer_list>
 
 namespace s21 {
+
 // TODO: add noexcept
 template <class T>
-class vector {
+class Vector {
  public:
   // Vector Member type
   using value_type = T;
@@ -20,14 +21,14 @@ class vector {
   using size_type = size_t;
 
   // Vector Member functions
-  vector() noexcept = default;
-  explicit vector(const size_type n);
-  vector(std::initializer_list<value_type> const &items);
-  vector(const vector &v) noexcept;
-  vector(vector &&v) noexcept;
-  ~vector() noexcept;
-  vector &operator=(const vector &v) noexcept;
-  vector &operator=(vector &&v) noexcept;
+  Vector() noexcept = default;
+  Vector(const size_type n);
+  Vector(std::initializer_list<value_type> const &items);
+  Vector(const Vector &v) noexcept;
+  Vector(Vector &&v) noexcept;
+  ~Vector() noexcept;
+  Vector &operator=(const Vector &v);
+  Vector &operator=(Vector &&v) noexcept;
 
   // Vector Element access
   reference at(const size_type pos) const;
@@ -41,11 +42,11 @@ class vector {
   iterator end() const;
 
   // Vector Capacity
-  bool empty() const;
-  size_type size() const;
-  size_type max_size() const;
+  [[nodiscard]] bool empty() const;
+  [[nodiscard]] size_type size() const;
+  [[nodiscard]] size_type max_size() const;
   void reserve(const size_type size);
-  size_type capacity() const;
+  [[nodiscard]] size_type capacity() const;
   void shrink_to_fit();
 
   // Vector Modifiers
@@ -54,7 +55,7 @@ class vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(vector &other);
+  void swap(Vector &other);
 
  private:
   // Vector Attributes
@@ -66,10 +67,12 @@ class vector {
   // Helpers
   void allocate_memory(const size_type n);
   void resize(const size_type n);
-  size_type requirement_capacity(const size_type size) const noexcept;
-  void shift_left(const iterator shift_from, const size_type shift_on);
-  void shift_right(const iterator shift_from, const size_type shift_on);
+  [[nodiscard]] size_type calculate_capacity(
+      const size_type size) const noexcept;
+  void shift_left(iterator shift_from, const size_type shift_on);
+  void shift_right(iterator shift_from, const size_type shift_on);
 };
+
 }  // namespace s21
 
 #endif  // SRC_INCLUDE_VECTOR_H_
