@@ -11,6 +11,7 @@ namespace s21 {
 template <class T>
 class vector {
  public:
+  // Vector Member type
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
@@ -18,32 +19,36 @@ class vector {
   using const_iterator = const T *;
   using size_type = size_t;
 
-  vector();
-  explicit vector(size_type n);
+  // Vector Member functions
+  vector() noexcept;
+  explicit vector(const size_type n);
   vector(std::initializer_list<value_type> const &items);
-  vector(const vector &v);
-  vector(vector &&v);
-  ~vector();
+  vector(const vector &v) noexcept;
+  vector(vector &&v) noexcept;
+  ~vector() noexcept;
+  vector operator=(const vector &v) noexcept;
+  vector operator=(vector &&v) noexcept;
 
-  vector operator=(const vector &v);
-  vector operator=(vector &&v);
-
-  reference at(size_type pos) const;
-  reference operator[](size_type pos) const;
+  // Vector Element access
+  reference at(const size_type pos) const;
+  reference operator[](const size_type pos) const;
   const_reference front() const;
   const_reference back() const;
-
   iterator data() const;
+
+  // Vector Iterators
   iterator begin() const;
   iterator end() const;
 
+  // Vector Capacity
   bool empty() const;
   size_type size() const;
   size_type max_size() const;
-  void reserve(size_type type);
+  void reserve(const size_type size);
   size_type capacity() const;
   void shrink_to_fit();
 
+  // Vector Modifiers
   void clear();
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
@@ -52,10 +57,13 @@ class vector {
   void swap(vector &other);
 
  private:
+  // Vector Attributes
   iterator it_begin_ = nullptr;
   iterator it_end_ = nullptr;
   size_type size_ = 0;
   size_type capacity_ = 0;
+
+  void allocate_memory(const size_type n);
 };
 }  // namespace s21
 
