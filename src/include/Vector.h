@@ -64,6 +64,8 @@ class Vector {
   size_type size_ = 0;
   size_type capacity_ = 0;
 
+  static constexpr size_type kMaxSize = (size_type(1) << 61) - 1;
+
   // Helpers
   void allocate_memory(const size_type n);
   void resize(const size_type n);
