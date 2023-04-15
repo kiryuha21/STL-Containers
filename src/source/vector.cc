@@ -6,14 +6,14 @@
 
 namespace s21 {
 
-// Vector Member type
+// Helpers
 template <class T>
 void vector<T>::allocate_memory(const size_type n) {
   if (n <= 0) {
     throw std::out_of_range("Vector size must be >= 0");
   }
 
-  capacity_ = pow(2, (size_type(std::log(n) / std::log(2))));
+  capacity_ = requirement_capacity(n);
 
   try {
     it_begin_ = new value_type[capacity_];
@@ -27,8 +27,30 @@ void vector<T>::allocate_memory(const size_type n) {
 }
 
 template <class T>
-vector<T>::vector() noexcept {}
+void vector<T>::resize(const size_type n) {
+  if (this->empty() || capacity_ == requirement_capacity(n)) {
+    return;
+  }
 
+  vector<value_type> new_vector(n);
+  std::fill(new_vector.it_begin_, new_vector.it_end_, it_begin_);
+  *this = std::move(new_vector);
+}
+
+template <class T>
+typename vector<T>::size_type vector<T>::requirement_capacity(
+    const size_type size) const noexcept {
+  if (capacity_ == 0) {
+    return 0;
+  }
+
+  auto res =
+      size_type(pow(2, double(size_type(std::log(size) / std::log(2))) + 1));
+
+  return res;
+}
+
+// Vector Member type
 template <class T>
 vector<T>::vector(const size_type n) {
   allocate_memory(n);
@@ -41,7 +63,7 @@ vector<T>::vector(std::initializer_list<value_type> const& items) {
 }
 
 template <class T>
-vector<T> vector<T>::operator=(const vector<T>& v) noexcept {
+vector<T>& vector<T>::operator=(const vector<T>& v) noexcept {
   if (this == v) {
     return *this;
   }
@@ -57,7 +79,7 @@ vector<T>::vector(const vector& v) noexcept {
 }
 
 template <class T>
-vector<T> vector<T>::operator=(vector<T>&& v) noexcept {
+vector<T>& vector<T>::operator=(vector<T>&& v) noexcept {
   if (*this == v) {
     return *this;
   }
@@ -79,11 +101,7 @@ vector<T>::vector(vector&& v) noexcept {
 
 template <class T>
 vector<T>::~vector() noexcept {
-  delete[] it_begin_;
-  it_begin_ = nullptr;
-  it_end_ = nullptr;
-  capacity_ = 0;
-  size_ = 0;
+  this->clear();
 }
 
 // Vector Element access
@@ -95,12 +113,12 @@ typename vector<T>::reference vector<T>::at(const size_type pos) const {
     throw std::out_of_range("Taking at of empty vector");
   }
 
-  return *(it_begin_ + pos);
+  return it_begin_[pos];
 }
 
 template <class T>
 typename vector<T>::reference vector<T>::operator[](const size_type pos) const {
-  return *(it_begin_ + pos);
+  return this->at(pos);
 }
 
 template <class T>
@@ -108,7 +126,7 @@ typename vector<T>::const_reference vector<T>::front() const {
   if (this->empty()) {
     throw std::out_of_range("Taking front of empty vector");
   }
-  return *it_begin_;
+  return this->at(0);
 }
 
 template <class T>
@@ -162,19 +180,36 @@ typename vector<T>::size_type vector<T>::capacity() const {
 
 template <class T>
 typename vector<T>::size_type vector<T>::max_size() const {
-  return this->capacity();  // TODO: right?
+  return this->capacity();  // TODO: not right 100%
 }
 
 template <class T>
 void vector<T>::shrink_to_fit() {
-  if (this->empty() ||
-      capacity_ == pow(2, (size_type(std::log(size_) / std::log(2))))) {
+  this->resize(size_);  // TODO: maybe cap should be = size
+}
+
+template <class T>
+void vector<T>::reserve(const size_type size) {
+  if (size <= capacity_) {
     return;
   }
 
-  vector<value_type> new_vector(size_);
-  std::fill(new_vector.it_begin_, new_vector.it_end_, it_begin_);
-  *this = std::move(new_vector);
+  this->resize(size);
+}
+
+// Vector Modifiers
+template <class T>
+void vector<T>::clear() {
+  delete[] it_begin_;
+  it_begin_ = it_end_ = nullptr;
+  size_ = capacity_ = 0;
+}
+
+template <class T>
+void vector<T>::swap(vector<T>& other) {
+  vector temp = std::move(other);
+  other = std::move(*this);
+  *this = std::move(temp);
 }
 
 }  // namespace s21

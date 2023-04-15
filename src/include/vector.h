@@ -20,14 +20,14 @@ class vector {
   using size_type = size_t;
 
   // Vector Member functions
-  vector() noexcept;
+  vector() noexcept = default;
   explicit vector(const size_type n);
   vector(std::initializer_list<value_type> const &items);
   vector(const vector &v) noexcept;
   vector(vector &&v) noexcept;
   ~vector() noexcept;
-  vector operator=(const vector &v) noexcept;
-  vector operator=(vector &&v) noexcept;
+  vector &operator=(const vector &v) noexcept;
+  vector &operator=(vector &&v) noexcept;
 
   // Vector Element access
   reference at(const size_type pos) const;
@@ -63,7 +63,12 @@ class vector {
   size_type size_ = 0;
   size_type capacity_ = 0;
 
+  // Helpers
   void allocate_memory(const size_type n);
+  void resize(const size_type n);
+  size_type requirement_capacity(const size_type size) const noexcept;
+  void shift_left(const iterator shift_from, const size_type shift_on);
+  void shift_right(const iterator shift_from, const size_type shift_on);
 };
 }  // namespace s21
 
