@@ -16,7 +16,7 @@ TEST(Vector, 1_shift_left_test) {
 }  // namespace s21
 
 int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
+  testing::InitGoogleTest(&argc, argv);
 
   return RUN_ALL_TESTS();
 }
