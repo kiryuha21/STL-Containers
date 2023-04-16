@@ -7,6 +7,7 @@
 #include "../s21_containers.h"
 
 namespace s21 {
+
 TEST(QueueSuite, default_constructor) {
   std::queue<int> a;
   Queue<int> b;
@@ -27,4 +28,5 @@ TEST(QueueSuite, initializer_constructor) {
   b.pop();
   ASSERT_EQ(a.front(), b.front());
 }
+
 }  // namespace s21

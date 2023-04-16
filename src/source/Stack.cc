@@ -1,44 +1,42 @@
-// Copyright 2023 School-21
-
-#include "../include/Queue.h"
+#include "../include/Stack.h"
 
 namespace s21 {
 
 template <class T>
-Queue<T>::Queue(const std::initializer_list<value_type> &items) {
+Stack<T>::Stack(const std::initializer_list<value_type> &items) {
   for (const auto &i : items) {
     push(i);
   }
 }
 
 template <class T>
-Queue<T>::Queue(const Queue<T> &q) {
+Stack<T>::Stack(const Stack<T> &q) {
   *this = q;
 }
 
 template <class T>
-Queue<T>::Queue(Queue<T> &&q) noexcept {
+Stack<T>::Stack(Stack<T> &&q) noexcept {
   *this = std::move(q);
 }
 
 template <class T>
-Queue<T>::~Queue() noexcept {
+Stack<T>::~Stack() noexcept {
   this->clear();
 }
 
 template <class T>
-Queue<T> &Queue<T>::operator=(const Queue<T> &q) {
+Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
   if (this == &q) {
     return *this;
   }
 
   for (Node *temp = q.head_; temp != nullptr; temp = temp->next) {
-    push(temp->value);
+    this->push_back(temp->value);
   }
 }
 
 template <class T>
-Queue<T> &Queue<T>::operator=(Queue<T> &&q) noexcept {
+Stack<T> &Stack<T>::operator=(Stack<T> &&q) noexcept {
   if (this == &q) {
     return *this;
   }
@@ -52,12 +50,17 @@ Queue<T> &Queue<T>::operator=(Queue<T> &&q) noexcept {
 }
 
 template <class T>
-void Queue<T>::push(const_reference value) {
-  this->push_back(value);
+typename Stack<T>::const_reference Stack<T>::top() const {
+  return this->front();
 }
 
 template <class T>
-void Queue<T>::pop() {
+void Stack<T>::push(const_reference value) {
+  this->push_front(value);
+}
+
+template <class T>
+void Stack<T>::pop() {
   this->pop_front();
 }
 

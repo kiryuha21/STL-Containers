@@ -11,6 +11,7 @@
 #include "Container.h"
 
 namespace s21 {
+
 auto constexpr kEmptyCollectionMsg = "Empty Collection!";
 
 template <class T>
@@ -55,7 +56,7 @@ class List : public Container<T> {
   void pop_back();
   void push_front(const_reference value);
   void pop_front();
-  void swap(List &other);
+  void swap(List &other) noexcept;
   void merge(List &other);
   void splice(const_iterator pos, List &other);
   void reverse();
@@ -104,6 +105,7 @@ class List : public Container<T> {
  private:
   void allocate_nodes(size_type size);
 };
+
 }  // namespace s21
 
 #endif  // SRC_INCLUDE_LIST_H_
