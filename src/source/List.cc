@@ -34,7 +34,7 @@ List<T>::List(const std::initializer_list<value_type> &items) {
 }
 
 template <class T>
-List<T>::List(const List &l) {
+List<T>::List(const List &l) : List<T>() {
   *this = l;
 }
 
@@ -57,6 +57,8 @@ List<T> &List<T>::operator=(const List &l) {
   for (Node *temp = l.head_; temp != nullptr; temp = temp->next) {
     push_back(temp->value);
   }
+
+  return *this;
 }
 
 template <class T>
@@ -125,7 +127,8 @@ void List<T>::clear() noexcept {
   }
 }
 
-// TODO: rewrite push_back() and push_front() with insert when implemented
+// TODO(lyradanu): rewrite push_back() and push_front() with insert when
+//  implemented
 template <class T>
 void List<T>::push_back(const_reference value) {
   Node *new_node = nullptr;

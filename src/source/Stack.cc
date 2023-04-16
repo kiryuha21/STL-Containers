@@ -1,3 +1,5 @@
+// Copyright 2023 School-21
+
 #include "../include/Stack.h"
 
 namespace s21 {
@@ -33,6 +35,8 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
   for (Node *temp = q.head_; temp != nullptr; temp = temp->next) {
     this->push_back(temp->value);
   }
+
+  return *this;
 }
 
 template <class T>

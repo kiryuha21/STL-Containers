@@ -12,7 +12,7 @@ Queue<T>::Queue(const std::initializer_list<value_type> &items) {
 }
 
 template <class T>
-Queue<T>::Queue(const Queue<T> &q) {
+Queue<T>::Queue(const Queue<T> &q) : List<T>() {
   *this = q;
 }
 
@@ -35,6 +35,8 @@ Queue<T> &Queue<T>::operator=(const Queue<T> &q) {
   for (Node *temp = q.head_; temp != nullptr; temp = temp->next) {
     push(temp->value);
   }
+
+  return *this;
 }
 
 template <class T>

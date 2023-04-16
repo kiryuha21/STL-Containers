@@ -1,5 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_STACK_H
-#define CPP2_S21_CONTAINERS_1_STACK_H
+// Copyright 2023 School-21
+
+#ifndef SRC_INCLUDE_STACK_H_
+#define SRC_INCLUDE_STACK_H_
 
 #include "List.h"
 
@@ -32,4 +34,4 @@ class Stack : public List<T> {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_STACK_H
+#endif  // SRC_INCLUDE_STACK_H_
