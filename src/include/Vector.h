@@ -3,30 +3,31 @@
 #ifndef SRC_INCLUDE_VECTOR_H_
 #define SRC_INCLUDE_VECTOR_H_
 
-#include <cstdlib>
 #include <initializer_list>
+
+#include "Container.h"
 
 namespace s21 {
 
 // TODO: add noexcept
 template <class T>
-class Vector {
+class Vector : public Container<T> {
  public:
   // Vector Member type
-  using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
+  using value_type = typename Container<T>::value_type;
+  using reference = typename Container<T>::reference;
+  using const_reference = typename Container<T>::const_reference;
   using iterator = T *;
   using const_iterator = const T *;
-  using size_type = size_t;
+  using size_type = typename Container<T>::size_type;
 
   // Vector Member functions
   Vector() noexcept = default;
   Vector(const size_type n);
   Vector(std::initializer_list<value_type> const &items);
-  Vector(const Vector &v) noexcept;
+  Vector(const Vector &v);
   Vector(Vector &&v) noexcept;
-  ~Vector() noexcept;
+  ~Vector() noexcept override;
   Vector &operator=(const Vector &v);
   Vector &operator=(Vector &&v) noexcept;
 
@@ -43,7 +44,7 @@ class Vector {
 
   // Vector Capacity
   [[nodiscard]] bool empty() const;
-  [[nodiscard]] size_type size() const;
+  [[nodiscard]] size_type size() const noexcept override;
   [[nodiscard]] size_type max_size() const;
   void reserve(const size_type size);
   [[nodiscard]] size_type capacity() const;

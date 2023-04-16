@@ -187,7 +187,7 @@ bool Vector<T>::empty() const {
 }
 
 template <typename T>
-typename Vector<T>::size_type Vector<T>::size() const {
+typename Vector<T>::size_type Vector<T>::size() const noexcept {
   return size_;
 }
 

@@ -19,7 +19,7 @@ Queue<T>::Queue(Queue<T> &&q) noexcept {
 }
 
 template <class T>
-Queue<T>::~Queue() {
+Queue<T>::~Queue() noexcept {
   clear();
 }
 
@@ -29,7 +29,9 @@ Queue<T> &Queue<T>::operator=(const Queue<T> &q) {
     return *this;
   }
 
-  std::copy(q.head_, q.tail_, head_);
+  for (Node *temp = q.head_; temp != nullptr; temp = temp->next) {
+    push(temp->value);
+  }
 }
 
 template <class T>
@@ -79,12 +81,11 @@ template <class T>
 void Queue<T>::push(const_reference value) {
   Node *new_node = nullptr;
   try {
-    new_node = new Node;
+    new_node = new Node(value);
   } catch (std::bad_alloc &e) {
     std::throw_with_nested(e);
   }
 
-  new_node->value = value;
   if (head_ == nullptr) {
     head_ = new_node;
     tail_ = new_node;
