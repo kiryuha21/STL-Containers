@@ -3,8 +3,10 @@
 #ifndef SRC_S21_CONTAINERS_H_
 #define SRC_S21_CONTAINERS_H_
 
+#include "include/List.h"
 #include "include/Queue.h"
 #include "include/Vector.h"
+#include "source/List.cc"
 #include "source/Queue.cc"
 #include "source/Vector.cc"
 
