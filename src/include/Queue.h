@@ -4,7 +4,6 @@
 #include "List.h"
 
 namespace s21 {
-auto constexpr kEmptyQueueMsg = "Empty Queue!";
 
 template <class T>
 class Queue : public List<T> {

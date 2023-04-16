@@ -9,7 +9,7 @@
 #include "Container.h"
 
 namespace s21 {
-auto constexpr kEmptyListMsg = "Empty List!";
+auto constexpr kEmptyCollectionMsg = "Empty Collection!";
 
 template <class T>
 class List : public Container<T> {

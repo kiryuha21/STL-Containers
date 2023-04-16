@@ -74,7 +74,7 @@ List<T> &List<T>::operator=(List &&l) noexcept {
 template <class T>
 typename List<T>::const_reference List<T>::front() const {
   if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyListMsg);
+    throw std::out_of_range(kEmptyCollectionMsg);
   }
   return head_->value;
 }
@@ -82,7 +82,7 @@ typename List<T>::const_reference List<T>::front() const {
 template <class T>
 typename List<T>::const_reference List<T>::back() const {
   if (tail_ == nullptr) {
-    throw std::out_of_range(kEmptyListMsg);
+    throw std::out_of_range(kEmptyCollectionMsg);
   }
   return tail_->value;
 }
@@ -144,7 +144,7 @@ void List<T>::push_back(const_reference value) {
 template <class T>
 void List<T>::pop_front() {
   if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyListMsg);
+    throw std::out_of_range(kEmptyCollectionMsg);
   }
 
   Node *temp = head_;
