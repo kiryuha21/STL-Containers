@@ -60,7 +60,6 @@ class Vector : public Container<T> {
  private:
   // Vector Attributes
   iterator it_begin_ = nullptr;
-  iterator it_end_ = nullptr;
   size_type size_ = 0;
   size_type capacity_ = 0;
 
@@ -69,6 +68,7 @@ class Vector : public Container<T> {
   // Helpers
   void allocate_memory(const size_type n);
   void resize(const size_type n);
+  void recap(const size_type n);
   [[nodiscard]] size_type calculate_capacity(
       const size_type size) const noexcept;
   void shift_left(const size_type shift_after, const size_type shift_on);

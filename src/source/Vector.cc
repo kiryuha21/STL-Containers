@@ -15,9 +15,7 @@ void Vector<T>::allocate_memory(const size_type n) {
     throw std::out_of_range("Vector size must be in (0; 2^61 - 1]");
   }
 
-  if (capacity_ < n) {
-    capacity_ = calculate_capacity(n);
-  }
+  capacity_ = n;
 
   if (n != 0) {
     try {
@@ -27,16 +25,11 @@ void Vector<T>::allocate_memory(const size_type n) {
       capacity_ = 0;
       throw std::out_of_range("Alloc error in allocate_memory");
     }
-
-    it_end_ = it_begin_ + n - 1;
-    std::fill(begin(), end(), value_type());
   }
-
-  size_ = n;
 }
 
 template <class T>
-void Vector<T>::resize(const size_type n) {
+void Vector<T>::resize(const size_type n) {  // TODO: check all
   if (n <= capacity_) {
     size_ = n;
     return;
@@ -47,18 +40,24 @@ void Vector<T>::resize(const size_type n) {
     return;
   }
 
+  recap(calculate_capacity(n));
+  size_ = n;
+}
+
+template <class T>
+void Vector<T>::recap(const size_type n) {
+  Vector<value_type> copy(*this);
   allocate_memory(n);
+  std::copy(copy.begin(), copy.begin() + std::min(copy.size_, n), begin());
 }
 
 template <class T>
 typename Vector<T>::size_type Vector<T>::calculate_capacity(
     const size_type size) const noexcept {
-  if (size == 0) {
-    return 1;
+  size_type res = std::max(capacity_, size_type(1));
+  while (res < size) {
+    res *= 2;
   }
-
-  auto res = static_cast<size_type>(pow(
-      size, static_cast<double>(std::ceil(std::log(size) / std::log(size)))));
 
   return res;
 }
@@ -89,12 +88,14 @@ void Vector<T>::shift_left(const size_type shift_after,
 
 // Vector Member type
 template <class T>
-Vector<T>::Vector(const size_type n) {
+Vector<T>::Vector(const size_type n) : size_(n) {
   allocate_memory(n);
+  std::fill(begin(), end(), value_type());
 }
 
 template <class T>
-Vector<T>::Vector(std::initializer_list<value_type> const& items) {
+Vector<T>::Vector(std::initializer_list<value_type> const& items)
+    : size_(items.size()) {
   allocate_memory(items.size());
   std::copy(items.begin(), items.end(), it_begin_);
 }
@@ -107,7 +108,6 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
 
   allocate_memory(v.capacity_);
   size_ = v.size_;
-  it_end_ = it_begin_ + size_ - 1;
   if (!v.empty()) {
     std::copy(v.begin(), v.end(), begin());
   }
@@ -129,7 +129,6 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
   delete[] it_begin_;
 
   it_begin_ = std::exchange(v.it_begin_, nullptr);
-  it_end_ = std::exchange(v.it_end_, nullptr);
   size_ = std::exchange(v.size_, 0);
   capacity_ = std::exchange(v.capacity_, 0);
 
@@ -176,7 +175,7 @@ typename Vector<T>::const_reference Vector<T>::back() const {
   if (empty()) {
     throw std::out_of_range("Taking back of empty Vector");
   }
-  return *it_end_;
+  return at(size_ - 1);
 }
 
 template <class T>
@@ -192,13 +191,17 @@ typename Vector<T>::iterator Vector<T>::begin() const noexcept {
 
 template <class T>
 typename Vector<T>::iterator Vector<T>::end() const noexcept {
-  return it_end_ + 1;
+  if (it_begin_ == nullptr) {
+    return nullptr;
+  }
+
+  return it_begin_ + size_;
 }
 
 // Vector Capacity
 template <class T>
 bool Vector<T>::empty() const noexcept {
-  return it_begin_ == nullptr;
+  return size_ == 0;
 }
 
 template <class T>
@@ -218,16 +221,14 @@ typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
 
 template <class T>
 void Vector<T>::shrink_to_fit() {
-  resize(size_);  // TODO(guinicyb): maybe cap should be = size
+  recap(size_);
 }
 
 template <class T>
 void Vector<T>::reserve(const size_type size) {
-  if (size <= capacity_) {
-    return;
+  if (size > capacity_) {
+    recap(size);
   }
-
-  resize(size);
 }
 
 // Vector Modifiers
@@ -246,7 +247,7 @@ void Vector<T>::swap(Vector<T>& other) noexcept {
 template <class T>
 void Vector<T>::push_back(const_reference value) {
   resize(size_ + 1);
-  *it_end_ = value;
+  *(end() - 1) = value;
 }
 
 template <class T>
