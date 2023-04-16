@@ -9,7 +9,6 @@
 
 namespace s21 {
 
-// TODO: add noexcept
 template <class T>
 class Vector : public Container<T> {
  public:
@@ -39,24 +38,24 @@ class Vector : public Container<T> {
   iterator data() const;
 
   // Vector Iterators
-  iterator begin() const;
-  iterator end() const;
+  iterator begin() const noexcept;
+  iterator end() const noexcept;
 
   // Vector Capacity
-  [[nodiscard]] bool empty() const;
+  [[nodiscard]] bool empty() const noexcept;
   [[nodiscard]] size_type size() const noexcept override;
-  [[nodiscard]] size_type max_size() const;
+  [[nodiscard]] size_type max_size() const noexcept;
   void reserve(const size_type size);
-  [[nodiscard]] size_type capacity() const;
+  [[nodiscard]] size_type capacity() const noexcept;
   void shrink_to_fit();
 
   // Vector Modifiers
-  void clear();
+  void clear() noexcept;
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(Vector &other);
+  void swap(Vector &other) noexcept;
 
  private:
   // Vector Attributes

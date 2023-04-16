@@ -1,5 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_QUEUE_H
-#define CPP2_S21_CONTAINERS_1_QUEUE_H
+// Copyright 2023 School-21
+
+#ifndef SRC_INCLUDE_QUEUE_H_
+#define SRC_INCLUDE_QUEUE_H_
 
 #include "List.h"
 
@@ -30,4 +32,4 @@ class Queue : public List<T> {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_QUEUE_H
+#endif  // SRC_INCLUDE_QUEUE_H_

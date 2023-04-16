@@ -1,5 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_LIST_H
-#define CPP2_S21_CONTAINERS_1_LIST_H
+// Copyright 2023 School-21
+
+#ifndef SRC_INCLUDE_LIST_H_
+#define SRC_INCLUDE_LIST_H_
 
 #include <initializer_list>
 #include <limits>
@@ -104,4 +106,4 @@ class List : public Container<T> {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_LIST_H
+#endif  // SRC_INCLUDE_LIST_H_

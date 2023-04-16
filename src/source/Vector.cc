@@ -1,3 +1,5 @@
+// Copyright 2023 School-21
+
 #include "../include/Vector.h"
 
 #include <cmath>
@@ -51,7 +53,9 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
   }
 
   auto res =
-      size_type(pow(2, double(size_type(std::log(size) / std::log(2))) + 1));
+      static_cast<size_type>(pow(2, static_cast<double>(static_cast<size_type>(
+                                        std::log(size) / std::log(2))) +
+                                        1));
 
   return res;
 }
@@ -178,18 +182,18 @@ typename Vector<T>::iterator Vector<T>::data() const {
 
 // Vector Iterators
 template <class T>
-typename Vector<T>::iterator Vector<T>::begin() const {
+typename Vector<T>::iterator Vector<T>::begin() const noexcept {
   return it_begin_;
 }
 
 template <class T>
-typename Vector<T>::iterator Vector<T>::end() const {
+typename Vector<T>::iterator Vector<T>::end() const noexcept {
   return it_end_ + 1;
 }
 
 // Vector Capacity
 template <class T>
-bool Vector<T>::empty() const {
+bool Vector<T>::empty() const noexcept {
   return it_begin_ == nullptr;
 }
 
@@ -199,18 +203,18 @@ typename Vector<T>::size_type Vector<T>::size() const noexcept {
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::capacity() const {
+typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
   return capacity_;
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::max_size() const {
+typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
   return kMaxSize;
 }
 
 template <class T>
 void Vector<T>::shrink_to_fit() {
-  resize(size_);  // TODO: maybe cap should be = size
+  resize(size_);  // TODO(guinicyb): maybe cap should be = size
 }
 
 template <class T>
@@ -224,14 +228,14 @@ void Vector<T>::reserve(const size_type size) {
 
 // Vector Modifiers
 template <class T>
-void Vector<T>::clear() {
+void Vector<T>::clear() noexcept {
   delete[] it_begin_;
   it_begin_ = it_end_ = nullptr;
   size_ = capacity_ = 0;
 }
 
 template <class T>
-void Vector<T>::swap(Vector<T>& other) {
+void Vector<T>::swap(Vector<T>& other) noexcept {
   Vector temp = std::move(other);
   other = std::move(*this);
   *this = std::move(temp);

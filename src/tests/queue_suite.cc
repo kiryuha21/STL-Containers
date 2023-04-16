@@ -1,3 +1,5 @@
+// Copyright 2023 School-21
+
 #include <gtest/gtest.h>
 
 #include <queue>
