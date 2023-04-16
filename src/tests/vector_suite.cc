@@ -95,4 +95,24 @@ TEST(Vector, 8_vectors_erase) {
   my_res.erase(my_res.begin());
   ASSERT_TRUE(vectors_equal(std_res, my_res));
 }
+
+TEST(Vector, 9_vectors_erase) {
+  Vector<int> my_res = {3, 4, 5};
+  std::vector<int> std_res = {3, 4, 5};
+  std_res.erase(std_res.begin());
+  my_res.erase(my_res.begin());
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 10_vectors_many_changes) {
+  Vector<int> my_res = {3, 4, 5, 6, 4, 5};
+  std::vector<int> std_res = {3, 4, 5, 6, 4, 5};
+  std_res.erase(std_res.begin() + 3);
+  my_res.erase(my_res.begin() + 3);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+  std_res.insert(std_res.begin() + 3, 10);
+  my_res.insert(my_res.begin() + 3, 10);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
 }  // namespace s21

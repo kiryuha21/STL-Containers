@@ -12,26 +12,29 @@ namespace s21 {
 template <class T>
 void Vector<T>::allocate_memory(const size_type n) {
   if (n > kMaxSize) {
-    throw std::out_of_range("Vector size must be in [0; 2^61 - 1]");
+    throw std::out_of_range("Vector size must be in (0; 2^61 - 1]");
   }
 
   capacity_ = calculate_capacity(n);
 
-  try {
-    it_begin_ = new value_type[capacity_];
-  } catch (const std::bad_alloc& exc) {
-    capacity_ = 0;
-    throw std::out_of_range("Alloc error in allocate_memory");
+  if (n != 0) {
+    try {
+      it_begin_ = new value_type[capacity_];
+    } catch (const std::bad_alloc& exc) {
+      capacity_ = 0;
+      throw std::out_of_range("Alloc error in allocate_memory");
+    }
+
+    it_end_ = it_begin_ + n - 1;
+    std::fill(begin(), end(), value_type());
   }
 
   size_ = n;
-  it_end_ = it_begin_ + n - 1;
-  std::fill(begin(), end(), value_type());
 }
 
 template <class T>
 void Vector<T>::resize(const size_type n) {
-  if (capacity_ == calculate_capacity(n)) {
+  if (n == size_) {
     return;
   }
 
@@ -41,7 +44,7 @@ void Vector<T>::resize(const size_type n) {
   }
 
   Vector<value_type> new_vector(n);
-  std::copy(begin(), end() - (n < size_ ? size_ - n : 0), new_vector.it_begin_);
+  std::copy(begin(), end() - (size_ > n ? size_ - n : 0), new_vector.it_begin_);
   *this = std::move(new_vector);
 }
 
@@ -61,26 +64,25 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
 }
 
 template <class T>
-void Vector<T>::shift_right(const size_type shift_count,
+void Vector<T>::shift_right(const size_type shift_after,
                             const size_type shift_on) {
-  resize(size_ + shift_on);
-  Vector<value_type> res(*this);
-  std::copy(it_begin_ + shift_count, it_end_,
-            res.it_begin_ + shift_count + shift_on);
+  Vector<value_type> res(size_ + shift_on);
+  std::copy(begin(), begin() + shift_after, res.begin());
+  std::copy(begin() + shift_after, end(), res.begin() + shift_after + shift_on);
+
   *this = std::move(res);
 }
 
 template <class T>
-void Vector<T>::shift_left(const size_type shift_count,
+void Vector<T>::shift_left(const size_type shift_after,
                            const size_type shift_on) {
-  if (size_ < shift_on) {
+  if (size_ < shift_on + shift_after) {
     throw std::out_of_range("Shift left on too big value");
   }
 
-  Vector<value_type> res(*this);
-  res.resize(res.size_ - shift_on);
-  std::copy(it_begin_ + shift_count, it_end_,
-            res.it_begin_ + shift_count - shift_on);
+  Vector<value_type> res(size_ - shift_on);
+  std::copy(begin(), begin() + shift_after, res.begin());
+  std::copy(begin() + shift_after + shift_on, end(), res.begin() + shift_after);
 
   *this = std::move(res);
 }
@@ -258,7 +260,7 @@ void Vector<T>::pop_back() {
 template <class T>
 typename Vector<T>::iterator Vector<T>::insert(iterator pos,
                                                const_reference value) {
-  auto res_position = size_type(it_begin_ - pos);
+  auto res_position = size_type(pos - it_begin_);
   shift_right(res_position, 1);
   *(it_begin_ + res_position) = value;
   return it_begin_ + res_position;
@@ -266,7 +268,7 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
 
 template <class T>
 void Vector<T>::erase(iterator pos) {
-  auto res_position = size_type(it_begin_ - pos);
+  auto res_position = size_type(pos - it_begin_);
   shift_left(res_position, 1);
 }
 
