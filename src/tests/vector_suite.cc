@@ -54,4 +54,13 @@ TEST(Vector, 4_vectors_push_pop_back) {
   std_res.pop_back();
   ASSERT_TRUE(vectors_equal(std_res, my_res));
 }
+
+TEST(Vector, 5_vectors_clear) {
+  Vector<int> my_res = {4, 3};
+  std::vector<int> std_res = {4, 3};
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+  my_res.clear();
+  std_res.clear();
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
 }  // namespace s21
