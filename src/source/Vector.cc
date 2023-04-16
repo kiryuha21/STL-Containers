@@ -15,10 +15,13 @@ void Vector<T>::allocate_memory(const size_type n) {
     throw std::out_of_range("Vector size must be in (0; 2^61 - 1]");
   }
 
-  capacity_ = calculate_capacity(n);
+  if (capacity_ < n) {
+    capacity_ = calculate_capacity(n);
+  }
 
   if (n != 0) {
     try {
+      delete[] it_begin_;
       it_begin_ = new value_type[capacity_];
     } catch (const std::bad_alloc& exc) {
       capacity_ = 0;
@@ -34,7 +37,8 @@ void Vector<T>::allocate_memory(const size_type n) {
 
 template <class T>
 void Vector<T>::resize(const size_type n) {
-  if (n == size_) {
+  if (n <= capacity_) {
+    size_ = n;
     return;
   }
 
@@ -43,22 +47,18 @@ void Vector<T>::resize(const size_type n) {
     return;
   }
 
-  Vector<value_type> new_vector(n);
-  std::copy(begin(), end() - (size_ > n ? size_ - n : 0), new_vector.it_begin_);
-  *this = std::move(new_vector);
+  allocate_memory(n);
 }
 
 template <class T>
 typename Vector<T>::size_type Vector<T>::calculate_capacity(
     const size_type size) const noexcept {
   if (size == 0) {
-    return 0;
+    return 1;
   }
 
-  auto res =
-      static_cast<size_type>(pow(2, static_cast<double>(static_cast<size_type>(
-                                        std::log(size) / std::log(2))) +
-                                        1));
+  auto res = static_cast<size_type>(pow(
+      size, static_cast<double>(std::ceil(std::log(size) / std::log(size)))));
 
   return res;
 }
@@ -66,14 +66,12 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
 template <class T>
 void Vector<T>::shift_right(const size_type shift_after,
                             const size_type shift_on) {
-  Vector<value_type> res(size_ + shift_on);
-  if (!empty()) {
-    std::copy(begin(), begin() + shift_after, res.begin());
-    std::copy(begin() + shift_after, end(),
-              res.begin() + shift_after + shift_on);
+  Vector<value_type> buff(*this);
+  resize(size_ + shift_on);
+  if (!buff.empty()) {
+    std::copy(buff.begin() + shift_after, buff.end(),
+              begin() + shift_after + shift_on);
   }
-
-  *this = std::move(res);
 }
 
 template <class T>
@@ -83,11 +81,10 @@ void Vector<T>::shift_left(const size_type shift_after,
     throw std::out_of_range("Shift left on too big value");
   }
 
-  Vector<value_type> res(size_ - shift_on);
-  std::copy(begin(), begin() + shift_after, res.begin());
-  std::copy(begin() + shift_after + shift_on, end(), res.begin() + shift_after);
-
-  *this = std::move(res);
+  Vector<value_type> buff(*this);
+  resize(size_ - shift_on);
+  std::copy(buff.begin() + shift_after + shift_on, buff.end(),
+            begin() + shift_after);
 }
 
 // Vector Member type
@@ -108,8 +105,13 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
     return *this;
   }
 
-  allocate_memory(v.size_);
-  std::copy(v.begin(), v.end(), begin());
+  allocate_memory(v.capacity_);
+  size_ = v.size_;
+  it_end_ = it_begin_ + size_ - 1;
+  if (!v.empty()) {
+    std::copy(v.begin(), v.end(), begin());
+  }
+
   return *this;
 }
 
@@ -141,7 +143,7 @@ Vector<T>::Vector(Vector&& v) noexcept {
 
 template <class T>
 Vector<T>::~Vector() noexcept {
-  clear();
+  delete[] it_begin_;
 }
 
 // Vector Element access
@@ -179,9 +181,6 @@ typename Vector<T>::const_reference Vector<T>::back() const {
 
 template <class T>
 typename Vector<T>::iterator Vector<T>::data() const {
-  if (empty()) {
-    throw std::out_of_range("Taking data of empty Vector");
-  }
   return it_begin_;
 }
 
@@ -234,9 +233,7 @@ void Vector<T>::reserve(const size_type size) {
 // Vector Modifiers
 template <class T>
 void Vector<T>::clear() noexcept {
-  delete[] it_begin_;
-  it_begin_ = it_end_ = nullptr;
-  size_ = capacity_ = 0;
+  size_ = 0;
 }
 
 template <class T>
