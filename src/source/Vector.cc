@@ -67,8 +67,11 @@ template <class T>
 void Vector<T>::shift_right(const size_type shift_after,
                             const size_type shift_on) {
   Vector<value_type> res(size_ + shift_on);
-  std::copy(begin(), begin() + shift_after, res.begin());
-  std::copy(begin() + shift_after, end(), res.begin() + shift_after + shift_on);
+  if (!empty()) {
+    std::copy(begin(), begin() + shift_after, res.begin());
+    std::copy(begin() + shift_after, end(),
+              res.begin() + shift_after + shift_on);
+  }
 
   *this = std::move(res);
 }
@@ -268,6 +271,9 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
 
 template <class T>
 void Vector<T>::erase(iterator pos) {
+  if (empty()) {
+    throw std::out_of_range("Erase of empty vector");
+  }
   auto res_position = size_type(pos - it_begin_);
   shift_left(res_position, 1);
 }

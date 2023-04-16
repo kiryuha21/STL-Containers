@@ -7,8 +7,6 @@
 
 #include "../s21_containers.h"
 
-namespace s21 {
-
 template <class T>
 bool vectors_equal(const std::vector<T> &std_res,
                    const s21::Vector<T> &my_res) {
@@ -27,29 +25,30 @@ bool vectors_equal(const std::vector<T> &std_res,
   }
   return true;
 }
+
 TEST(Vector, 1_vectors_initial_list) {
-  Vector<int> my_res = {1, 2, 3};
+  s21::Vector<int> my_res = {1, 2, 3};
   std::vector<int> std_res = {1, 2, 3};
   ASSERT_TRUE(vectors_equal(std_res, my_res));
   ASSERT_THROW(my_res.at(3), std::out_of_range);
 }
 
 TEST(Vector, 2_vectors_default_constructors) {
-  Vector<int> my_res(16);
+  s21::Vector<int> my_res(16);
   std::vector<int> std_res(16);
   ASSERT_TRUE(vectors_equal(std_res, my_res));
   ASSERT_THROW(my_res.at(30), std::out_of_range);
 }
 
 TEST(Vector, 3_vectors_max_size) {
-  Vector<int> my_res;
+  s21::Vector<int> my_res;
   std::vector<int> std_res;
   ASSERT_TRUE(vectors_equal(std_res, my_res));
   ASSERT_EQ(my_res.max_size(), std_res.max_size());
 }
 
 TEST(Vector, 4_vectors_push_pop_back) {
-  Vector<int> my_res;
+  s21::Vector<int> my_res;
   std::vector<int> std_res;
   my_res.push_back(3);
   std_res.push_back(3);
@@ -60,7 +59,7 @@ TEST(Vector, 4_vectors_push_pop_back) {
 }
 
 TEST(Vector, 5_vectors_clear) {
-  Vector<int> my_res = {4, 3};
+  s21::Vector<int> my_res = {4, 3};
   std::vector<int> std_res = {4, 3};
   ASSERT_TRUE(vectors_equal(std_res, my_res));
   my_res.clear();
@@ -69,7 +68,7 @@ TEST(Vector, 5_vectors_clear) {
 }
 
 TEST(Vector, 6_vectors_insert) {
-  Vector<int> my_res = {1, 2, 3};
+  s21::Vector<int> my_res = {1, 2, 3};
   std::vector<int> std_res = {1, 2, 3};
   ASSERT_EQ(my_res.front(), std_res.front());
   ASSERT_EQ(my_res.back(), std_res.back());
@@ -81,7 +80,7 @@ TEST(Vector, 6_vectors_insert) {
 }
 
 TEST(Vector, 7_vectors_insert) {
-  Vector<int> my_res = {2};
+  s21::Vector<int> my_res = {2};
   std::vector<int> std_res = {2};
   std_res.insert(std_res.begin(), 1);
   my_res.insert(my_res.begin(), 1);
@@ -89,7 +88,7 @@ TEST(Vector, 7_vectors_insert) {
 }
 
 TEST(Vector, 8_vectors_erase) {
-  Vector<int> my_res = {2};
+  s21::Vector<int> my_res = {2};
   std::vector<int> std_res = {2};
   std_res.erase(std_res.begin());
   my_res.erase(my_res.begin());
@@ -97,7 +96,7 @@ TEST(Vector, 8_vectors_erase) {
 }
 
 TEST(Vector, 9_vectors_erase) {
-  Vector<int> my_res = {3, 4, 5};
+  s21::Vector<int> my_res = {3, 4, 5};
   std::vector<int> std_res = {3, 4, 5};
   std_res.erase(std_res.begin());
   my_res.erase(my_res.begin());
@@ -105,7 +104,7 @@ TEST(Vector, 9_vectors_erase) {
 }
 
 TEST(Vector, 10_vectors_many_changes) {
-  Vector<int> my_res = {3, 4, 5, 6, 4, 5};
+  s21::Vector<int> my_res = {3, 4, 5, 6, 4, 5};
   std::vector<int> std_res = {3, 4, 5, 6, 4, 5};
   std_res.erase(std_res.begin() + 3);
   my_res.erase(my_res.begin() + 3);
@@ -115,4 +114,58 @@ TEST(Vector, 10_vectors_many_changes) {
   ASSERT_TRUE(vectors_equal(std_res, my_res));
 }
 
-}  // namespace s21
+TEST(Vector, 11_vectors_insert) {
+  s21::Vector<int> my_res;
+  std::vector<int> std_res;
+  std_res.insert(std_res.begin(), 10);
+  my_res.insert(my_res.begin(), 10);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 12_vectors_erase) {
+  s21::Vector<int> my_res;
+  ASSERT_THROW(my_res.erase(my_res.begin()), std::out_of_range);
+}
+
+TEST(Vector, 13_vectors_constructors) {
+  s21::Vector<int> my_res;
+  std::vector<int> std_res;
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 14_vectors_constructors) {
+  s21::Vector<int> my_res(10);
+  std::vector<int> std_res(10);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 15_vectors_constructors) {
+  s21::Vector<int> my_res({});
+  std::vector<int> std_res({});
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 16_vectors_constructors) {
+  s21::Vector<int> my_res({3, 4});
+  std::vector<int> std_res({3, 4});
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 17_vectors_constructors) {
+  s21::Vector<int> my_vec(10);
+  std::vector<int> std_vec(10);
+  ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+  s21::Vector<int> my_res(my_vec);
+  std::vector<int> std_res(std_vec);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 18_vectors_constructors) {
+  s21::Vector<int> my_vec(10);
+  std::vector<int> std_vec(10);
+  ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+  s21::Vector<int> my_res(std::move(my_vec));
+  std::vector<int> std_res(std::move(std_vec));
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+  ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+}
