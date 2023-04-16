@@ -12,7 +12,7 @@ Stack<T>::Stack(const std::initializer_list<value_type> &items) {
 }
 
 template <class T>
-Stack<T>::Stack(const Stack<T> &q) {
+Stack<T>::Stack(const Stack<T> &q) : List<T>() {
   *this = q;
 }
 
