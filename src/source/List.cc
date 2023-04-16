@@ -16,7 +16,7 @@ void List<T>::allocate_nodes(List::size_type size) {
 template <class T>
 List<T>::List(List::size_type n) {
   try {
-      allocate_nodes(n);
+    allocate_nodes(n);
   } catch (std::bad_alloc &e) {
     std::throw_with_nested(e);
   }
@@ -24,21 +24,21 @@ List<T>::List(List::size_type n) {
 
 template <class T>
 List<T>::List(const std::initializer_list<value_type> &items) {
-    try {
-        allocate_nodes(items.size());
-    } catch (std::bad_alloc &e) {
-        std::throw_with_nested(e);
-    }
+  try {
+    allocate_nodes(items.size());
+  } catch (std::bad_alloc &e) {
+    std::throw_with_nested(e);
+  }
 }
 
 template <class T>
 List<T>::List(const List &l) {
-    *this = l;
+  *this = l;
 }
 
 template <class T>
 List<T>::List(List &&l) noexcept {
-    *this = std::move(l);
+  *this = std::move(l);
 }
 
 template <class T>
