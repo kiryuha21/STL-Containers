@@ -33,7 +33,13 @@ void Vector<T>::resize(const size_type n) {
     return;
   }
 
+  if (empty()) {
+    *this = Vector(n);
+    return;
+  }
+
   Vector<value_type> new_vector(n);
+  std::copy(begin(), end() - (n < size_ ? size_ - n : 0), new_vector.it_begin_);
   *this = std::move(new_vector);
 }
 
@@ -51,21 +57,28 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
 }
 
 template <class T>
-void Vector<T>::shift_right(iterator shift_from, const size_type shift_on) {
-  auto shift_count = it_end_ - shift_from;
+void Vector<T>::shift_right(const size_type shift_count,
+                            const size_type shift_on) {
   resize(size_ + shift_on);
-  std::copy(shift_from, shift_from + shift_count + 1, shift_from + shift_on);
+  Vector<value_type> res(*this);
+  std::copy(it_begin_ + shift_count, it_end_,
+            res.it_begin_ + shift_count + shift_on);
+  *this = std::move(res);
 }
 
 template <class T>
-void Vector<T>::shift_left(iterator shift_from, const size_type shift_on) {
-  if (it_begin_ + shift_on < shift_from) {
+void Vector<T>::shift_left(const size_type shift_count,
+                           const size_type shift_on) {
+  if (size_ < shift_on) {
     throw std::out_of_range("Shift left on too big value");
   }
 
-  auto shift_count = shift_from - it_begin_;
-  std::copy(shift_from, shift_from + shift_count + 1, shift_from - shift_on);
-  resize(size_ - shift_on);
+  Vector<value_type> res(*this);
+  res.resize(res.size_ - shift_on);
+  std::copy(it_begin_ + shift_count, it_end_,
+            res.it_begin_ + shift_count - shift_on);
+
+  *this = std::move(res);
 }
 
 // Vector Member type
@@ -166,17 +179,11 @@ typename Vector<T>::iterator Vector<T>::data() const {
 // Vector Iterators
 template <class T>
 typename Vector<T>::iterator Vector<T>::begin() const {
-  if (empty()) {
-    throw std::out_of_range("Taking begin of empty Vector");
-  }
   return it_begin_;
 }
 
 template <class T>
 typename Vector<T>::iterator Vector<T>::end() const {
-  if (empty()) {
-    throw std::out_of_range("Taking end of empty Vector");
-  }
   return it_end_ + 1;
 }
 
@@ -247,14 +254,16 @@ void Vector<T>::pop_back() {
 template <class T>
 typename Vector<T>::iterator Vector<T>::insert(iterator pos,
                                                const_reference value) {
-  shift_left(pos, 1);
-  at(pos) = value;
-  return pos;
+  auto res_position = size_type(it_begin_ - pos);
+  shift_right(res_position, 1);
+  *(it_begin_ + res_position) = value;
+  return it_begin_ + res_position;
 }
 
 template <class T>
 void Vector<T>::erase(iterator pos) {
-  shift_right(pos, 1);
+  auto res_position = size_type(it_begin_ - pos);
+  shift_left(res_position, 1);
 }
 
 }  // namespace s21

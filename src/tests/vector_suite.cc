@@ -11,6 +11,8 @@ template <class T>
 bool vectors_equal(const std::vector<T> &std_res,
                    const s21::Vector<T> &my_res) {
   if (my_res.size() != std_res.size()) {
+    std::cout << "std_res size = " << std_res.size()
+              << ", my_res size = " << my_res.size() << "\n";
     return false;
   }
   size_t size = my_res.size();
@@ -61,6 +63,34 @@ TEST(Vector, 5_vectors_clear) {
   ASSERT_TRUE(vectors_equal(std_res, my_res));
   my_res.clear();
   std_res.clear();
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 6_vectors_insert) {
+  Vector<int> my_res = {1, 2, 3};
+  std::vector<int> std_res = {1, 2, 3};
+  ASSERT_EQ(my_res.front(), std_res.front());
+  ASSERT_EQ(my_res.back(), std_res.back());
+  my_res = {1};
+  std_res = {1};
+  ASSERT_EQ(my_res.front(), std_res.front());
+  ASSERT_EQ(my_res.back(), std_res.back());
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 7_vectors_insert) {
+  Vector<int> my_res = {2};
+  std::vector<int> std_res = {2};
+  std_res.insert(std_res.begin(), 1);
+  my_res.insert(my_res.begin(), 1);
+  ASSERT_TRUE(vectors_equal(std_res, my_res));
+}
+
+TEST(Vector, 8_vectors_erase) {
+  Vector<int> my_res = {2};
+  std::vector<int> std_res = {2};
+  std_res.erase(std_res.begin());
+  my_res.erase(my_res.begin());
   ASSERT_TRUE(vectors_equal(std_res, my_res));
 }
 }  // namespace s21

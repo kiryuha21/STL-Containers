@@ -72,8 +72,8 @@ class Vector : public Container<T> {
   void resize(const size_type n);
   [[nodiscard]] size_type calculate_capacity(
       const size_type size) const noexcept;
-  void shift_left(iterator shift_from, const size_type shift_on);
-  void shift_right(iterator shift_from, const size_type shift_on);
+  void shift_left(const size_type shift_count, const size_type shift_on);
+  void shift_right(const size_type shift_count, const size_type shift_on);
 };
 
 }  // namespace s21
