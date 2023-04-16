@@ -61,9 +61,15 @@ TEST(VectorSuite, copy_constructors) {
   s21::Vector<int> my_vec(10);
   std::vector<int> std_vec(10);
   ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+  s21::Vector<int> my_vec2;
+  std::vector<int> std_vec2;
+  ASSERT_TRUE(vectors_equal(std_vec2, my_vec2));
   s21::Vector<int> my_res(my_vec);
   std::vector<int> std_res(std_vec);
   ASSERT_TRUE(vectors_equal(std_res, my_res));
+  s21::Vector<int> my_res2(my_vec2);
+  std::vector<int> std_res2(std_vec2);
+  ASSERT_TRUE(vectors_equal(std_res2, my_res2));
 }
 
 TEST(VectorSuite, move_constructors) {
@@ -342,6 +348,20 @@ TEST(VectorSuite, insert_single) {
   ASSERT_TRUE(vectors_equal(std_vec, my_vec));
 }
 
+TEST(VectorSuite, wrong_insert) {
+  s21::Vector<int> my_vec({2});
+  ASSERT_THROW(my_vec.insert(my_vec.begin() + 2, 1), std::out_of_range);
+  ASSERT_THROW(my_vec.insert(my_vec.begin() - 1, 1), std::out_of_range);
+}
+
+TEST(VectorSuite, insert_empty) {
+  s21::Vector<int> my_vec;
+  std::vector<int> std_vec;
+  std_vec.insert(std_vec.begin(), 10);
+  my_vec.insert(my_vec.begin(), 10);
+  ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+}
+
 TEST(VectorSuite, erase_only) {
   s21::Vector<int> my_vec = {2};
   std::vector<int> std_vec = {2};
@@ -358,12 +378,10 @@ TEST(VectorSuite, erase_not_only) {
   ASSERT_TRUE(vectors_equal(std_vec, my_vec));
 }
 
-TEST(VectorSuite, insert_empty) {
-  s21::Vector<int> my_vec;
-  std::vector<int> std_vec;
-  std_vec.insert(std_vec.begin(), 10);
-  my_vec.insert(my_vec.begin(), 10);
-  ASSERT_TRUE(vectors_equal(std_vec, my_vec));
+TEST(VectorSuite, wrong_erase) {
+  s21::Vector<int> my_vec({2});
+  ASSERT_THROW(my_vec.erase(my_vec.begin() + 2), std::out_of_range);
+  ASSERT_THROW(my_vec.erase(my_vec.begin() - 1), std::out_of_range);
 }
 
 TEST(VectorSuite, erase_empty) {
