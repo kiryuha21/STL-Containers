@@ -42,7 +42,7 @@ class Queue {
 
   struct Node {
     value_type value;
-    reference next = nullptr;
+    Node* next = nullptr;
   };
 
   Node *head_ = nullptr;
