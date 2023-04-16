@@ -68,4 +68,9 @@ void Stack<T>::pop() {
   this->pop_front();
 }
 
+template <class T>
+void Stack<T>::swap(Stack &other) noexcept {
+  std::swap(*this, other);
+}
+
 }  // namespace s21

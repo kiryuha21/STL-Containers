@@ -8,12 +8,17 @@
 namespace s21 {
 
 template <class T>
-class Queue : public List<T> {
+class Queue : private List<T> {
  public:
   using value_type = typename Container<T>::value_type;
   using reference = typename Container<T>::reference;
   using const_reference = typename Container<T>::const_reference;
   using size_type = typename Container<T>::size_type;
+
+  using List<T>::empty;
+  using List<T>::size;
+  using List<T>::front;
+  using List<T>::back;
 
   Queue() = default;
   Queue(std::initializer_list<value_type> const &items);
@@ -25,6 +30,7 @@ class Queue : public List<T> {
 
   void push(const_reference value);
   void pop();
+  void swap(Queue &other) noexcept;
 
  private:
   using Node = typename List<T>::Node;

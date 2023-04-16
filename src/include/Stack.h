@@ -8,12 +8,15 @@
 namespace s21 {
 
 template <class T>
-class Stack : public List<T> {
+class Stack : private List<T> {
  public:
   using value_type = typename Container<T>::value_type;
   using reference = typename Container<T>::reference;
   using const_reference = typename Container<T>::const_reference;
   using size_type = typename Container<T>::size_type;
+
+  using List<T>::empty;
+  using List<T>::size;
 
   Stack() = default;
   Stack(std::initializer_list<value_type> const &items);
@@ -27,6 +30,7 @@ class Stack : public List<T> {
 
   void push(const_reference value);
   void pop();
+  void swap(Stack &other) noexcept;
 
  private:
   using Node = typename List<T>::Node;
