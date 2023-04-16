@@ -63,4 +63,9 @@ void Queue<T>::pop() {
   this->pop_front();
 }
 
+template <class T>
+void Queue<T>::swap(Queue &other) noexcept {
+  std::swap(*this, other);
+}
+
 }  // namespace s21
