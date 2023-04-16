@@ -1,10 +1,9 @@
-// Copyright 2023 school-21
-
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <vector>
 
-#include "s21_containers.h"
+#include "../s21_containers.h"
 
 namespace s21 {
 
@@ -56,9 +55,3 @@ TEST(Vector, 4_vectors_push_pop_back) {
   ASSERT_TRUE(vectors_equal(std_res, my_res));
 }
 }  // namespace s21
-
-int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-
-  return RUN_ALL_TESTS();
-}

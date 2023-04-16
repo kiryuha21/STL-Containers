@@ -13,14 +13,14 @@ TEST_TARGET  = s21_tests
 
 SRC_LIB = ./source/
 BUILD_PATH = ./build/
+TEST_PATH = ./tests/
 
 SRC_LIB_FILES = $(wildcard $(SRC_LIB)*.cc)
-TEST_FILES = s21_tests.cc
+TEST_FILES = $(TEST_PATH)/*.cc
 SRC_LIB_HEADERS = $(wildcard include/*.h)
 LIB_HEADER = s21_containers.h
 
 SRC_LIB_OBJ = $(patsubst $(SRC_LIB)%.cc, $(BUILD_PATH)%.o, $(SRC_LIB_FILES))
-TEST_OBJ = $(BUILD_PATH)s21_tests.o
 
 CPPLINT = cpplint
 CLANG_FORMAT = clang-format
@@ -33,7 +33,7 @@ $(BUILD_PATH):
 	mkdir $(BUILD_PATH)
 
 $(TEST_TARGET): $(LIB) $(TEST_OBJ)
-	$(CC) $(TEST_OBJ) $(LIB) -o $(TEST_TARGET) $(TEST_FLAGS)
+	$(CC) $(TEST_FILES) $(LIB) -o $(TEST_TARGET) $(TEST_FLAGS)
 
 $(BUILD_PATH)%.o: $(SRC_LIB)%.cc
 	$(CC) -c $< -o $@
