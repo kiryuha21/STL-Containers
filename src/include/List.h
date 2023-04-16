@@ -1,0 +1,6 @@
+#ifndef CPP2_S21_CONTAINERS_1_LIST_H
+#define CPP2_S21_CONTAINERS_1_LIST_H
+
+class List {};
+
+#endif  // CPP2_S21_CONTAINERS_1_LIST_H

@@ -7,7 +7,7 @@
 namespace s21 {
 
 // Helpers
-template <typename T>
+template <class T>
 void Vector<T>::allocate_memory(const size_type n) {
   if (n > kMaxSize) {
     throw std::out_of_range("Vector size must be in [0; 2^61 - 1]");
@@ -27,7 +27,7 @@ void Vector<T>::allocate_memory(const size_type n) {
   std::fill(begin(), end(), value_type());
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::resize(const size_type n) {
   if (capacity_ == calculate_capacity(n)) {
     return;
@@ -37,7 +37,7 @@ void Vector<T>::resize(const size_type n) {
   *this = std::move(new_vector);
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::size_type Vector<T>::calculate_capacity(
     const size_type size) const noexcept {
   if (size == 0) {
@@ -50,14 +50,14 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
   return res;
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::shift_right(iterator shift_from, const size_type shift_on) {
   auto shift_count = it_end_ - shift_from;
   resize(size_ + shift_on);
   std::copy(shift_from, shift_from + shift_count + 1, shift_from + shift_on);
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::shift_left(iterator shift_from, const size_type shift_on) {
   if (it_begin_ + shift_on < shift_from) {
     throw std::out_of_range("Shift left on too big value");
@@ -69,18 +69,18 @@ void Vector<T>::shift_left(iterator shift_from, const size_type shift_on) {
 }
 
 // Vector Member type
-template <typename T>
+template <class T>
 Vector<T>::Vector(const size_type n) {
   allocate_memory(n);
 }
 
-template <typename T>
+template <class T>
 Vector<T>::Vector(std::initializer_list<value_type> const& items) {
   allocate_memory(items.size());
   std::copy(items.begin(), items.end(), it_begin_);
 }
 
-template <typename T>
+template <class T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
   if (this == &v) {
     return *this;
@@ -91,12 +91,12 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
   return *this;
 }
 
-template <typename T>
-Vector<T>::Vector(const Vector& v) noexcept {
+template <class T>
+Vector<T>::Vector(const Vector& v) {
   *this = v;
 }
 
-template <typename T>
+template <class T>
 Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
   if (this == &v) {
     return *this;
@@ -112,18 +112,18 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
   return *this;
 }
 
-template <typename T>
+template <class T>
 Vector<T>::Vector(Vector&& v) noexcept {
   *this = std::move(v);
 }
 
-template <typename T>
+template <class T>
 Vector<T>::~Vector() noexcept {
   clear();
 }
 
 // Vector Element access
-template <typename T>
+template <class T>
 typename Vector<T>::reference Vector<T>::at(const size_type pos) const {
   if (pos >= size_) {
     throw std::out_of_range("Wrong position for at");
@@ -134,12 +134,12 @@ typename Vector<T>::reference Vector<T>::at(const size_type pos) const {
   return it_begin_[pos];
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::reference Vector<T>::operator[](const size_type pos) const {
   return at(pos);
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::const_reference Vector<T>::front() const {
   if (empty()) {
     throw std::out_of_range("Taking front of empty Vector");
@@ -147,7 +147,7 @@ typename Vector<T>::const_reference Vector<T>::front() const {
   return at(0);
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::const_reference Vector<T>::back() const {
   if (empty()) {
     throw std::out_of_range("Taking back of empty Vector");
@@ -155,7 +155,7 @@ typename Vector<T>::const_reference Vector<T>::back() const {
   return *it_end_;
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::iterator Vector<T>::data() const {
   if (empty()) {
     throw std::out_of_range("Taking data of empty Vector");
@@ -164,7 +164,7 @@ typename Vector<T>::iterator Vector<T>::data() const {
 }
 
 // Vector Iterators
-template <typename T>
+template <class T>
 typename Vector<T>::iterator Vector<T>::begin() const {
   if (empty()) {
     throw std::out_of_range("Taking begin of empty Vector");
@@ -172,7 +172,7 @@ typename Vector<T>::iterator Vector<T>::begin() const {
   return it_begin_;
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::iterator Vector<T>::end() const {
   if (empty()) {
     throw std::out_of_range("Taking end of empty Vector");
@@ -181,32 +181,32 @@ typename Vector<T>::iterator Vector<T>::end() const {
 }
 
 // Vector Capacity
-template <typename T>
+template <class T>
 bool Vector<T>::empty() const {
   return it_begin_ == nullptr;
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::size_type Vector<T>::size() const noexcept {
   return size_;
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::size_type Vector<T>::capacity() const {
   return capacity_;
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::size_type Vector<T>::max_size() const {
   return kMaxSize;
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::shrink_to_fit() {
   resize(size_);  // TODO: maybe cap should be = size
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::reserve(const size_type size) {
   if (size <= capacity_) {
     return;
@@ -216,27 +216,27 @@ void Vector<T>::reserve(const size_type size) {
 }
 
 // Vector Modifiers
-template <typename T>
+template <class T>
 void Vector<T>::clear() {
   delete[] it_begin_;
   it_begin_ = it_end_ = nullptr;
   size_ = capacity_ = 0;
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::swap(Vector<T>& other) {
   Vector temp = std::move(other);
   other = std::move(*this);
   *this = std::move(temp);
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::push_back(const_reference value) {
   resize(size_ + 1);
   *it_end_ = value;
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::pop_back() {
   if (empty()) {
     throw std::out_of_range("Pop back of empty vector");
@@ -244,7 +244,7 @@ void Vector<T>::pop_back() {
   resize(size_ - 1);
 }
 
-template <typename T>
+template <class T>
 typename Vector<T>::iterator Vector<T>::insert(iterator pos,
                                                const_reference value) {
   shift_left(pos, 1);
@@ -252,7 +252,7 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
   return pos;
 }
 
-template <typename T>
+template <class T>
 void Vector<T>::erase(iterator pos) {
   shift_right(pos, 1);
 }

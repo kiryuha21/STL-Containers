@@ -43,7 +43,6 @@ class Queue : public Container<T> {
     value_type value;
     Node *next = nullptr;
 
-    Node() = default;
     explicit Node(value_type val) : value(val){};
   };
 
