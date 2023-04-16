@@ -34,7 +34,7 @@ List<T>::List(const std::initializer_list<value_type> &items) {
 }
 
 template <class T>
-List<T>::List(const List &l) {
+List<T>::List(const List &l) : List<T>() {
   *this = l;
 }
 
@@ -57,6 +57,8 @@ List<T> &List<T>::operator=(const List &l) {
   for (Node *temp = l.head_; temp != nullptr; temp = temp->next) {
     push_back(temp->value);
   }
+
+  return *this;
 }
 
 template <class T>
@@ -125,6 +127,8 @@ void List<T>::clear() noexcept {
   }
 }
 
+// TODO(lyradanu): rewrite push_back() and push_front() with insert when
+//  implemented
 template <class T>
 void List<T>::push_back(const_reference value) {
   Node *new_node = nullptr;
@@ -144,6 +148,24 @@ void List<T>::push_back(const_reference value) {
 }
 
 template <class T>
+void List<T>::push_front(const_reference value) {
+  Node *new_node = nullptr;
+  try {
+    new_node = new Node(value);
+  } catch (std::bad_alloc &e) {
+    std::throw_with_nested(e);
+  }
+
+  if (head_ == nullptr) {
+    head_ = new_node;
+    tail_ = new_node;
+  } else {
+    new_node->next = head_;
+    head_ = new_node;
+  }
+}
+
+template <class T>
 void List<T>::pop_front() {
   if (head_ == nullptr) {
     throw std::out_of_range(kEmptyCollectionMsg);
@@ -152,6 +174,11 @@ void List<T>::pop_front() {
   Node *temp = head_;
   head_ = head_->next;
   delete temp;
+}
+
+template <class T>
+void List<T>::swap(List &other) noexcept {
+  std::swap(*this, other);
 }
 
 }  // namespace s21

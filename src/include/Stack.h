@@ -1,27 +1,29 @@
 // Copyright 2023 School-21
 
-#ifndef SRC_INCLUDE_QUEUE_H_
-#define SRC_INCLUDE_QUEUE_H_
+#ifndef SRC_INCLUDE_STACK_H_
+#define SRC_INCLUDE_STACK_H_
 
 #include "List.h"
 
 namespace s21 {
 
 template <class T>
-class Queue : public List<T> {
+class Stack : public List<T> {
  public:
   using value_type = typename Container<T>::value_type;
   using reference = typename Container<T>::reference;
   using const_reference = typename Container<T>::const_reference;
   using size_type = typename Container<T>::size_type;
 
-  Queue() = default;
-  Queue(std::initializer_list<value_type> const &items);
-  Queue(const Queue &q);
-  Queue(Queue &&q) noexcept;
-  ~Queue() noexcept override;
-  Queue &operator=(const Queue &q);
-  Queue &operator=(Queue &&q) noexcept;
+  Stack() = default;
+  Stack(std::initializer_list<value_type> const &items);
+  Stack(const Stack &q);
+  Stack(Stack &&q) noexcept;
+  ~Stack() noexcept override;
+  Stack &operator=(const Stack &q);
+  Stack &operator=(Stack &&q) noexcept;
+
+  const_reference top() const;
 
   void push(const_reference value);
   void pop();
@@ -32,4 +34,4 @@ class Queue : public List<T> {
 
 }  // namespace s21
 
-#endif  // SRC_INCLUDE_QUEUE_H_
+#endif  // SRC_INCLUDE_STACK_H_
