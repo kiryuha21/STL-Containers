@@ -59,7 +59,7 @@ class Vector : public Container<T> {
 
  private:
   // Vector Attributes
-  iterator it_begin_ = nullptr;
+  value_type *memory_ = nullptr;
   size_type size_ = 0;
   size_type capacity_ = 0;
 

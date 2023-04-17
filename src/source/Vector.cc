@@ -15,11 +15,11 @@ void Vector<T>::allocate_memory(const size_type n) {
     throw std::out_of_range("Vector size must be in (0; 2^61 - 1]");
   }
 
-  delete[] it_begin_;
+  delete[] memory_;
 
   if (n != 0) {
     try {
-      it_begin_ = new value_type[n];
+      memory_ = new value_type[n];
     } catch (const std::bad_alloc& exc) {
       throw std::out_of_range("Alloc error in allocate_memory");
     }
@@ -67,10 +67,10 @@ void Vector<T>::shift_right(const size_type shift_after,
                             const size_type shift_on) {
   resize(size_ + shift_on);
   for (size_type i = size_ - 1; i >= shift_after + shift_on; --i) {
-    it_begin_[i] = it_begin_[i - shift_on];
+    memory_[i] = memory_[i - shift_on];
   }
   for (size_type i = shift_after + shift_on - 1; i > shift_after; --i) {
-    it_begin_[i] = value_type();
+    memory_[i] = value_type();
   }
 }
 
@@ -82,7 +82,7 @@ void Vector<T>::shift_left(const size_type shift_after,
   }
 
   for (size_type i = shift_after; i < size_ - shift_on; ++i) {
-    it_begin_[i] = it_begin_[i + shift_on];
+    memory_[i] = memory_[i + shift_on];
   }
   resize(size_ - shift_on);
 }
@@ -98,7 +98,7 @@ template <class T>
 Vector<T>::Vector(std::initializer_list<value_type> const& items)
     : size_(items.size()) {
   allocate_memory(items.size());
-  std::copy(items.begin(), items.end(), it_begin_);
+  std::copy(items.begin(), items.end(), memory_);
 }
 
 template <class T>
@@ -125,9 +125,9 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
     return *this;
   }
 
-  delete[] it_begin_;
+  delete[] memory_;
 
-  it_begin_ = std::exchange(v.it_begin_, nullptr);
+  memory_ = std::exchange(v.memory_, nullptr);
   size_ = std::exchange(v.size_, 0);
   capacity_ = std::exchange(v.capacity_, 0);
 
@@ -141,7 +141,7 @@ Vector<T>::Vector(Vector&& v) noexcept {
 
 template <class T>
 Vector<T>::~Vector() noexcept {
-  delete[] it_begin_;
+  delete[] memory_;
 }
 
 // Vector Element access
@@ -153,7 +153,7 @@ typename Vector<T>::reference Vector<T>::at(const size_type pos) const {
     throw std::out_of_range("Taking at of empty Vector");
   }
 
-  return it_begin_[pos];
+  return memory_[pos];
 }
 
 template <class T>
@@ -166,7 +166,7 @@ typename Vector<T>::const_reference Vector<T>::front() const {
   if (empty()) {
     throw std::out_of_range("Taking front of empty Vector");
   }
-  return at(0);
+  return memory_[0];
 }
 
 template <class T>
@@ -174,27 +174,27 @@ typename Vector<T>::const_reference Vector<T>::back() const {
   if (empty()) {
     throw std::out_of_range("Taking back of empty Vector");
   }
-  return at(size_ - 1);
+  return memory_[size_ - 1];
 }
 
 template <class T>
 typename Vector<T>::iterator Vector<T>::data() const {
-  return it_begin_;
+  return memory_;
 }
 
 // Vector Iterators
 template <class T>
 typename Vector<T>::iterator Vector<T>::begin() const noexcept {
-  return it_begin_;
+  return memory_;
 }
 
 template <class T>
 typename Vector<T>::iterator Vector<T>::end() const noexcept {
-  if (it_begin_ == nullptr) {
+  if (memory_ == nullptr) {
     return nullptr;
   }
 
-  return it_begin_ + size_;
+  return memory_ + size_;
 }
 
 // Vector Capacity
@@ -263,8 +263,8 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
     throw std::out_of_range("Bad insert place");
   }
   shift_right(res_position, 1);
-  *(it_begin_ + res_position) = value;
-  return it_begin_ + res_position;
+  *(memory_ + res_position) = value;
+  return memory_ + res_position;
 }
 
 template <class T>
@@ -274,7 +274,7 @@ void Vector<T>::erase(iterator pos) {
   } else if (pos >= end() || pos < begin()) {
     throw std::out_of_range("Bad erase place");
   }
-  auto res_position = size_type(pos - it_begin_);
+  auto res_position = size_type(pos - memory_);
   shift_left(res_position, 1);
 }
 
