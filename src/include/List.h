@@ -8,20 +8,17 @@
 namespace s21 {
 
 template <class T>
-class List : public Container<T> {
- protected:
-  struct Node;
-
+class List : public ForwardList<T> {
  public:
   class ListIterator;
   class ListConstIterator;
 
-  using value_type = typename Container<T>::value_type;
-  using reference = typename Container<T>::reference;
-  using const_reference = typename Container<T>::const_reference;
+  using value_type = typename ForwardList<T>::value_type;
+  using reference = typename ForwardList<T>::reference;
+  using const_reference = typename ForwardList<T>::const_reference;
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
-  using size_type = typename Container<T>::size_type;
+  using size_type = typename ForwardList<T>::size_type;
 
   List() = default;
   explicit List(size_type n);
@@ -32,24 +29,23 @@ class List : public Container<T> {
   List &operator=(const List &l);
   List &operator=(List &&l) noexcept;
 
-  const_reference front() const;
-  const_reference back() const;
+  using ForwardList<T>::front;
+  using ForwardList<T>::back;
 
   iterator begin() const;
   iterator end() const;
 
-  [[nodiscard]] bool empty() const noexcept;
-  [[nodiscard]] size_type size() const noexcept override;
+  // inherited empty() and size()
   [[nodiscard]] size_type max_size() const noexcept;
 
-  void clear() noexcept;
+  // inherited clear()
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
-  void push_back(const_reference value);
-  void pop_back();
-  void push_front(const_reference value);
-  void pop_front();
-  void swap(List &other) noexcept;
+  void push_back(const_reference val) override;
+  void pop_back() override;
+  void push_front(const_reference val) override;
+  void pop_front() override;
+  // inherited swap()
   void merge(List &other);
   void splice(const_iterator pos, List &other);
   void reverse();
@@ -58,7 +54,7 @@ class List : public Container<T> {
 
   class ListIterator {
    public:
-    explicit ListIterator(Node *node) : node_(node) {}
+    explicit ListIterator(INode<T> *node) : node_(node) {}
 
     iterator operator+();
     iterator operator-();
@@ -67,11 +63,11 @@ class List : public Container<T> {
     reference operator*();
 
    private:
-    Node *node_ = nullptr;
+    INode<T> *node_ = nullptr;
   };
 
   class ListConstIterator {
-    explicit ListConstIterator(Node *node) : node_(node) {}
+    explicit ListConstIterator(INode<T> *node) : node_(node) {}
     const_iterator operator+();
     const_iterator operator-();
     const_iterator &operator--();
@@ -79,24 +75,11 @@ class List : public Container<T> {
     const_reference operator*();
 
    private:
-    Node *node_ = nullptr;
+    INode<T> *node_ = nullptr;
   };
-
- protected:
-  struct Node {
-    value_type value;
-    Node *next = nullptr;
-    Node *prev = nullptr;
-
-    Node() = default;
-    explicit Node(value_type val) : value(val) {}
-  };
-
-  Node *head_ = nullptr;
-  Node *tail_ = nullptr;
 
  private:
-  void allocate_nodes(size_type size);
+  INode<T> *allocate_node(value_type value) const override;
 };
 
 }  // namespace s21

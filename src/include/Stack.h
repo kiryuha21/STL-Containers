@@ -25,8 +25,11 @@ class Stack : public ForwardList<T> {
 
   const_reference top() const;
 
+  // inherited empty() and size()
+
   void push(const_reference value);
   void pop();
+  // inherited swap()
 };
 
 }  // namespace s21

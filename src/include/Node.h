@@ -1,5 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_NODE_H
-#define CPP2_S21_CONTAINERS_1_NODE_H
+// Copyright 2023 School-21
+
+#ifndef SRC_INCLUDE_NODE_H_
+#define SRC_INCLUDE_NODE_H_
 
 #include <stdexcept>
 
@@ -78,4 +80,4 @@ class BiNode : public UNode<T> {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_NODE_H
+#endif  // SRC_INCLUDE_NODE_H_

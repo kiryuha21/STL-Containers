@@ -5,31 +5,21 @@
 namespace s21 {
 
 template <class T>
-void List<T>::allocate_nodes(List::size_type size) {
-  head_ = new Node;
-  tail_ = head_;
-  for (int i = 0; i < size - 1; ++i) {
-    tail_->next = new Node;
-    tail_->next->prev = tail_;
-    tail_ = tail_->next;
-  }
-}
-
-template <class T>
 List<T>::List(List::size_type n) {
-  try {
-    allocate_nodes(n);
-  } catch (std::bad_alloc &e) {
-    std::throw_with_nested(e);
+  this->size_ = n;
+  this->head_ = allocate_node({});
+  this->tail_ = this->head_;
+  for (int i = 0; i < n - 1; ++i) {
+    this->tail_->set_next(allocate_node({}));
+    this->tail_->get_next()->set_prev(this->tail_);
+    this->tail_ = this->tail_->get_next();
   }
 }
 
 template <class T>
 List<T>::List(const std::initializer_list<value_type> &items) {
-  try {
-    allocate_nodes(items.size());
-  } catch (std::bad_alloc &e) {
-    std::throw_with_nested(e);
+  for (const auto &i : items) {
+    this->push_back(i);
   }
 }
 
@@ -45,7 +35,7 @@ List<T>::List(List &&l) noexcept {
 
 template <class T>
 List<T>::~List() noexcept {
-  clear();
+  this->clear();
 }
 
 template <class T>
@@ -54,7 +44,7 @@ List<T> &List<T>::operator=(const List &l) {
     return *this;
   }
 
-  for (Node *temp = l.head_; temp != nullptr; temp = temp->next) {
+  for (INode<T> *temp = l.head_; temp != nullptr; temp = temp->next) {
     push_back(temp->value);
   }
 
@@ -67,118 +57,77 @@ List<T> &List<T>::operator=(List &&l) noexcept {
     return *this;
   }
 
-  clear();
+  this->clear();
 
-  head_ = std::exchange(l.head_, nullptr);
-  tail_ = std::exchange(l.tail_, nullptr);
+  this->head_ = std::exchange(l.head_, nullptr);
+  this->tail_ = std::exchange(l.tail_, nullptr);
+  this->size_ = std::exchange(l.size_, 0);
 
   return *this;
 }
 
 template <class T>
-typename List<T>::const_reference List<T>::front() const {
-  if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
-  }
-  return head_->value;
-}
-
-template <class T>
-typename List<T>::const_reference List<T>::back() const {
-  if (tail_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
-  }
-  return tail_->value;
-}
-
-template <class T>
 typename List<T>::iterator List<T>::begin() const {
-  return ListIterator(head_);
+  return ListIterator(this->head_);
 }
 
 template <class T>
 typename List<T>::iterator List<T>::end() const {
-  return ListIterator(tail_);
+  return ListIterator(this->tail_);
 }
 
-template <class T>
-bool List<T>::empty() const noexcept {
-  return head_ == nullptr;
-}
-
-template <class T>
-typename List<T>::size_type List<T>::size() const noexcept {
-  size_type result = 0;
-  for (Node *temp = head_; temp != nullptr; temp = temp->next, ++result) {
-  }
-  return result;
-}
-
+// FIXME(lyradanu): 100% incorrect
 template <class T>
 typename List<T>::size_type List<T>::max_size() const noexcept {
-  return std::numeric_limits<Node>::max();
+  return std::numeric_limits<BiNode<T>>::max();
 }
 
 template <class T>
-void List<T>::clear() noexcept {
-  for (Node *temp = head_; temp != nullptr; temp = head_) {
-    head_ = head_->next;
-    delete temp;
-  }
-}
-
-// TODO(lyradanu): rewrite push_back() and push_front() with insert when
-//  implemented
-template <class T>
-void List<T>::push_back(const_reference value) {
-  Node *new_node = nullptr;
-  try {
-    new_node = new Node(value);
-  } catch (std::bad_alloc &e) {
-    std::throw_with_nested(e);
-  }
-
-  if (head_ == nullptr) {
-    head_ = new_node;
-    tail_ = new_node;
-  } else {
-    tail_->next = new_node;
-    tail_ = new_node;
+void List<T>::push_back(const_reference val) {
+  INode<T> *temp = this->tail_;
+  ForwardList<T>::push_back(val);
+  if (this->head_ != this->tail_) {
+    this->tail_->set_prev(temp);
   }
 }
 
 template <class T>
-void List<T>::push_front(const_reference value) {
-  Node *new_node = nullptr;
-  try {
-    new_node = new Node(value);
-  } catch (std::bad_alloc &e) {
-    std::throw_with_nested(e);
+void List<T>::pop_back() {
+  if (this->tail_ == nullptr) {
+    throw std::out_of_range(kEmptyCollectionMsg);
   }
 
-  if (head_ == nullptr) {
-    head_ = new_node;
-    tail_ = new_node;
-  } else {
-    new_node->next = head_;
-    head_ = new_node;
+  --this->size_;
+  this->tail_ = this->tail_->get_prev();
+  delete this->tail_->get_next();
+}
+
+template <class T>
+void List<T>::push_front(const_reference val) {
+  INode<T> *temp = this->head_;
+  ForwardList<T>::push_front(val);
+  if (this->head_ != this->tail_) {
+    temp->set_prev(this->head_);
   }
 }
 
 template <class T>
 void List<T>::pop_front() {
-  if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
-  }
-
-  Node *temp = head_;
-  head_ = head_->next;
-  delete temp;
+  ForwardList<T>::pop_front();
+  this->head_->set_prev(nullptr);
 }
 
 template <class T>
-void List<T>::swap(List &other) noexcept {
-  std::swap(*this, other);
+INode<T> *List<T>::allocate_node(value_type value) const {
+  INode<T> *new_node = nullptr;
+
+  try {
+    new_node = new BiNode<T>(value);
+  } catch (std::bad_alloc &e) {
+    std::throw_with_nested(e);
+  }
+
+  return new_node;
 }
 
 }  // namespace s21

@@ -1,5 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_1_FORWARDLIST_H
-#define CPP2_S21_CONTAINERS_1_FORWARDLIST_H
+// Copyright 2023 School-21
+
+#ifndef SRC_INCLUDE_FORWARDLIST_H_
+#define SRC_INCLUDE_FORWARDLIST_H_
 
 #include <initializer_list>
 #include <limits>
@@ -37,10 +39,10 @@ class ForwardList : public Container<T> {
   const_reference front() const;
   const_reference back() const;
 
-  void push_back(const_reference value);
-  void push_front(const_reference value);
+  virtual void push_back(const_reference value);
+  virtual void push_front(const_reference value);
   virtual void pop_back();
-  void pop_front();
+  virtual void pop_front();
 
   virtual INode<T> *allocate_node(value_type value) const;
   void clear() noexcept;
@@ -52,4 +54,4 @@ class ForwardList : public Container<T> {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_1_FORWARDLIST_H
+#endif  // SRC_INCLUDE_FORWARDLIST_H_

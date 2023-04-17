@@ -26,8 +26,11 @@ class Queue : public ForwardList<T> {
   using ForwardList<T>::front;
   using ForwardList<T>::back;
 
+  // inherited empty() and size()
+
   void push(const_reference value);
   void pop();
+  // inherited swap()
 };
 
 }  // namespace s21
