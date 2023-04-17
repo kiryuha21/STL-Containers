@@ -5,10 +5,12 @@
 
 #include "include/List.h"
 #include "include/Queue.h"
+#include "include/SortedContainer.h"
 #include "include/Stack.h"
 #include "include/Vector.h"
 #include "source/List.cc"
 #include "source/Queue.cc"
+#include "source/SortedContainer.cc"
 #include "source/Stack.cc"
 #include "source/Vector.cc"
 

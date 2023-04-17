@@ -84,19 +84,17 @@ class SortedContainer : public Container<T> {
    public:
     Node() noexcept = default;
     explicit Node(value_type value) : value_(value) {}
-    virtual key_type key() const noexcept;
-    virtual value_type value() const noexcept;
+    virtual key_type key() const noexcept { return value_; };
+    virtual value_type value() const noexcept { return value_; };
     Node *left = nullptr;
     Node *right = nullptr;
+    Node *parent = nullptr;
 
    private:
-    enum class Color { kRed, kBlack };
-
     value_type value_ = value_type();
-    Color color_ = Color::kBlack;
   };
 
-  iterator find_place(const key_type &key) const noexcept;
+  Node *find_previous(const key_type &key) const noexcept;
 
   Node *root_ = nullptr;
   size_type size_ = 0;
