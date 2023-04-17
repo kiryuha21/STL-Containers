@@ -3,16 +3,9 @@
 #ifndef SRC_INCLUDE_LIST_H_
 #define SRC_INCLUDE_LIST_H_
 
-#include <initializer_list>
-#include <limits>
-#include <stdexcept>
-#include <utility>
-
-#include "Container.h"
+#include "ForwardList.h"
 
 namespace s21 {
-
-auto constexpr kEmptyCollectionMsg = "Empty Collection!";
 
 template <class T>
 class List : public Container<T> {

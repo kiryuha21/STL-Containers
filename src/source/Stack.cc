@@ -12,7 +12,7 @@ Stack<T>::Stack(const std::initializer_list<value_type> &items) {
 }
 
 template <class T>
-Stack<T>::Stack(const Stack<T> &q) : List<T>() {
+Stack<T>::Stack(const Stack<T> &q) : ForwardList<T>() {
   *this = q;
 }
 
@@ -32,8 +32,8 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
     return *this;
   }
 
-  for (Node *temp = q.head_; temp != nullptr; temp = temp->next) {
-    this->push_back(temp->value);
+  for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
+    this->push_back(temp->get_value());
   }
 
   return *this;
@@ -49,6 +49,7 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&q) noexcept {
 
   this->head_ = std::exchange(q.head_, nullptr);
   this->tail_ = std::exchange(q.tail_, nullptr);
+  this->size_ = std::exchange(q.size_, 0);
 
   return *this;
 }
@@ -66,11 +67,6 @@ void Stack<T>::push(const_reference value) {
 template <class T>
 void Stack<T>::pop() {
   this->pop_front();
-}
-
-template <class T>
-void Stack<T>::swap(Stack &other) noexcept {
-  std::swap(*this, other);
 }
 
 }  // namespace s21

@@ -18,6 +18,7 @@ class Container {
   virtual ~Container() noexcept = default;
 
   // Main functions
+  [[nodiscard]] virtual bool empty() const noexcept = 0;
   [[nodiscard]] virtual size_type size() const noexcept = 0;
 };
 

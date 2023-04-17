@@ -3,20 +3,17 @@
 #ifndef SRC_INCLUDE_STACK_H_
 #define SRC_INCLUDE_STACK_H_
 
-#include "List.h"
+#include "ForwardList.h"
 
 namespace s21 {
 
 template <class T>
-class Stack : private List<T> {
+class Stack : public ForwardList<T> {
  public:
-  using value_type = typename Container<T>::value_type;
-  using reference = typename Container<T>::reference;
-  using const_reference = typename Container<T>::const_reference;
-  using size_type = typename Container<T>::size_type;
-
-  using List<T>::empty;
-  using List<T>::size;
+  using value_type = typename ForwardList<T>::value_type;
+  using reference = typename ForwardList<T>::reference;
+  using const_reference = typename ForwardList<T>::const_reference;
+  using size_type = typename ForwardList<T>::size_type;
 
   Stack() = default;
   Stack(std::initializer_list<value_type> const &items);
@@ -30,10 +27,6 @@ class Stack : private List<T> {
 
   void push(const_reference value);
   void pop();
-  void swap(Stack &other) noexcept;
-
- private:
-  using Node = typename List<T>::Node;
 };
 
 }  // namespace s21
