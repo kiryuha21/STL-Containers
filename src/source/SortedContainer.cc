@@ -46,22 +46,60 @@ SortedContainer<T> &SortedContainer<T>::operator=(
 }
 
 template <class T>
-typename SortedContainer<T>::iterator SortedContainer<T>::begin()
+typename SortedContainer<T>::iterator
+SortedContainer<T>::begin()  // TODO: CHECK
     const noexcept {
   Node *pointer = root_;
-  while (pointer->left_ != nullptr) {
+  while (pointer != nullptr && pointer->left_ != nullptr) {
     pointer = pointer->left;
   }
   return pointer;
 }
 
 template <class T>
-typename SortedContainer<T>::iterator SortedContainer<T>::end() const noexcept {
+typename SortedContainer<T>::iterator SortedContainer<T>::end()
+    const noexcept {  // TODO: CHECK
   Node *pointer = root_;
-  while (pointer->right != nullptr) {
+  while (pointer != nullptr && pointer->right != nullptr) {
     pointer = pointer->right;
   }
   return pointer;
+}
+
+template <class T>
+typename SortedContainer<T>::iterator SortedContainer<T>::find_place(
+    const key_type &key) const noexcept {
+  Node *pointer = root_;
+
+  while (pointer != nullptr && pointer->key() != key) {
+    while (pointer != nullptr && pointer->key() > key) {
+      pointer = pointer->left;
+    }
+    while (pointer != nullptr && pointer->key() < key) {
+      pointer = pointer->right;
+    }
+  }
+
+  return pointer;
+}
+
+template <class T>
+typename SortedContainer<T>::iterator SortedContainer<T>::find(
+    const key_type &key) const noexcept {
+  iterator result = find_place(key);
+  if (result == nullptr) {
+    result = end();
+  }
+  return result;
+}
+
+template <class T>
+bool SortedContainer<T>::contains(const key_type &key) const noexcept {
+  if (end() == nullptr) {
+    return false;
+  }
+
+  return find(key)->key() == key;
 }
 
 template <class T>

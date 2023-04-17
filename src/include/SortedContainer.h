@@ -49,8 +49,8 @@ class SortedContainer : public Container<T> {
 
   void merge(SortedContainer &other);
 
-  iterator find(const key_type &key);
-  bool contains(const key_type &key);
+  iterator find(const key_type &key) const noexcept;
+  bool contains(const key_type &key) const noexcept;
 
   class SortedIterator {
    public:
@@ -95,6 +95,8 @@ class SortedContainer : public Container<T> {
     value_type value_ = value_type();
     Color color_ = Color::kBlack;
   };
+
+  iterator find_place(const key_type &key) const noexcept;
 
   Node *root_ = nullptr;
   size_type size_ = 0;
