@@ -215,7 +215,7 @@ typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
 
 template <class T>
 typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
-  return kMaxSize;
+  return kMaxSize;  // TODO: CHECK
 }
 
 template <class T>
