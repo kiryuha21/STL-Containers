@@ -34,7 +34,7 @@ ForwardList<T> &ForwardList<T>::operator=(const ForwardList<T> &q) {
 
   size_ = q.size_;
   for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
-    push(temp->get_value());
+    push(temp->value());
   }
 
   return *this;
@@ -75,7 +75,7 @@ typename ForwardList<T>::const_reference ForwardList<T>::front() const {
   if (head_ == nullptr) {
     throw std::out_of_range(kEmptyCollectionMsg);
   }
-  return head_->get_value();
+  return head_->value();
 }
 
 template <class T>
@@ -83,7 +83,7 @@ typename ForwardList<T>::const_reference ForwardList<T>::back() const {
   if (tail_ == nullptr) {
     throw std::out_of_range(kEmptyCollectionMsg);
   }
-  return tail_->get_value();
+  return tail_->value();
 }
 
 template <class T>

@@ -45,8 +45,8 @@ List<T> &List<T>::operator=(const List &l) {
   }
 
   this->clear();
-  for (INode<T> *temp = l.head_; temp != nullptr; temp = temp->next) {
-    push_back(temp->value);
+  for (INode<T> *temp = l.head_; temp != nullptr; temp = temp->get_next()) {
+    push_back(temp->value());
   }
 
   return *this;
@@ -96,14 +96,26 @@ typename List<T>::size_type List<T>::max_size() const noexcept {
 template <class T>
 typename List<T>::iterator List<T>::insert(List::iterator pos,
                                            const_reference value) {
-  INode<T> *temp = pos.node_->get_prev();
+  if (pos == begin()) {
+    push_front(value);
+    return iterator(this->head_);
+  }
+
+  if (pos == end()) {
+    push_back(value);
+    return iterator(this->tail_);
+  }
+
+  INode<T> *temp = pos.get_node()->get_prev();
   INode<T> *new_node = allocate_node(value);
 
-  pos.node_->set_prev(new_node);
-  new_node->set_next(pos.node_);
+  new_node->set_next(pos.get_node());
+  pos.get_node()->set_prev(new_node);
 
   new_node->set_prev(temp);
   temp->set_next(new_node);
+
+  return iterator(new_node);
 }
 
 template <class T>
@@ -154,66 +166,71 @@ void List<T>::pop_front() {
 
 template <class T>
 void List<T>::merge(List &other) {
-  for (auto it = other.begin(); it != other.end(); it++) {
+  for (auto it = other.begin(); it != other.end(); ++it) {
     push_back(*it);
   }
 }
 
 template <class T>
 void List<T>::splice(List::const_iterator pos, List &other) {
-  for (auto it = other.cbegin(); it != other.cend(); it++) {
-    insert(pos, *it);
+  iterator dest(pos.get_node());
+  for (auto it = other.cbegin(); it != other.cend(); ++it) {
+    insert(dest, *it);
   }
 }
 
 template <class T>
 typename List<T>::iterator &List<T>::ListIterator::operator--() {
-  return node_->get_prev();
+  set_node(get_node()->get_prev());
+  return *this;
 }
 
 template <class T>
 typename List<T>::iterator &List<T>::ListIterator::operator++() {
-  return node_->get_next();
+  set_node(get_node()->get_next());
+  return *this;
 }
 
 template <class T>
 bool List<T>::ListIterator::operator==(const iterator &other) {
-  return node_ == other.node_;
+  return get_node() == other.get_node();
 }
 
 template <class T>
 bool List<T>::ListIterator::operator!=(const iterator &other) {
-  return node_ != other.node_;
+  return get_node() != other.get_node();
 }
 
 template <class T>
 typename List<T>::reference List<T>::ListIterator::operator*() {
-  return node_->get_value();
+  return get_node()->value();
 }
 
 template <class T>
 typename List<T>::const_iterator &List<T>::ListConstIterator::operator--() {
-  return node_->get_prev();
+  set_node(get_node()->get_prev());
+  return *this;
 }
 
 template <class T>
 typename List<T>::const_iterator &List<T>::ListConstIterator::operator++() {
-  return node_->get_next();
+  set_node(get_node()->get_next());
+  return *this;
 }
 
 template <class T>
-bool List<T>::ListConstIterator::operator==(List::const_iterator &other) {
-  return node_ == other.node_;
+bool List<T>::ListConstIterator::operator==(const const_iterator &other) {
+  return get_node() == other.get_node();
 }
 
 template <class T>
-bool List<T>::ListConstIterator::operator!=(List::const_iterator &other) {
-  return node_ != other.node_;
+bool List<T>::ListConstIterator::operator!=(const const_iterator &other) {
+  return get_node() != other.get_node();
 }
 
 template <class T>
 typename List<T>::const_reference List<T>::ListConstIterator::operator*() {
-  return node_->get_value();
+  return get_node()->value();
 }
 
 template <class T>

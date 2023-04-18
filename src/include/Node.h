@@ -12,10 +12,10 @@ class INode {
  public:
   virtual INode *get_next() const noexcept = 0;
   virtual INode *get_prev() const = 0;
-  virtual const T &get_value() const noexcept = 0;
+  virtual const T &value() const = 0;
   virtual void set_next(INode<T> *ptr) noexcept = 0;
   virtual void set_prev(INode<T> *ptr) = 0;
-  virtual void set_value(T new_value) noexcept = 0;
+  virtual T &value() = 0;
 
   virtual ~INode() noexcept = default;
 };
@@ -41,16 +41,16 @@ struct UNode : public INode<T> {
   INode<T> *get_prev() const override {
     throw std::logic_error("Doesn't exist");
   }
-  const T &get_value() const noexcept override { return value_; }
+  const T &value() const override { return value_; }
   void set_next(INode<T> *ptr) noexcept override { next_ = ptr; }
   void set_prev(INode<T> *) override {
     throw std::logic_error("Doesn't exist");
   }
-  void set_value(T new_value) noexcept override { value_ = new_value; }
+  T &value() override { return value_; }
 
  protected:
   INode<T> *next_ = nullptr;
-  T value_;
+  T value_ = {};
 };
 
 template <class T>

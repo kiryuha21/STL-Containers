@@ -57,6 +57,8 @@ class List : public ForwardList<T> {
   class ListIterator {
    public:
     explicit ListIterator(INode<T> *node) : node_(node) {}
+    INode<T> *get_node() const { return node_; }
+    void set_node(INode<T> *node) { node_ = node; }
 
     iterator &operator--();
     iterator &operator++();
@@ -64,21 +66,23 @@ class List : public ForwardList<T> {
     bool operator!=(const iterator &other);
     reference operator*();
 
-   protected:
+   private:
     INode<T> *node_ = nullptr;
   };
 
   class ListConstIterator {
    public:
     explicit ListConstIterator(INode<T> *node) : node_(node) {}
+    INode<T> *get_node() const { return node_; }
+    void set_node(INode<T> *node) { node_ = node; }
 
     const_iterator &operator--();
     const_iterator &operator++();
-    bool operator==(const_iterator &other);
-    bool operator!=(const_iterator &other);
+    bool operator==(const const_iterator &other);
+    bool operator!=(const const_iterator &other);
     const_reference operator*();
 
-   protected:
+   private:
     INode<T> *node_ = nullptr;
   };
 
