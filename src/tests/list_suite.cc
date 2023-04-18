@@ -34,6 +34,22 @@ bool lists_equal(List<T> first, std::list<T> second) {
   return i == first.cend() && j == second.cend();
 }
 
+template <class T>
+std::ostream& operator<<(std::ostream& os, List<T> list) {
+  for (auto& i : list) {
+    os << i << " ";
+  }
+  return os;
+}
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, std::list<T> list) {
+  for (auto& i : list) {
+    os << i << " ";
+  }
+  return os;
+}
+
 TEST(ListSuite, default_contructor_test) {
   List<int> a;
 
@@ -190,6 +206,7 @@ TEST(ListSuite, insert_to_empty_test) {
   List<int> a;
   auto it = a.insert(a.begin(), 1);
   ASSERT_EQ(*it, 1);
+  ASSERT_EQ(a.size(), 1);
   ASSERT_EQ(a.front(), 1);
   ASSERT_EQ(a.back(), 1);
 }
@@ -198,6 +215,7 @@ TEST(ListSuite, insert_front_test) {
   List<int> a = {1};
   auto it = a.insert(a.begin(), 2);
   ASSERT_EQ(*it, 2);
+  ASSERT_EQ(a.size(), 2);
   ASSERT_EQ(a.front(), 2);
 }
 
@@ -205,6 +223,7 @@ TEST(ListSuite, insert_back_test) {
   List<int> a = {1};
   auto it = a.insert(a.end(), 2);
   ASSERT_EQ(*it, 2);
+  ASSERT_EQ(a.size(), 2);
   ASSERT_EQ(a.back(), 2);
 }
 
@@ -213,6 +232,7 @@ TEST(ListSuite, insert_mid_test) {
 
   auto it = a.insert(++a.begin(), 3);
   ASSERT_EQ(*it, 3);
+  ASSERT_EQ(a.size(), 3);
   ASSERT_TRUE(lists_equal(a, List<int>{1, 3, 2}));
 }
 
@@ -328,7 +348,7 @@ TEST(ListSuite, merge_to_empty) {
   ASSERT_TRUE(lists_equal(a, c));
 }
 
-TEST(ListSuite, merge_to_non_empty) {
+TEST(ListSuite, merge_to_back) {
   List<int> a = {4, 5};
   List<int> b = {7, 8, 9};
 
@@ -340,6 +360,44 @@ TEST(ListSuite, merge_to_non_empty) {
 
   ASSERT_EQ(a.size(), 5);
   ASSERT_TRUE(lists_equal(a, c));
+}
+
+TEST(ListSuite, merge_to_front) {
+  List<int> a = {7, 8, 9};
+  List<int> b = {4, 5};
+
+  std::list<int> c = {7, 8, 9};
+  std::list<int> d = {4, 5};
+
+  a.merge(b);
+  c.merge(d);
+
+  ASSERT_EQ(a.size(), 5);
+  ASSERT_TRUE(lists_equal(a, c));
+}
+
+TEST(ListSuite, merge_to_self) {
+  List<int> a = {1, 2, 3};
+  std::list<int> b = {1, 2, 3};
+
+  a.merge(a);
+  b.merge(b);
+
+  ASSERT_TRUE(lists_equal(a, b));
+  ASSERT_TRUE(lists_equal(a, List<int>{1, 2, 3}));
+}
+
+TEST(ListSuite, splice_to_empty_test) {
+  List<int> my_dest;
+  List<int> my_source = {3, 4};
+
+  std::list<int> std_dest;
+  std::list<int> std_source = {3, 4};
+
+  my_dest.splice(my_dest.cbegin(), my_source);
+  std_dest.splice(std_dest.cbegin(), std_source);
+
+  ASSERT_TRUE(lists_equal(my_dest, std_dest));
 }
 
 TEST(ListSuite, splice_at_begin_test) {
@@ -362,13 +420,8 @@ TEST(ListSuite, splice_at_middle_test) {
   std::list<int> std_dest = {1, 2};
   std::list<int> std_source = {3, 4};
 
-  auto my_it = my_dest.cbegin();
-  auto std_it = std_dest.cbegin();
-  ++my_it;
-  ++std_it;
-
-  my_dest.splice(my_it, my_source);
-  std_dest.splice(std_it, std_source);
+  my_dest.splice(++my_dest.cbegin(), my_source);
+  std_dest.splice(++std_dest.cbegin(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
 }
@@ -384,6 +437,99 @@ TEST(ListSuite, splice_at_end_test) {
   std_dest.splice(std_dest.cend(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
+}
+
+TEST(ListSuite, reverse_empty_test) {
+  List<int> a;
+  std::list<int> b;
+
+  a.reverse();
+  b.reverse();
+
+  // test that no exceptions occur for empty list
+  ASSERT_TRUE(true);
+}
+
+TEST(ListSuite, reverse_test) {
+  List<int> a = {1, 2, 3};
+  std::list<int> b = {1, 2, 3};
+
+  a.reverse();
+  b.reverse();
+
+  ASSERT_TRUE(lists_equal(a, b));
+  ASSERT_EQ(a.front(), 3);
+  ASSERT_EQ(a.back(), 1);
+}
+
+TEST(ListSuite, unique_empty_test) {
+  List<int> a;
+  std::list<int> b;
+
+  a.unique();
+  b.unique();
+
+  // test that no exceptions occur for empty list
+  ASSERT_TRUE(true);
+}
+
+TEST(ListSuite, no_unique_test) {
+  List<int> a = {1, 2, 3};
+  std::list<int> b = {1, 2, 3};
+
+  a.unique();
+  b.unique();
+
+  ASSERT_EQ(a.size(), 3);
+  ASSERT_TRUE(lists_equal(a, b));
+}
+
+TEST(ListSuite, unique_test) {
+  List<int> a = {1, 2, 2, 2, 3, 2, 2};
+  std::list<int> b = {1, 2, 2, 2, 3, 2, 2};
+
+  a.unique();
+  b.unique();
+
+  std::cout << "a is\n" << a << "\nb is\n" << b << std::endl;
+
+  ASSERT_EQ(a.size(), 4);
+  ASSERT_TRUE(lists_equal(a, b));
+}
+
+TEST(ListSuite, sort_empty_test) {
+  List<int> a;
+  std::list<int> b;
+
+  a.sort();
+  b.sort();
+
+  // test that no exceptions occur for empty list
+  ASSERT_TRUE(true);
+}
+
+TEST(ListSuite, no_sort_test) {
+  List<int> a = {1, 2, 3};
+  std::list<int> b = {1, 2, 3};
+
+  a.sort();
+  b.sort();
+
+  ASSERT_EQ(a.size(), 3);
+  ASSERT_TRUE(lists_equal(a, b));
+}
+
+TEST(ListSuite, sort_test) {
+  List<int> a = {1, 2, 1, 5, 4, 12, -5};
+  std::list<int> b = {1, 2, 1, 5, 4, 12, -5};
+
+  a.sort();
+  b.sort();
+
+  std::cout << "a is\n" << a << "\nb is\n" << b << std::endl;
+
+  ASSERT_EQ(a.size(), 4);
+  ASSERT_TRUE(lists_equal(a, b));
 }
 
 }  // namespace s21

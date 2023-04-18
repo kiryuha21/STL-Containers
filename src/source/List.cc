@@ -117,6 +117,7 @@ typename List<T>::iterator List<T>::insert(List::iterator pos,
   new_node->set_prev(temp);
   temp->set_next(new_node);
 
+  ++this->size_;
   return iterator(new_node, this->head_, this->tail_);
 }
 
@@ -188,13 +189,10 @@ void List<T>::merge(List &other) {
     return;
   }
 
-  bool is_less = true;
   if (this->empty() || other.front() > this->back()) {
-    is_less = false;
-  }
-
-  for (auto it = other.begin(); it != other.end(); ++it) {
-    is_less ? push_front(*it) : push_back(*it);
+    splice(this->cend(), other);
+  } else {
+    splice(this->cbegin(), other);
   }
 }
 
@@ -208,8 +206,8 @@ void List<T>::splice(List::const_iterator pos, List &other) {
 
 template <class T>
 void List<T>::reverse() {
-  for (auto i = this->head_; i != nullptr; i = i->get_next()) {
-    INode<T> temp = i->get_next();
+  for (auto i = this->head_; i != nullptr; i = i->get_prev()) {
+    INode<T> *temp = i->get_next();
     i->set_next(i->get_prev());
     i->set_prev(temp);
   }
@@ -218,13 +216,23 @@ void List<T>::reverse() {
 
 template <class T>
 void List<T>::unique() {
-  sort();
-  std::unique(begin(), end());
+  if (this->empty()) {
+    return;
+  }
+
+  auto backward = this->begin();
+  auto forward = ++this->begin();
+  for (; forward != this->end(); backward = forward, ++forward) {
+    if (*forward == *backward) {
+      erase(backward);
+    }
+  }
 }
 
+// TODO: finish
 template <class T>
 void List<T>::sort() {
-  std::sort(begin(), end());
+  // bubble sort B-)
 }
 
 template <class T>
