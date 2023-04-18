@@ -56,10 +56,10 @@ class List : public ForwardList<T> {
    public:
     explicit ListIterator(INode<T> *node) : node_(node) {}
 
-    iterator operator+();
-    iterator operator-();
     iterator &operator--();
     iterator &operator++();
+    bool operator==(const iterator &other);
+    bool operator!=(const iterator &other);
     reference operator*();
 
    private:
@@ -67,11 +67,13 @@ class List : public ForwardList<T> {
   };
 
   class ListConstIterator {
+   public:
     explicit ListConstIterator(INode<T> *node) : node_(node) {}
-    const_iterator operator+();
-    const_iterator operator-();
+
     const_iterator &operator--();
     const_iterator &operator++();
+    bool operator==(const_iterator &other);
+    bool operator!=(const_iterator &other);
     const_reference operator*();
 
    private:

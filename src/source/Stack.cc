@@ -32,6 +32,7 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
     return *this;
   }
 
+  this->clear();
   for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
     this->push_back(temp->get_value());
   }

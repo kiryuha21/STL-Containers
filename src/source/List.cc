@@ -44,6 +44,7 @@ List<T> &List<T>::operator=(const List &l) {
     return *this;
   }
 
+  this->clear();
   for (INode<T> *temp = l.head_; temp != nullptr; temp = temp->next) {
     push_back(temp->value);
   }
@@ -115,6 +116,56 @@ template <class T>
 void List<T>::pop_front() {
   ForwardList<T>::pop_front();
   this->head_->set_prev(nullptr);
+}
+
+template <class T>
+typename List<T>::iterator &List<T>::ListIterator::operator--() {
+  return node_->get_prev();
+}
+
+template <class T>
+typename List<T>::iterator &List<T>::ListIterator::operator++() {
+  return node_->get_next();
+}
+
+template <class T>
+bool List<T>::ListIterator::operator==(const iterator &other) {
+  return node_ == other.node_;
+}
+
+template <class T>
+bool List<T>::ListIterator::operator!=(const iterator &other) {
+  return node_ != other.node_;
+}
+
+template <class T>
+typename List<T>::reference List<T>::ListIterator::operator*() {
+  return node_->get_value();
+}
+
+template <class T>
+typename List<T>::const_iterator &List<T>::ListConstIterator::operator--() {
+  return node_->get_prev();
+}
+
+template <class T>
+typename List<T>::const_iterator &List<T>::ListConstIterator::operator++() {
+  return node_->get_next();
+}
+
+template <class T>
+bool List<T>::ListConstIterator::operator==(List::const_iterator &other) {
+  return node_ == other.node_;
+}
+
+template <class T>
+bool List<T>::ListConstIterator::operator!=(List::const_iterator &other) {
+  return node_ != other.node_;
+}
+
+template <class T>
+typename List<T>::const_reference List<T>::ListConstIterator::operator*() {
+  return node_->get_value();
 }
 
 template <class T>

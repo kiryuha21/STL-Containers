@@ -32,6 +32,7 @@ Queue<T> &Queue<T>::operator=(const Queue<T> &q) {
     return *this;
   }
 
+  this->clear();
   for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
     push(temp->get_value());
   }
