@@ -73,7 +73,7 @@ void ForwardList<T>::swap(ForwardList &other) {
 template <class T>
 typename ForwardList<T>::const_reference ForwardList<T>::front() const {
   if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
+    throw std::logic_error(kEmptyCollectionMsg);
   }
   return head_->value();
 }
@@ -81,7 +81,7 @@ typename ForwardList<T>::const_reference ForwardList<T>::front() const {
 template <class T>
 typename ForwardList<T>::const_reference ForwardList<T>::back() const {
   if (tail_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
+    throw std::logic_error(kEmptyCollectionMsg);
   }
   return tail_->value();
 }
@@ -117,7 +117,7 @@ void ForwardList<T>::push_front(const_reference value) {
 template <class T>
 void ForwardList<T>::pop_back() {
   if (tail_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
+    throw std::logic_error(kEmptyCollectionMsg);
   }
 
   --size_;
@@ -126,12 +126,13 @@ void ForwardList<T>::pop_back() {
   }
   tail_ = temp;
   delete tail_->get_next();
+  tail_->set_next(nullptr);
 }
 
 template <class T>
 void ForwardList<T>::pop_front() {
   if (head_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
+    throw std::logic_error(kEmptyCollectionMsg);
   }
 
   --size_;

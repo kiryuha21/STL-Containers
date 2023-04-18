@@ -56,7 +56,7 @@ TEST(StackSuite, default_constructor_test) {
   ASSERT_EQ(std_stack.size(), 0);
   ASSERT_EQ(std_stack.size(), my_stack.size());
 
-  ASSERT_THROW(my_stack.top(), std::out_of_range);
+  ASSERT_THROW(my_stack.top(), std::logic_error);
 }
 
 TEST(StackSuite, initializer_constructor_test) {
@@ -116,7 +116,7 @@ TEST(StackSuite, present_top_test) {
 
 TEST(StackSuite, missing_top_test) {
   Stack<int> my_stack;
-  ASSERT_THROW(my_stack.top(), std::out_of_range);
+  ASSERT_THROW(my_stack.top(), std::logic_error);
 }
 
 TEST(StackSuite, empty_stack_test) {
@@ -159,7 +159,7 @@ TEST(StackSuite, push_to_empty_test) {
   Stack<int> my_stack;
   std::stack<int> std_stack;
 
-  ASSERT_THROW(my_stack.top(), std::out_of_range);
+  ASSERT_THROW(my_stack.top(), std::logic_error);
 
   my_stack.push(1);
   std_stack.push(1);
@@ -203,7 +203,7 @@ TEST(StackSuite, pop_non_empty_test) {
 
 TEST(StackSuite, pop_empty_test) {
   Stack<int> my_stack;
-  ASSERT_THROW(my_stack.pop(), std::out_of_range);
+  ASSERT_THROW(my_stack.pop(), std::logic_error);
 }
 
 TEST(StackSuite, swap_test) {

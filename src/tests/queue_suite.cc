@@ -56,8 +56,8 @@ TEST(QueueSuite, default_constructor_test) {
   ASSERT_EQ(std_queue.size(), 0);
   ASSERT_EQ(std_queue.size(), my_queue.size());
 
-  ASSERT_THROW(my_queue.front(), std::out_of_range);
-  ASSERT_THROW(my_queue.back(), std::out_of_range);
+  ASSERT_THROW(my_queue.front(), std::logic_error);
+  ASSERT_THROW(my_queue.back(), std::logic_error);
 }
 
 TEST(QueueSuite, initializer_constructor_test) {
@@ -125,7 +125,7 @@ TEST(QueueSuite, present_front_test) {
 
 TEST(QueueSuite, missing_front_test) {
   Queue<int> my_queue;
-  ASSERT_THROW(my_queue.front(), std::out_of_range);
+  ASSERT_THROW(my_queue.front(), std::logic_error);
 }
 
 TEST(QueueSuite, present_back_test) {
@@ -140,7 +140,7 @@ TEST(QueueSuite, present_back_test) {
 
 TEST(QueueSuite, missing_back_test) {
   Queue<int> my_queue;
-  ASSERT_THROW(my_queue.back(), std::out_of_range);
+  ASSERT_THROW(my_queue.back(), std::logic_error);
 }
 
 TEST(QueueSuite, empty_queue_test) {
@@ -183,8 +183,8 @@ TEST(QueueSuite, push_to_empty_test) {
   Queue<int> my_queue;
   std::queue<int> std_queue;
 
-  ASSERT_THROW(my_queue.back(), std::out_of_range);
-  ASSERT_THROW(my_queue.front(), std::out_of_range);
+  ASSERT_THROW(my_queue.back(), std::logic_error);
+  ASSERT_THROW(my_queue.front(), std::logic_error);
 
   my_queue.push(1);
   std_queue.push(1);
@@ -231,7 +231,7 @@ TEST(QueueSuite, pop_non_empty_test) {
 
 TEST(QueueSuite, pop_empty_test) {
   Queue<int> my_queue;
-  ASSERT_THROW(my_queue.pop(), std::out_of_range);
+  ASSERT_THROW(my_queue.pop(), std::logic_error);
 }
 
 TEST(QueueSuite, swap_test) {

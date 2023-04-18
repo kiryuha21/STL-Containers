@@ -4,7 +4,6 @@
 #define SRC_INCLUDE_FORWARDLIST_H_
 
 #include <initializer_list>
-#include <limits>
 #include <utility>
 
 #include "Container.h"

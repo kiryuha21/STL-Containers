@@ -3,6 +3,8 @@
 #ifndef SRC_INCLUDE_LIST_H_
 #define SRC_INCLUDE_LIST_H_
 
+#include <algorithm>
+
 #include "ForwardList.h"
 
 namespace s21 {
@@ -56,7 +58,8 @@ class List : public ForwardList<T> {
 
   class ListIterator {
    public:
-    explicit ListIterator(INode<T> *node) : node_(node) {}
+    ListIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
+        : node_(node), head_(head), tail_(tail) {}
     INode<T> *get_node() const { return node_; }
     void set_node(INode<T> *node) { node_ = node; }
 
@@ -68,11 +71,14 @@ class List : public ForwardList<T> {
 
    private:
     INode<T> *node_ = nullptr;
+    INode<T> *head_ = nullptr;
+    INode<T> *tail_ = nullptr;
   };
 
   class ListConstIterator {
    public:
-    explicit ListConstIterator(INode<T> *node) : node_(node) {}
+    ListConstIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
+        : node_(node), head_(head), tail_(tail) {}
     INode<T> *get_node() const { return node_; }
     void set_node(INode<T> *node) { node_ = node; }
 
@@ -84,6 +90,8 @@ class List : public ForwardList<T> {
 
    private:
     INode<T> *node_ = nullptr;
+    INode<T> *head_ = nullptr;
+    INode<T> *tail_ = nullptr;
   };
 
  private:
