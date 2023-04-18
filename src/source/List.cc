@@ -74,13 +74,47 @@ typename List<T>::iterator List<T>::begin() const {
 
 template <class T>
 typename List<T>::iterator List<T>::end() const {
-  return ListIterator(this->tail_);
+  return ListIterator(this->tail_->get_next());
+}
+
+template <class T>
+typename List<T>::const_iterator List<T>::cbegin() const {
+  return ListConstIterator(this->head_);
+}
+
+template <class T>
+typename List<T>::const_iterator List<T>::cend() const {
+  return ListConstIterator(this->tail_->get_next());
 }
 
 // FIXME(lyradanu): 100% incorrect
 template <class T>
 typename List<T>::size_type List<T>::max_size() const noexcept {
   return std::numeric_limits<BiNode<T>>::max();
+}
+
+template <class T>
+typename List<T>::iterator List<T>::insert(List::iterator pos,
+                                           const_reference value) {
+  INode<T> *temp = pos.node_->get_prev();
+  INode<T> *new_node = allocate_node(value);
+
+  pos.node_->set_prev(new_node);
+  new_node->set_next(pos.node_);
+
+  new_node->set_prev(temp);
+  temp->set_next(new_node);
+}
+
+template <class T>
+void List<T>::erase(List::iterator pos) {
+  INode<T> *next = pos.node_->get_next();
+  INode<T> *prev = pos.node_->get_prev();
+
+  prev->set_next(next);
+  next->set_prev(prev);
+
+  delete pos.node_;
 }
 
 template <class T>
@@ -116,6 +150,20 @@ template <class T>
 void List<T>::pop_front() {
   ForwardList<T>::pop_front();
   this->head_->set_prev(nullptr);
+}
+
+template <class T>
+void List<T>::merge(List &other) {
+  for (auto it = other.begin(); it != other.end(); it++) {
+    push_back(*it);
+  }
+}
+
+template <class T>
+void List<T>::splice(List::const_iterator pos, List &other) {
+  for (auto it = other.cbegin(); it != other.cend(); it++) {
+    insert(pos, *it);
+  }
 }
 
 template <class T>

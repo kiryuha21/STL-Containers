@@ -34,6 +34,8 @@ class List : public ForwardList<T> {
 
   iterator begin() const;
   iterator end() const;
+  const_iterator cbegin() const;
+  const_iterator cend() const;
 
   // inherited empty() and size()
   [[nodiscard]] size_type max_size() const noexcept;
@@ -62,7 +64,7 @@ class List : public ForwardList<T> {
     bool operator!=(const iterator &other);
     reference operator*();
 
-   private:
+   protected:
     INode<T> *node_ = nullptr;
   };
 
@@ -76,7 +78,7 @@ class List : public ForwardList<T> {
     bool operator!=(const_iterator &other);
     const_reference operator*();
 
-   private:
+   protected:
     INode<T> *node_ = nullptr;
   };
 

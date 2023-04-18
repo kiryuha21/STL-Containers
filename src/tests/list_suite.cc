@@ -7,6 +7,7 @@
 #include "../s21_containers.h"
 
 namespace s21 {
+
 TEST(ListSuite, push_back_to_empty_test) {
   List<int> a;
   a.push_back(1);
@@ -22,4 +23,12 @@ TEST(ListSuite, push_back_to_non_empty_test) {
   ASSERT_EQ(a.front(), 1);
   ASSERT_EQ(a.back(), 2);
 }
+
+TEST(ListSuite, list_test) {
+  List<int> a = {1, 2};
+  List<int> b = {3, 4};
+
+  a.splice(a.cbegin(), b);
+}
+
 }  // namespace s21
