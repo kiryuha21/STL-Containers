@@ -346,6 +346,7 @@ TEST(ListSuite, merge_to_empty) {
 
   ASSERT_EQ(a.size(), 3);
   ASSERT_TRUE(lists_equal(a, c));
+  ASSERT_TRUE(lists_equal(b, d));
 }
 
 TEST(ListSuite, merge_to_back) {
@@ -360,6 +361,7 @@ TEST(ListSuite, merge_to_back) {
 
   ASSERT_EQ(a.size(), 5);
   ASSERT_TRUE(lists_equal(a, c));
+  ASSERT_TRUE(lists_equal(b, d));
 }
 
 TEST(ListSuite, merge_to_front) {
@@ -374,6 +376,7 @@ TEST(ListSuite, merge_to_front) {
 
   ASSERT_EQ(a.size(), 5);
   ASSERT_TRUE(lists_equal(a, c));
+  ASSERT_TRUE(lists_equal(b, d));
 }
 
 TEST(ListSuite, merge_to_self) {
@@ -398,6 +401,7 @@ TEST(ListSuite, splice_to_empty_test) {
   std_dest.splice(std_dest.cbegin(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
+  ASSERT_TRUE(lists_equal(my_source, std_source));
 }
 
 TEST(ListSuite, splice_at_begin_test) {
@@ -411,6 +415,7 @@ TEST(ListSuite, splice_at_begin_test) {
   std_dest.splice(std_dest.cbegin(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
+  ASSERT_TRUE(lists_equal(my_source, std_source));
 }
 
 TEST(ListSuite, splice_at_middle_test) {
@@ -424,6 +429,7 @@ TEST(ListSuite, splice_at_middle_test) {
   std_dest.splice(++std_dest.cbegin(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
+  ASSERT_TRUE(lists_equal(my_source, std_source));
 }
 
 TEST(ListSuite, splice_at_end_test) {
@@ -437,6 +443,7 @@ TEST(ListSuite, splice_at_end_test) {
   std_dest.splice(std_dest.cend(), std_source);
 
   ASSERT_TRUE(lists_equal(my_dest, std_dest));
+  ASSERT_TRUE(lists_equal(my_source, std_source));
 }
 
 TEST(ListSuite, reverse_empty_test) {
@@ -491,8 +498,6 @@ TEST(ListSuite, unique_test) {
   a.unique();
   b.unique();
 
-  std::cout << "a is\n" << a << "\nb is\n" << b << std::endl;
-
   ASSERT_EQ(a.size(), 4);
   ASSERT_TRUE(lists_equal(a, b));
 }
@@ -525,8 +530,6 @@ TEST(ListSuite, sort_test) {
 
   a.sort();
   b.sort();
-
-  std::cout << "a is\n" << a << "\nb is\n" << b << std::endl;
 
   ASSERT_EQ(a.size(), 7);
   ASSERT_TRUE(lists_equal(a, b));

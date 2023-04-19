@@ -292,10 +292,36 @@ void List<T>::merge(List &other) {
 
 template <class T>
 void List<T>::splice(List::const_iterator pos, List &other) {
-  iterator dest(pos.get_node(), this->head_, this->tail_);
-  for (auto it = other.cbegin(); it != other.cend(); ++it) {
-    insert(dest, *it);
+  if (other.empty()) {
+    return;
   }
+
+  if (this->empty()) {
+    this->head_ = other.head_;
+    this->tail_ = other.tail_;
+  } else if (pos == cend()) {
+    other.head_->set_prev(this->tail_);
+    this->tail_->set_next(other.head_);
+    this->tail_ = other.tail_;
+  } else if (pos == cbegin()) {
+    other.tail_->set_next(this->head_);
+    this->head_->set_prev(other.tail_);
+    this->head_ = other.head_;
+  } else {
+    INode<T> *new_next = pos.get_node();
+    INode<T> *new_prev = (--pos).get_node();
+
+    other.head_->set_prev(new_prev);
+    new_prev->set_next(other.head_);
+
+    other.tail_->set_next(new_next);
+    new_next->set_prev(other.tail_);
+  }
+
+  this->size_ += other.size_;
+  other.size_ = 0;
+  other.head_ = nullptr;
+  other.tail_ = nullptr;
 }
 
 template <class T>
