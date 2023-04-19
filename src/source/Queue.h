@@ -1,8 +1,37 @@
 // Copyright 2023 School-21
 
-#include "../include/Queue.hpp"
+#ifndef SRC_SOURCE_QUEUE_H_
+#define SRC_SOURCE_QUEUE_H_
+
+#include "ForwardList.h"
 
 namespace s21 {
+
+template <class T>
+class Queue : public ForwardList<T> {
+ public:
+  using value_type = typename ForwardList<T>::value_type;
+  using reference = typename ForwardList<T>::reference;
+  using const_reference = typename ForwardList<T>::const_reference;
+  using size_type = typename ForwardList<T>::size_type;
+
+  Queue() = default;
+  Queue(std::initializer_list<value_type> const &items);
+  Queue(const Queue &q);
+  Queue(Queue &&q) noexcept;
+  ~Queue() noexcept override;
+  Queue &operator=(const Queue &q);
+  Queue &operator=(Queue &&q) noexcept;
+
+  using ForwardList<T>::front;
+  using ForwardList<T>::back;
+
+  // inherited empty() and size()
+
+  void push(const_reference value);
+  void pop();
+  // inherited swap()
+};
 
 template <class T>
 Queue<T>::Queue(const std::initializer_list<value_type> &items) {
@@ -66,3 +95,5 @@ void Queue<T>::pop() {
 }
 
 }  // namespace s21
+
+#endif  // SRC_SOURCE_QUEUE_H_

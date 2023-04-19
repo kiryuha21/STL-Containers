@@ -1,12 +1,82 @@
 // Copyright 2023 School-21
 
-#include "../include/Vector.hpp"
+#ifndef SRC_SOURCE_VECTOR_H_
+#define SRC_SOURCE_VECTOR_H_
 
 #include <cmath>
+#include <initializer_list>
 #include <stdexcept>
 #include <utility>
 
+#include "Container.h"
+
 namespace s21 {
+
+template <class T>
+class Vector : public Container<T> {
+ public:
+  // Vector Member type
+  using value_type = typename Container<T>::value_type;
+  using reference = typename Container<T>::reference;
+  using const_reference = typename Container<T>::const_reference;
+  using iterator = T *;
+  using const_iterator = const T *;
+  using size_type = typename Container<T>::size_type;
+
+  // Vector Member functions
+  Vector() noexcept = default;
+  Vector(const size_type n);
+  Vector(std::initializer_list<value_type> const &items);
+  Vector(const Vector &v);
+  Vector(Vector &&v) noexcept;
+  ~Vector() noexcept override;
+  Vector &operator=(const Vector &v);
+  Vector &operator=(Vector &&v) noexcept;
+
+  // Vector Element access
+  reference at(const size_type pos) const;
+  reference operator[](const size_type pos) const;
+  const_reference front() const;
+  const_reference back() const;
+  iterator data() const;
+
+  // Vector Iterators
+  iterator begin() const noexcept;
+  iterator end() const noexcept;
+
+  // Vector Capacity
+  [[nodiscard]] bool empty() const noexcept;
+  [[nodiscard]] size_type size() const noexcept override;
+  [[nodiscard]] size_type max_size() const noexcept;
+  void reserve(const size_type size);
+  [[nodiscard]] size_type capacity() const noexcept;
+  void shrink_to_fit();
+
+  // Vector Modifiers
+  void clear() noexcept;
+  iterator insert(iterator pos, const_reference value);
+  void erase(iterator pos);
+  void push_back(const_reference value);
+  void pop_back();
+  void swap(Vector &other) noexcept;
+
+ private:
+  // Vector Attributes
+  value_type *memory_ = nullptr;
+  size_type size_ = 0;
+  size_type capacity_ = 0;
+
+  static constexpr size_type kMaxSize = (size_type(1) << 61) - 1;
+
+  // Helpers
+  void allocate_memory(const size_type n);
+  void resize(const size_type n);
+  void recap(const size_type n);
+  [[nodiscard]] size_type calculate_capacity(
+      const size_type size) const noexcept;
+  void shift_left(const size_type shift_after, const size_type shift_on);
+  void shift_right(const size_type shift_after, const size_type shift_on);
+};
 
 // Helpers
 template <class T>
@@ -20,7 +90,7 @@ void Vector<T>::allocate_memory(const size_type n) {
   if (n != 0) {
     try {
       memory_ = new value_type[n];
-    } catch (const std::bad_alloc& exc) {
+    } catch (const std::bad_alloc &exc) {
       throw std::out_of_range("Alloc error in allocate_memory");
     }
   }
@@ -95,14 +165,14 @@ Vector<T>::Vector(const size_type n) : size_(n) {
 }
 
 template <class T>
-Vector<T>::Vector(std::initializer_list<value_type> const& items)
+Vector<T>::Vector(std::initializer_list<value_type> const &items)
     : size_(items.size()) {
   allocate_memory(items.size());
   std::copy(items.begin(), items.end(), memory_);
 }
 
 template <class T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
+Vector<T> &Vector<T>::operator=(const Vector<T> &v) {
   if (this == &v) {
     return *this;
   }
@@ -115,12 +185,12 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& v) {
 }
 
 template <class T>
-Vector<T>::Vector(const Vector& v) {
+Vector<T>::Vector(const Vector &v) {
   *this = v;
 }
 
 template <class T>
-Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
+Vector<T> &Vector<T>::operator=(Vector<T> &&v) noexcept {
   if (this == &v) {
     return *this;
   }
@@ -135,7 +205,7 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& v) noexcept {
 }
 
 template <class T>
-Vector<T>::Vector(Vector&& v) noexcept {
+Vector<T>::Vector(Vector &&v) noexcept {
   *this = std::move(v);
 }
 
@@ -237,7 +307,7 @@ void Vector<T>::clear() noexcept {
 }
 
 template <class T>
-void Vector<T>::swap(Vector<T>& other) noexcept {
+void Vector<T>::swap(Vector<T> &other) noexcept {
   std::swap(*this, other);
 }
 
@@ -279,3 +349,5 @@ void Vector<T>::erase(iterator pos) {
 }
 
 }  // namespace s21
+
+#endif  // SRC_SOURCE_VECTOR_H_

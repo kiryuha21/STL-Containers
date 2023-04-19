@@ -1,7 +1,7 @@
 // Copyright 2023 School-21
 
-#ifndef SRC_INCLUDE_CONTAINER_H_
-#define SRC_INCLUDE_CONTAINER_H_
+#ifndef SRC_SOURCE_CONTAINER_H_
+#define SRC_SOURCE_CONTAINER_H_
 
 #include <cstdlib>
 
@@ -22,4 +22,4 @@ class Container {
   [[nodiscard]] virtual size_type size() const noexcept = 0;
 };
 
-#endif  // SRC_INCLUDE_CONTAINER_H_
+#endif  // SRC_SOURCE_CONTAINER_H_

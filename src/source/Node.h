@@ -1,7 +1,7 @@
 // Copyright 2023 School-21
 
-#ifndef SRC_INCLUDE_NODE_H_
-#define SRC_INCLUDE_NODE_H_
+#ifndef SRC_SOURCE_NODE_H_
+#define SRC_SOURCE_NODE_H_
 
 #include <stdexcept>
 
@@ -80,4 +80,4 @@ class BiNode : public UNode<T> {
 
 }  // namespace s21
 
-#endif  // SRC_INCLUDE_NODE_H_
+#endif  // SRC_SOURCE_NODE_H_

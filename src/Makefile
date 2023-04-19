@@ -15,10 +15,10 @@ SRC_LIB = source
 BUILD_PATH = build
 TEST_PATH = tests
 
-SRC_LIB_FILES = $(wildcard $(SRC_LIB)/*.cc)
+SRC_LIB_FILES = $(wildcard $(SRC_LIB)/*.h)
 TEST_FILES = $(wildcard $(TEST_PATH)/*.cc)
 
-SRC_LIB_OBJ = $(patsubst $(SRC_LIB)/%.cc, $(BUILD_PATH)/%.o, $(SRC_LIB_FILES))
+SRC_LIB_OBJ = $(patsubst $(SRC_LIB)/%.h, $(BUILD_PATH)/%.o, $(SRC_LIB_FILES))
 TEST_OBJ = $(patsubst $(TEST_PATH)/%.cc, $(BUILD_PATH)/%.o, $(TEST_FILES))
 
 CPPLINT = cpplint
@@ -34,7 +34,7 @@ $(BUILD_PATH):
 $(TEST_TARGET): style $(BUILD_PATH) $(TEST_OBJ)
 	$(CC) $(TEST_OBJ) -o $(TEST_TARGET) $(TEST_FLAGS)
 
-$(BUILD_PATH)/%.o: $(SRC_LIB)/%.cc
+$(BUILD_PATH)/%.o: $(SRC_LIB)/%.h
 	$(CC) -c $< -o $@
 
 $(BUILD_PATH)/%.o: $(TEST_PATH)/%.cc $(SRC_LIB_FILES)
@@ -52,10 +52,10 @@ clean:
 style: $(CLANG_FORMAT) $(CPPLINT)
 
 $(CPPLINT):
-	$(CPPLINT) $(wildcard */*.cc *.cc */*.hpp *.hpp) || true
+	$(CPPLINT) $(wildcard */*.cc *.cc */*.h *.h) || true
 
 $(CLANG_FORMAT):
-	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.hpp *.hpp) || true
+	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.h *.h) || true
 
 valgrind: $(TEST_TARGET)
 	$(VALGRIND) ./$(TEST_TARGET) || true
