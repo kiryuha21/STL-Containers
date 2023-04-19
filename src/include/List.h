@@ -58,6 +58,7 @@ class List : public ForwardList<T> {
 
   class ListIterator {
    public:
+    ListIterator() = default;
     ListIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
         : node_(node), head_(head), tail_(tail) {}
     INode<T> *get_node() const { return node_; }
@@ -77,6 +78,7 @@ class List : public ForwardList<T> {
 
   class ListConstIterator {
    public:
+    ListConstIterator() = default;
     ListConstIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
         : node_(node), head_(head), tail_(tail) {}
     INode<T> *get_node() const { return node_; }

@@ -528,7 +528,7 @@ TEST(ListSuite, sort_test) {
 
   std::cout << "a is\n" << a << "\nb is\n" << b << std::endl;
 
-  ASSERT_EQ(a.size(), 4);
+  ASSERT_EQ(a.size(), 7);
   ASSERT_TRUE(lists_equal(a, b));
 }
 

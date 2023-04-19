@@ -159,7 +159,7 @@ void List<T>::push_back(const_reference val) {
 template <class T>
 void List<T>::pop_back() {
   if (this->tail_ == nullptr) {
-    throw std::out_of_range(kEmptyCollectionMsg);
+    throw std::logic_error(kEmptyCollectionMsg);
   }
 
   --this->size_;
@@ -229,10 +229,19 @@ void List<T>::unique() {
   }
 }
 
-// TODO: finish
 template <class T>
 void List<T>::sort() {
-  // bubble sort B-)
+  if (this->empty()) {
+    return;
+  }
+
+  for (INode<T> *i = this->head_; i->get_next() != nullptr; i = i->get_next()) {
+    for (INode<T> *j = i->get_next(); j != nullptr; j = j->get_next()) {
+      if (i->value() > j->value()) {
+        std::swap(i->value(), j->value());
+      }
+    }
+  }
 }
 
 template <class T>
