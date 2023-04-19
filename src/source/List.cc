@@ -1,6 +1,6 @@
 // Copyright 2023 School-21
 
-#include "../include/List.h"
+#include "../include/List.hpp"
 
 namespace s21 {
 

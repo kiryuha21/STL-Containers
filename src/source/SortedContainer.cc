@@ -1,6 +1,6 @@
 // Copyright 2023 School-21
 
-#include "../include/SortedContainer.h"
+#include "../include/SortedContainer.hpp"
 
 namespace s21 {
 

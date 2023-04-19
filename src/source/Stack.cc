@@ -1,6 +1,6 @@
 // Copyright 2023 School-21
 
-#include "../include/Stack.h"
+#include "../include/Stack.hpp"
 
 namespace s21 {
 

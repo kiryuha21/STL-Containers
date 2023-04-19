@@ -3,9 +3,7 @@
 #ifndef SRC_INCLUDE_LIST_H_
 #define SRC_INCLUDE_LIST_H_
 
-#include <algorithm>
-
-#include "ForwardList.h"
+#include "ForwardList.hpp"
 
 namespace s21 {
 

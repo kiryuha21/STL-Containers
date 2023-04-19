@@ -6,8 +6,8 @@
 #include <initializer_list>
 #include <utility>
 
-#include "Container.h"
-#include "Node.h"
+#include "Container.hpp"
+#include "Node.hpp"
 
 namespace s21 {
 

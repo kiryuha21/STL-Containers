@@ -3,7 +3,7 @@
 #ifndef SRC_INCLUDE_STACK_H_
 #define SRC_INCLUDE_STACK_H_
 
-#include "ForwardList.h"
+#include "ForwardList.hpp"
 
 namespace s21 {
 

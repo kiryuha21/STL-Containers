@@ -1,6 +1,6 @@
 // Copyright 2023 School-21
 
-#include "../include/Vector.h"
+#include "../include/Vector.hpp"
 
 #include <cmath>
 #include <stdexcept>

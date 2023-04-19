@@ -52,10 +52,10 @@ clean:
 style: $(CLANG_FORMAT) $(CPPLINT)
 
 $(CPPLINT):
-	$(CPPLINT) $(wildcard */*.cc *.cc */*.h *.h) || true
+	$(CPPLINT) $(wildcard */*.cc *.cc */*.hpp *.hpp) || true
 
 $(CLANG_FORMAT):
-	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.h *.h) || true
+	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.hpp *.hpp) || true
 
 valgrind: $(TEST_TARGET)
 	$(VALGRIND) ./$(TEST_TARGET) || true
