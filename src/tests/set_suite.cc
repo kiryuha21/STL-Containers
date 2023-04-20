@@ -48,7 +48,7 @@ TEST(SetSuite, default_contructor_test) {
   ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
-TEST(SetSuite, initializer_list_constructor_test) {
+TEST(SetSuite, initializer_set_constructor_test) {
   Set<int> my_set = {4, 2, 1, 1};
   std::set<int> std_set = {4, 2, 1, 1};
 
@@ -87,12 +87,12 @@ TEST(SetSuite, equal_iterators_test) {
   ASSERT_TRUE(my_set.begin() == my_set.end());
 }
 
-TEST(SetSuite, empty_list_test) {
+TEST(SetSuite, empty_set_test) {
   Set<int> my_set;
   ASSERT_TRUE(my_set.empty());
 }
 
-TEST(SetSuite, non_empty_list_test) {
+TEST(SetSuite, non_empty_set_test) {
   Set<int> my_set = {1, 2, 3};
   ASSERT_FALSE(my_set.empty());
 }
