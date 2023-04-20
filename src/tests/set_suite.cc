@@ -25,6 +25,23 @@ bool sets_equal(Set<T> first, std::set<T> second) {
   return first_it == first.end() && second_it == second.end();
 }
 
+template <class T>
+bool sets_equal(Set<T> first, Set<T> second) {
+  if (first.size() != second.size()) {
+    return false;
+  }
+  auto first_it = first.begin();
+  auto second_it = second.begin();
+  for (; first_it != first.end() && second_it != second.end();
+       ++first_it, ++second_it) {
+    if (*first_it != *second_it) {
+      return false;
+    }
+  }
+
+  return first_it == first.end() && second_it == second.end();
+}
+
 TEST(SetSuite, default_contructor_test) {
   Set<int> my_set;
   std::set<int> std_set;
@@ -162,6 +179,88 @@ TEST(SetSuite, erase_mid_test) {
   ASSERT_EQ(*a.begin(), 1);
   ASSERT_EQ(*a.end(), 3);
   ASSERT_TRUE(sets_equal(a, std::set<int>{1, 3}));
+}
+
+TEST(SetSuite, swap_test) {
+  Set<int> first_set = {1, 2, 3};
+  Set<int> second_set = {4, 5, 6};
+  Set<int> first_copy(first_set);
+  Set<int> second_copy(second_set);
+
+  first_set.swap(second_set);
+  ASSERT_TRUE(sets_equal(first_set, second_copy));
+  ASSERT_TRUE(sets_equal(second_set, first_copy));
+}
+
+TEST(SetSuite, merge_empty_test) {
+  Set<int> first_set = {1, 2, 3};
+  Set<int> second_set;
+
+  first_set.merge(second_set);
+  ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3}));
+}
+
+TEST(SetSuite, merge_to_empty_test) {
+  Set<int> first_set;
+  Set<int> second_set = {1, 2, 3};
+
+  first_set.merge(second_set);
+  ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3}));
+  ASSERT_TRUE(sets_equal(second_set, std::set<int>{}));
+}
+
+TEST(SetSuite, merge_non_repeating_test) {
+  Set<int> first_set = {4, 5, 6};
+  Set<int> second_set = {1, 2, 3};
+
+  first_set.merge(second_set);
+  ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3, 4, 5, 6}));
+  ASSERT_TRUE(sets_equal(second_set, std::set<int>{}));
+}
+
+TEST(SetSuite, merge_repeating_test) {
+  Set<int> first_set = {4, 1, 2};
+  Set<int> second_set = {1, 2, 3};
+
+  first_set.merge(second_set);
+  ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3, 4}));
+  ASSERT_TRUE(sets_equal(second_set, std::set<int>{}));
+}
+
+TEST(SetSuite, find_in_empty_test) {
+  Set<int> first_set;
+  auto res = first_set.find(5);
+  ASSERT_EQ(res, first_set.end());
+}
+
+TEST(SetSuite, find_present_test) {
+  Set<int> first_set = {1, 2, 3};
+  auto res = first_set.find(2);
+  ASSERT_EQ(*res, 2);
+}
+
+TEST(SetSuite, find_non_present_test) {
+  Set<int> first_set = {1, 2, 3};
+  auto res = first_set.find(4);
+  ASSERT_EQ(res, first_set.end());
+}
+
+TEST(SetSuite, contains_in_empty_test) {
+  Set<int> first_set;
+  bool res = first_set.contains(5);
+  ASSERT_EQ(res, false);
+}
+
+TEST(SetSuite, contains_present_test) {
+  Set<int> first_set = {1, 2, 3};
+  bool res = first_set.contains(2);
+  ASSERT_EQ(res, true);
+}
+
+TEST(SetSuite, contains_non_present_test) {
+  Set<int> first_set = {1, 2, 3};
+  bool res = first_set.contains(4);
+  ASSERT_EQ(res, false);
 }
 
 }  // namespace s21
