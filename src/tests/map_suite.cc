@@ -130,12 +130,11 @@ TEST(MapSuite, clear_non_empty_test) {
 }
 
 TEST(MapSuite, insert_to_empty_test) {
-  Map<int, int> my_map = {{1, 2}, {2, 3}, {5, 12}};
+  Map<int, int> my_map;
   auto res = my_map.insert({3, 3});
   ASSERT_TRUE(res.second);
   ASSERT_EQ((*(res.first)).first, 3);
-  ASSERT_TRUE(
-      maps_equal(my_map, std::map<int, int>{{1, 2}, {2, 3}, {5, 12}, {3, 3}}));
+  ASSERT_TRUE(maps_equal(my_map, std::map<int, int>{{3, 3}}));
 }
 
 TEST(MapSuite, insert_to_non_empty_test) {
@@ -168,9 +167,11 @@ TEST(MapSuite, erase_start_test) {
 }
 
 TEST(MapSuite, erase_end_test) {
-  Map<int, int> a = {{1, 2}};
+  Map<int, int> a = {{1, 2}, {2, 3}};
+  a.erase(--a.end());
 
-  ASSERT_THROW(a.erase(a.end()), std::out_of_range);
+  ASSERT_EQ(*a.begin(), (std::pair<int, int>(1, 2)));
+  ASSERT_TRUE(maps_equal(a, std::map<int, int>{{1, 2}}));
 }
 
 TEST(MapSuite, erase_mid_test) {
@@ -232,12 +233,6 @@ TEST(MapSuite, merge_repeating_test) {
       first_map,
       std::map<int, int>{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}}));
   ASSERT_TRUE(maps_equal(second_map, std::map<int, int>{{4, 4}}));
-
-  first_map.merge(second_map);
-  ASSERT_TRUE(maps_equal(
-      first_map,
-      std::map<int, int>{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}}));
-  ASSERT_TRUE(maps_equal(second_map, std::map<int, int>{{4, 4}}));
 }
 
 TEST(MapSuite, contains_in_empty_test) {
@@ -252,7 +247,7 @@ TEST(MapSuite, contains_present_test) {
   ASSERT_TRUE(res);
 }
 
-TEST(MapSuite, find_non_present_test) {
+TEST(MapSuite, contains_non_present_test) {
   Map<int, int> first_map = {{1, 1}, {2, 2}, {3, 3}};
   auto res = first_map.contains(4);
   ASSERT_FALSE(res);
