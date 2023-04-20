@@ -220,7 +220,8 @@ TEST(VectorSuite, max_size_1) {
 
 TEST(VectorSuite, max_size_2) {
   s21::Vector<long double> my_vec;
-    ASSERT_EQ(my_vec.max_size(), s21::Vector<long double>::size_type(-1) / sizeof(long double));
+  ASSERT_EQ(my_vec.max_size(),
+            s21::Vector<long double>::size_type(-1) / sizeof(long double));
 }
 
 TEST(VectorSuite, capacity) {

@@ -67,6 +67,9 @@ class Vector : public Container<T> {
   size_type size_ = 0;
   size_type capacity_ = 0;
 
+  // Max size
+  static constexpr size_type kMaxSize = size_type(-1) / sizeof(value_type);
+
   // Helpers
   void allocate_memory(const size_type n);
   void resize(const size_type n);
@@ -280,7 +283,7 @@ typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
 
 template <class T>
 typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
-  return this->kDefaultMaxSize;
+  return this->kMaxSize;
 }
 
 template <class T>
