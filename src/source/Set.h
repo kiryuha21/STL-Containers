@@ -32,8 +32,8 @@ class Set : public Container<V> {
   iterator begin() const noexcept;
   iterator end() const noexcept;
 
-  [[nodiscard]] bool empty() const noexcept;
-  [[nodiscard]] size_type size() const noexcept;
+  [[nodiscard]] bool empty() const noexcept override;
+  [[nodiscard]] size_type size() const noexcept override;
   [[nodiscard]] size_type max_size() const noexcept;
 
   void clear() noexcept;
