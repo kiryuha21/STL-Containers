@@ -303,7 +303,13 @@ typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::insert(
 template <class V, class K, class T>
 void TreeNode<V, K, T>::erase(iterator pos) {
   if (!pos.get_node()->left_ && !pos.get_node()->right_) {
-    pos.get_node()->parent_ = nullptr;
+    if (pos.get_node()->parent_) {
+      if (pos.get_node()->parent_->right_ == pos.get_node()) {
+        pos.get_node()->parent_->right_ = nullptr;
+      } else {
+        pos.get_node()->parent_->left_ = nullptr;
+      }
+    }
     delete pos.get_node();
   } else if (!pos.get_node()->left_) {
     TreeNode *swap_with = pos.get_node()->right_;
