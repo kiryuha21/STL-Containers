@@ -71,6 +71,34 @@ class Map : public Container<T> {
 };
 
 template <class K, class T>
+std::pair<typename Map<K, T>::iterator, bool> Map<K, T>::insert_or_assign(
+    const key_type &key, const mapped_type &obj) {
+  if (contains(key)) {
+    return std::pair<iterator, bool>(tree_.find(key), false);
+  }
+  return insert(key, obj);
+}
+
+template <class K, class T>
+std::pair<typename Map<K, T>::iterator, bool> Map<K, T>::insert(
+    const key_type &key, const mapped_type &obj) {
+  if (!contains(key)) {
+    value_type value(key, obj);
+    return std::pair<iterator, bool>(tree_.insert(value), true);
+  }
+  return std::pair<iterator, bool>(tree_.end(), false);
+}
+
+template <class K, class T>
+std::pair<typename Map<K, T>::iterator, bool> Map<K, T>::insert(
+    const Map::value_type &value) {
+  if (!contains(value.first)) {
+    return std::pair<iterator, bool>(tree_.insert(value), true);
+  }
+  return std::pair<iterator, bool>(tree_.end(), false);
+}
+
+template <class K, class T>
 typename Map<K, T>::mapped_type &Map<K, T>::operator[](const key_type &key) {
   iterator found = tree_.find(key);
   if (found == end()) {
