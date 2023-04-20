@@ -141,7 +141,7 @@ TEST(ListSuite, begin_exception_test) {
 }
 
 TEST(ListSuite, end_normal_test) {
-  std::list<int> a = {1};
+  List<int> a = {1};
   ASSERT_EQ(*(--a.end()), 1);
 }
 
@@ -186,8 +186,13 @@ TEST(ListSuite, zero_size_test) {
 }
 
 TEST(ListSuite, non_zero_size_test) {
-  List<int> a = {1, 2, 3};
-  ASSERT_EQ(a.size(), 3);
+  for (int i = 0; i < 10; ++i) {
+    List<int> a;
+    for (int j = 0; j < i; ++j) {
+      a.push_back(i);
+    }
+    ASSERT_EQ(a.size(), i);
+  }
 }
 
 TEST(ListSuite, max_size_test_1) {

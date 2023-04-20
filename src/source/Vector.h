@@ -46,7 +46,7 @@ class Vector : public Container<T> {
   iterator end() const noexcept;
 
   // Vector Capacity
-  [[nodiscard]] bool empty() const noexcept;
+  [[nodiscard]] bool empty() const noexcept override;
   [[nodiscard]] size_type size() const noexcept override;
   [[nodiscard]] size_type max_size() const noexcept;
   void reserve(const size_type size);
