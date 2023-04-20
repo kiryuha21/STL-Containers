@@ -40,7 +40,7 @@ class List : public ForwardList<T> {
   // inherited empty() and size()
   [[nodiscard]] size_type max_size() const noexcept;
 
-  // inherited clear()
+  using ForwardList<T>::clear;
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference val) override;

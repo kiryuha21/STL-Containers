@@ -207,6 +207,9 @@ void ForwardList<T>::clear() noexcept {
     head_ = head_->get_next();
     delete temp;
   }
+  this->head_ = nullptr;
+  this->tail_ = nullptr;
+  this->size_ = 0;
 }
 
 }  // namespace s21

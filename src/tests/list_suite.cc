@@ -206,6 +206,21 @@ TEST(ListSuite, max_size_test_2) {
             List<long double>::size_type(-1) / sizeof(BiNode<long double>));
 }
 
+TEST(ListSuite, clear_empty_test) {
+  List<int> a;
+  a.clear();
+  ASSERT_TRUE(true);  // not sigsegv
+}
+
+TEST(ListSuite, clear_non_empty_test) {
+  List<int> a = {1, 2, 3};
+  a.clear();
+
+  ASSERT_EQ(a.size(), 0);
+  ASSERT_TRUE(a.empty());
+  ASSERT_TRUE(a.begin() == a.end());
+}
+
 TEST(ListSuite, insert_to_empty_test) {
   List<int> a;
   auto it = a.insert(a.begin(), 1);
