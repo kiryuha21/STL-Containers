@@ -10,11 +10,12 @@ template <class V, class K>  // V must be class(contains node_ and key_type
 class TreeNode {
  public:
   class TreeIterator;
+  class TreeConstIterator;
 
   using value_type = V;
   using key_type = K;
   using iterator = TreeIterator;
-  using const_iterator = const TreeIterator;
+  using const_iterator = TreeConstIterator;
   using reference = V &;
   using const_reference = const V &;
   using size_type = size_t;
@@ -42,12 +43,16 @@ class TreeNode {
     bool end_iterator_ = false;
   };
 
+  class TreeConstIterator : public TreeIterator {
+    // value_type operator*() override; TODO
+  };
+
   TreeNode() noexcept = default;
   explicit TreeNode(value_type value) noexcept;
   TreeNode(value_type value, TreeNode *parent) noexcept;
+  TreeNode(const TreeNode &other);
 
   TreeNode &operator=(const TreeNode &other);
-  TreeNode &operator=(TreeNode &&other) noexcept;
 
   ~TreeNode() noexcept;
 
@@ -80,6 +85,12 @@ template <class V, class K>
 typename TreeNode<V, K>::value_type TreeNode<V, K>::iterator::operator*() {
   return end_iterator_ ? value_type() : node_->get_value();
 }
+
+// template <class V, class K>
+// typename TreeNode<V, K>::value_type
+// TreeNode<V, K>::const_iterator::operator*() {
+//   // return end_iterator_ ? value_type() : node_->get_value(); TODO
+// }
 
 template <class V, class K>
 typename TreeNode<V, K>::iterator &TreeNode<V, K>::iterator::operator--() {
@@ -168,12 +179,18 @@ typename TreeNode<V, K>::iterator TreeNode<V, K>::TreeIterator::operator+(
 template <class V, class K>
 bool TreeNode<V, K>::iterator::operator==(
     const iterator &other) const noexcept {
+  if (end_iterator_ == other.end_iterator_ && end_iterator_ == true) {
+    return true;
+  }
   return node_ == other.node_ && end_iterator_ == other.end_iterator_;
 }
 
 template <class V, class K>
 bool TreeNode<V, K>::iterator::operator!=(
     const iterator &other) const noexcept {
+  if (end_iterator_ == other.end_iterator_ && end_iterator_ == false) {
+    return false;
+  }
   return node_ != other.node_ || end_iterator_ != other.end_iterator_;
 }
 
@@ -199,35 +216,30 @@ TreeNode<V, K>::TreeNode(value_type value, TreeNode *parent) noexcept
     : value_(value), parent_(parent) {}
 
 template <class V, class K>
+TreeNode<V, K>::TreeNode(const TreeNode &other) {
+  *this = other;
+}
+
+template <class V, class K>
 TreeNode<V, K> &TreeNode<V, K>::operator=(const TreeNode<V, K> &other) {
   if (this == &other) {
     return *this;
   }
 
+  clear();
+
   value_ = other.value_;
   if (!left_ && other.left_) {
     left_ = new TreeNode<V, K>;
-    left_->parent_ = this;
   }
   left_ = other.left_;
+  left_->parent_ = this;
 
   if (!right_ && other.right_) {
     right_ = new TreeNode<V, K>;
-    right_->parent_ = this;
   }
   right_ = other.right_;
-
-  return *this;
-}
-
-template <class V, class K>
-TreeNode<V, K> &TreeNode<V, K>::operator=(TreeNode<V, K> &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
-  clear();
-  *this = other;
+  right_->parent_ = this;
 
   return *this;
 }

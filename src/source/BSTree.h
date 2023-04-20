@@ -19,7 +19,7 @@ class BSTree {
   using reference = V &;
   using const_reference = const V &;
   using iterator = typename tree_node::TreeNode<V, K>::TreeIterator;
-  using const_iterator = const typename tree_node::TreeNode<V, K>::TreeIterator;
+  using const_iterator = typename tree_node::TreeNode<V, K>::TreeConstIterator;
   using size_type = size_t;
 
   BSTree() noexcept = default;
@@ -103,7 +103,6 @@ BSTree<V, K> &BSTree<V, K>::operator=(BSTree &&other) noexcept {
 
   clear();
 
-  root_ = new tree_node::TreeNode<value_type, key_type>;
   root_ = std::exchange(other.root_, nullptr);
 
   return *this;
@@ -129,7 +128,7 @@ typename BSTree<V, K>::iterator BSTree<V, K>::end() const noexcept {
 
 template <class V, class K>
 [[nodiscard]] bool BSTree<V, K>::empty() const noexcept {
-  return this == nullptr;
+  return root_ == nullptr;
 }
 
 template <class V, class K>
@@ -188,6 +187,9 @@ void BSTree<V, K>::merge(BSTree &other) {
 template <class V, class K>
 typename BSTree<V, K>::iterator BSTree<V, K>::find(
     const key_type &key) const noexcept {
+  if (!root_) {
+    return end();
+  }
   typename tree_node::TreeNode<value_type, key_type>::iterator it =
       root_->find(key);
   if (it == nullptr) {

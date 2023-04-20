@@ -6,6 +6,7 @@
 #include "source/ForwardList.h"
 #include "source/List.h"
 #include "source/Queue.h"
+#include "source/Set.h"
 #include "source/SortedContainer.h"
 #include "source/Stack.h"
 #include "source/Vector.h"
