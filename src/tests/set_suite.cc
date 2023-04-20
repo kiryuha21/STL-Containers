@@ -9,7 +9,10 @@
 namespace s21 {
 
 template <class T>
-bool sets_equal(Set<T> first, Set<T> second) {
+bool sets_equal(Set<T> first, std::set<T> second) {
+  if (first.size() != second.size()) {
+    return false;
+  }
   auto first_it = first.begin();
   auto second_it = second.begin();
   for (; first_it != first.end() && second_it != second.end();
@@ -23,95 +26,88 @@ bool sets_equal(Set<T> first, Set<T> second) {
 }
 
 TEST(SetSuite, default_contructor_test) {
-  Set<int> a;
-  ASSERT_EQ(a.size(), 0);
-  ASSERT_TRUE(a.empty());
-  ASSERT_TRUE(a.begin() == a.end());
+  Set<int> my_set;
+  std::set<int> std_set;
+  ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
 TEST(SetSuite, initializer_list_constructor_test) {
-  Set<int> a = {4, 2, 1, 1};
+  Set<int> my_set = {4, 2, 1, 1};
+  std::set<int> std_set = {4, 2, 1, 1};
 
-  ASSERT_EQ(a.size(), 4);
-  ASSERT_FALSE(a.empty());
-  ASSERT_FALSE(a.begin() == a.end());
+  ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
 TEST(SetSuite, copy_constructor_test) {
-  Set<int> a = {4, 2, 1, 1};
-  Set<int> b(a);
+  Set<int> my_set = {4, 2, 1, 1};
+  Set<int> my_copied(my_set);
+  std::set<int> std_set = {4, 2, 1, 1};
 
-  ASSERT_EQ(b.size(), 4);
-  ASSERT_FALSE(b.empty());
-  ASSERT_FALSE(b.begin() == b.end());
-  ASSERT_TRUE(sets_equal(a, b));
+  ASSERT_TRUE(sets_equal(my_copied, std_set));
 }
 
 TEST(SetSuite, move_constructor_test) {
-  Set<int> a = {1, 2, 3};
-  Set<int> b(std::move(a));
-
-  ASSERT_TRUE(a.empty());
-  ASSERT_EQ(a.size(), 0);
-
-  ASSERT_EQ(b.size(), 3);
-  ASSERT_FALSE(b.empty());
-  ASSERT_FALSE(b.begin() == b.end());
+  Set<int> my_set = {1, 2, 3};
+  Set<int> my_moved(std::move(my_set));
+  std::set<int> std_set = {1, 2, 3};
+  std::set<int> std_moved(std::move(std_set));
+  ASSERT_TRUE(sets_equal(my_moved, std_moved));
+  ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
 TEST(SetSuite, begin_normal_test) {
-  Set<int> a = {1};
-  ASSERT_EQ(*a.begin(), 1);
+  Set<int> my_set = {1};
+  ASSERT_EQ(*my_set.begin(), 1);
 }
 
 TEST(SetSuite, end_normal_test) {
-  Set<int> a = {1};
-  ASSERT_EQ(*(--a.end()), 1);
+  Set<int> my_set = {1};
+  ASSERT_EQ(*(--my_set.end()), 1);
 }
 
 TEST(SetSuite, equal_iterators_test) {
-  Set<int> a;
-  ASSERT_TRUE(a.begin() == a.end());
+  Set<int> my_set;
+  ASSERT_TRUE(my_set.begin() == my_set.end());
 }
 
 TEST(SetSuite, empty_list_test) {
-  Set<int> a;
-  ASSERT_TRUE(a.empty());
+  Set<int> my_set;
+  ASSERT_TRUE(my_set.empty());
 }
 
 TEST(SetSuite, non_empty_list_test) {
-  Set<int> a = {1, 2, 3};
-  ASSERT_FALSE(a.empty());
+  Set<int> my_set = {1, 2, 3};
+  ASSERT_FALSE(my_set.empty());
 }
 
 TEST(SetSuite, zero_size_test) {
-  Set<int> a;
-  ASSERT_EQ(a.size(), 0);
+  Set<int> my_set;
+  ASSERT_EQ(my_set.size(), 0);
 }
 
 TEST(SetSuite, non_zero_size_test) {
   for (int i = 0; i < 10; ++i) {
-    Set<int> a;
+    Set<int> my_set;
     for (int j = 0; j < i; ++j) {
-      a.insert(i);
+      my_set.insert(j);
     }
-    ASSERT_EQ(a.size(), i);
+    ASSERT_EQ(my_set.size(), i);
   }
 }
 
 TEST(SetSuite, clear_empty_test) {
-  Set<int> a;
-  a.clear();
+  Set<int> my_set;
+  my_set.clear();
   ASSERT_TRUE(true);  // not sigsegv
 }
 
 TEST(SetSuite, clear_non_empty_test) {
-  Set<int> a = {1, 2, 3};
-  a.clear();
+  Set<int> my_set = {1, 2, 3};
+  my_set.clear();
 
-  ASSERT_EQ(a.size(), 0);
-  ASSERT_TRUE(a.empty());
-  ASSERT_TRUE(a.begin() == a.end());
+  ASSERT_EQ(my_set.size(), 0);
+  ASSERT_TRUE(my_set.empty());
+  ASSERT_TRUE(my_set.begin() == my_set.end());
 }
 
 }  // namespace s21
