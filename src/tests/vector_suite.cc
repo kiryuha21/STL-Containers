@@ -213,9 +213,15 @@ TEST(VectorSuite, size) {
   ASSERT_EQ(my_vec.size(), std_vec.size());
 }
 
-TEST(VectorSuite, max_size) {
+TEST(VectorSuite, max_size_1) {
   s21::Vector<int> my_vec;
   std::vector<int> std_vec;
+  ASSERT_EQ(my_vec.max_size(), std_vec.max_size());
+}
+
+TEST(VectorSuite, max_size_2) {
+  s21::Vector<long double> my_vec;
+  std::vector<long double> std_vec;
   ASSERT_EQ(my_vec.max_size(), std_vec.max_size());
 }
 

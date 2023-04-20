@@ -192,14 +192,13 @@ TEST(ListSuite, non_zero_size_test) {
 
 TEST(ListSuite, max_size_test_1) {
   List<int> a;
-  std::list<int> b;
-  ASSERT_EQ(a.max_size(), b.max_size());
+  ASSERT_EQ(a.max_size(), List<int>::size_type(-1) / sizeof(BiNode<int>));
 }
 
 TEST(ListSuite, max_size_test_2) {
   List<long double> a;
-  std::list<long double> b;
-  ASSERT_EQ(a.max_size(), b.max_size());
+  ASSERT_EQ(a.max_size(),
+            List<long double>::size_type(-1) / sizeof(BiNode<long double>));
 }
 
 TEST(ListSuite, insert_to_empty_test) {

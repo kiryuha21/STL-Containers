@@ -182,11 +182,9 @@ typename List<T>::const_iterator List<T>::cend() const {
   return const_iterator(this->tail_->get_next(), this->head_, this->tail_);
 }
 
-// FIXME(lyradanu): 50% incorrect
 template <class T>
 typename List<T>::size_type List<T>::max_size() const noexcept {
-  std::allocator<UNode<value_type>> allocator;
-  return allocator.max_size();
+  return size_type(-1) / sizeof(BiNode<T>);
 }
 
 template <class T>
