@@ -12,16 +12,18 @@
 #include "TreeNode.h"
 
 namespace bstree {
-template <class V, class K>  // V must be class(contain node_ and key_type
-                             // key()), K - key_type
-class BSTree {
+template <class V, class K, class T>  // V must be class(contain node_ and
+                                      // key_type key()), K - key_type
+                                      class BSTree {
  public:
   using value_type = V;
   using key_type = K;
+  using obj_type = T;
   using reference = V &;
   using const_reference = const V &;
-  using iterator = typename tree_node::TreeNode<V, K>::TreeIterator;
-  using const_iterator = typename tree_node::TreeNode<V, K>::TreeConstIterator;
+  using iterator = typename tree_node::TreeNode<V, K, T>::TreeIterator;
+  using const_iterator =
+      typename tree_node::TreeNode<V, K, T>::TreeConstIterator;
   using size_type = size_t;
 
   BSTree() noexcept = default;
@@ -52,38 +54,38 @@ class BSTree {
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
 
  private:
-  tree_node::TreeNode<value_type, key_type> *root_ = nullptr;
+  tree_node::TreeNode<value_type, key_type, obj_type> *root_ = nullptr;
 };
 
-template <class V, class K>
-BSTree<V, K>::BSTree(std::initializer_list<value_type> const &items) {
+template <class V, class K, class T>
+BSTree<V, K, T>::BSTree(std::initializer_list<value_type> const &items) {
   for (const auto &elem : items) {
     insert(elem);
   }
 }
 
-template <class V, class K>
-BSTree<V, K>::BSTree(const BSTree &other) {
+template <class V, class K, class T>
+BSTree<V, K, T>::BSTree(const BSTree &other) {
   *this = other;
 }
 
-template <class V, class K>
-BSTree<V, K>::BSTree(BSTree &&other) noexcept {
+template <class V, class K, class T>
+BSTree<V, K, T>::BSTree(BSTree &&other) noexcept {
   *this = std::move(other);
 }
 
-template <class V, class K>
-BSTree<V, K>::BSTree(const value_type &value) noexcept {
+template <class V, class K, class T>
+BSTree<V, K, T>::BSTree(const value_type &value) noexcept {
   insert(value);
 }
 
-template <class V, class K>
-BSTree<V, K>::~BSTree() noexcept {
+template <class V, class K, class T>
+BSTree<V, K, T>::~BSTree() noexcept {
   clear();
 }
 
-template <class V, class K>
-BSTree<V, K> &BSTree<V, K>::operator=(const BSTree &other) {
+template <class V, class K, class T>
+BSTree<V, K, T> &BSTree<V, K, T>::operator=(const BSTree &other) {
   if (this == &other) {
     return *this;
   }
@@ -97,8 +99,8 @@ BSTree<V, K> &BSTree<V, K>::operator=(const BSTree &other) {
   return *this;
 }
 
-template <class V, class K>
-BSTree<V, K> &BSTree<V, K>::operator=(BSTree &&other) noexcept {
+template <class V, class K, class T>
+BSTree<V, K, T> &BSTree<V, K, T>::operator=(BSTree &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -110,8 +112,8 @@ BSTree<V, K> &BSTree<V, K>::operator=(BSTree &&other) noexcept {
   return *this;
 }
 
-template <class V, class K>
-typename BSTree<V, K>::iterator BSTree<V, K>::begin() const noexcept {
+template <class V, class K, class T>
+typename BSTree<V, K, T>::iterator BSTree<V, K, T>::begin() const noexcept {
   if (!root_) {
     return iterator(nullptr, true);
   }
@@ -119,8 +121,8 @@ typename BSTree<V, K>::iterator BSTree<V, K>::begin() const noexcept {
   return iterator(root_->front(), false);
 }
 
-template <class V, class K>
-typename BSTree<V, K>::iterator BSTree<V, K>::end() const noexcept {
+template <class V, class K, class T>
+typename BSTree<V, K, T>::iterator BSTree<V, K, T>::end() const noexcept {
   if (!root_) {
     return iterator(nullptr, true);
   }
@@ -128,13 +130,13 @@ typename BSTree<V, K>::iterator BSTree<V, K>::end() const noexcept {
   return iterator(root_->back(), true);
 }
 
-template <class V, class K>
-[[nodiscard]] bool BSTree<V, K>::empty() const noexcept {
+template <class V, class K, class T>
+[[nodiscard]] bool BSTree<V, K, T>::empty() const noexcept {
   return root_ == nullptr;
 }
 
-template <class V, class K>
-[[nodiscard]] typename BSTree<V, K>::size_type BSTree<V, K>::size()
+template <class V, class K, class T>
+[[nodiscard]] typename BSTree<V, K, T>::size_type BSTree<V, K, T>::size()
     const noexcept {
   if (!root_) {
     return 0;
@@ -142,30 +144,30 @@ template <class V, class K>
   return root_->size();
 }
 
-template <class V, class K>
-[[nodiscard]] typename BSTree<V, K>::size_type BSTree<V, K>::max_size()
+template <class V, class K, class T>
+[[nodiscard]] typename BSTree<V, K, T>::size_type BSTree<V, K, T>::max_size()
     const noexcept {
-  return size_type(-1) / sizeof(tree_node::TreeNode<V, K>);
+  return size_type(-1) / sizeof(tree_node::TreeNode<V, K, T>);
 }
 
-template <class V, class K>
-void BSTree<V, K>::clear() noexcept {
+template <class V, class K, class T>
+void BSTree<V, K, T>::clear() noexcept {
   delete root_;
 }
 
-template <class V, class K>
-typename BSTree<V, K>::iterator BSTree<V, K>::insert(
-    const typename BSTree<V, K>::value_type &value) {
+template <class V, class K, class T>
+typename BSTree<V, K, T>::iterator BSTree<V, K, T>::insert(
+    const typename BSTree<V, K, T>::value_type &value) {
   if (!root_) {
-    root_ = new tree_node::TreeNode<value_type, key_type>(value);
+    root_ = new tree_node::TreeNode<value_type, key_type, obj_type>(value);
     return iterator(root_);
   }
 
   return root_->insert(value);
 }
 
-template <class V, class K>
-void BSTree<V, K>::erase(iterator pos) {
+template <class V, class K, class T>
+void BSTree<V, K, T>::erase(iterator pos) {
   if (!root_) {
     throw std::out_of_range("Already empty");
   } else if (pos.get_node() == root_ && !root_->get_right() &&
@@ -177,25 +179,25 @@ void BSTree<V, K>::erase(iterator pos) {
   }
 }
 
-template <class V, class K>
-void BSTree<V, K>::swap(BSTree &other) noexcept {
+template <class V, class K, class T>
+void BSTree<V, K, T>::swap(BSTree &other) noexcept {
   std::swap(root_, other.root_);
 }
 
-template <class V, class K>
-void BSTree<V, K>::merge(BSTree &other) {
+template <class V, class K, class T>
+void BSTree<V, K, T>::merge(BSTree &other) {
   for (iterator elem = other.begin(); elem != other.end(); ++elem) {
     insert(*elem);
   }
 }
 
-template <class V, class K>
-typename BSTree<V, K>::iterator BSTree<V, K>::find(
+template <class V, class K, class T>
+typename BSTree<V, K, T>::iterator BSTree<V, K, T>::find(
     const key_type &key) const noexcept {
   if (!root_) {
     return end();
   }
-  typename tree_node::TreeNode<value_type, key_type>::iterator it =
+  typename tree_node::TreeNode<value_type, key_type, obj_type>::iterator it =
       root_->find(key);
   if (it == nullptr) {
     return end();
@@ -203,8 +205,9 @@ typename BSTree<V, K>::iterator BSTree<V, K>::find(
   return iterator(it);
 }
 
-template <class V, class K>
-[[nodiscard]] bool BSTree<V, K>::contains(const key_type &key) const noexcept {
+template <class V, class K, class T>
+[[nodiscard]] bool BSTree<V, K, T>::contains(
+    const key_type &key) const noexcept {
   return find(key) != end();
 }
 

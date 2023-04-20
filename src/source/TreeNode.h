@@ -7,15 +7,16 @@
 #include <utility>
 
 namespace tree_node {
-template <class V, class K>  // V must be class(contains node_ and key_type
-                             // key()), K - key_type
-class TreeNode {
+template <class V, class K, class T>  // V must be class(contains node_ and
+                                      // key_type key()), K - key_type
+                                      class TreeNode {
  public:
   class TreeIterator;
   class TreeConstIterator;
 
   using value_type = V;
   using key_type = K;
+  using obj_type = T;
   using iterator = TreeIterator;
   using const_iterator = TreeConstIterator;
   using reference = V &;
@@ -24,7 +25,7 @@ class TreeNode {
 
   class TreeIterator {
    public:
-    value_type operator*();
+    obj_type operator*();
     iterator &operator--();
     iterator &operator++();
     iterator &operator-=(size_type count);
@@ -83,19 +84,20 @@ class TreeNode {
   TreeNode *find_place(const key_type &key) noexcept;
 };
 
-template <class V, class K>
-typename TreeNode<V, K>::value_type TreeNode<V, K>::iterator::operator*() {
-  return end_iterator_ ? value_type() : node_->get_value();
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::obj_type TreeNode<V, K, T>::iterator::operator*() {
+  return end_iterator_ ? obj_type() : node_->get_value().value_;
 }
 
-// template <class V, class K>
-// typename TreeNode<V, K>::value_type
-// TreeNode<V, K>::const_iterator::operator*() {
+// template <class V, class K, class T>
+// typename TreeNode<V, K, T>::value_type
+// TreeNode<V, K, T>::const_iterator::operator*() {
 //   // return end_iterator_ ? value_type() : node_->get_value(); TODO
 // }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator &TreeNode<V, K>::iterator::operator--() {
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator &
+TreeNode<V, K, T>::iterator::operator--() {
   if (end_iterator_) {
     end_iterator_ = false;
     node_ = node_->back();
@@ -118,8 +120,9 @@ typename TreeNode<V, K>::iterator &TreeNode<V, K>::iterator::operator--() {
   return *this;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator &TreeNode<V, K>::iterator::operator++() {
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator &
+TreeNode<V, K, T>::iterator::operator++() {
   if (end_iterator_) {
     end_iterator_ = false;
     node_ = node_->back();
@@ -142,9 +145,9 @@ typename TreeNode<V, K>::iterator &TreeNode<V, K>::iterator::operator++() {
   return *this;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator &TreeNode<V, K>::TreeIterator::operator+=(
-    TreeNode::size_type count) {
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator &
+TreeNode<V, K, T>::TreeIterator::operator+=(TreeNode::size_type count) {
   for (int i = 0; i < count; ++i) {
     ++(*this);
   }
@@ -152,9 +155,9 @@ typename TreeNode<V, K>::iterator &TreeNode<V, K>::TreeIterator::operator+=(
   return *this;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator &TreeNode<V, K>::TreeIterator::operator-=(
-    TreeNode::size_type count) {
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator &
+TreeNode<V, K, T>::TreeIterator::operator-=(TreeNode::size_type count) {
   for (int i = 0; i < count; ++i) {
     --(*this);
   }
@@ -162,24 +165,24 @@ typename TreeNode<V, K>::iterator &TreeNode<V, K>::TreeIterator::operator-=(
   return *this;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator TreeNode<V, K>::TreeIterator::operator-(
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::TreeIterator::operator-(
     TreeNode::size_type count) {
   iterator result = *this;
   result -= count;
   return result;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator TreeNode<V, K>::TreeIterator::operator+(
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::TreeIterator::operator+(
     TreeNode::size_type count) {
   iterator result = *this;
   result += count;
   return result;
 }
 
-template <class V, class K>
-bool TreeNode<V, K>::iterator::operator==(
+template <class V, class K, class T>
+bool TreeNode<V, K, T>::iterator::operator==(
     const iterator &other) const noexcept {
   if (end_iterator_ == other.end_iterator_ && end_iterator_ == true) {
     return true;
@@ -187,8 +190,8 @@ bool TreeNode<V, K>::iterator::operator==(
   return node_ == other.node_ && end_iterator_ == other.end_iterator_;
 }
 
-template <class V, class K>
-bool TreeNode<V, K>::iterator::operator!=(
+template <class V, class K, class T>
+bool TreeNode<V, K, T>::iterator::operator!=(
     const iterator &other) const noexcept {
   if (end_iterator_ == other.end_iterator_ && end_iterator_ == false) {
     return false;
@@ -196,34 +199,35 @@ bool TreeNode<V, K>::iterator::operator!=(
   return node_ != other.node_ || end_iterator_ != other.end_iterator_;
 }
 
-template <class V, class K>
-TreeNode<V, K>::TreeIterator::TreeIterator(TreeNode *node,
-                                           bool end_iterator) noexcept
+template <class V, class K, class T>
+TreeNode<V, K, T>::TreeIterator::TreeIterator(TreeNode *node,
+                                              bool end_iterator) noexcept
     : node_(node), end_iterator_(end_iterator) {}
 
-template <class V, class K>
-TreeNode<V, K>::TreeIterator::TreeIterator(TreeNode *node) noexcept
+template <class V, class K, class T>
+TreeNode<V, K, T>::TreeIterator::TreeIterator(TreeNode *node) noexcept
     : node_(node), end_iterator_(node == nullptr) {}
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::TreeIterator::get_node() const noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::TreeIterator::get_node() const noexcept {
   return node_;
 }
 
-template <class V, class K>
-TreeNode<V, K>::TreeNode(value_type value) noexcept : value_(value) {}
+template <class V, class K, class T>
+TreeNode<V, K, T>::TreeNode(value_type value) noexcept : value_(value) {}
 
-template <class V, class K>
-TreeNode<V, K>::TreeNode(value_type value, TreeNode *parent) noexcept
+template <class V, class K, class T>
+TreeNode<V, K, T>::TreeNode(value_type value, TreeNode *parent) noexcept
     : value_(value), parent_(parent) {}
 
-template <class V, class K>
-TreeNode<V, K>::TreeNode(const TreeNode &other) {
+template <class V, class K, class T>
+TreeNode<V, K, T>::TreeNode(const TreeNode &other) {
   *this = other;
 }
 
-template <class V, class K>
-TreeNode<V, K> &TreeNode<V, K>::operator=(const TreeNode<V, K> &other) {
+template <class V, class K, class T>
+TreeNode<V, K, T> &TreeNode<V, K, T>::operator=(
+    const TreeNode<V, K, T> &other) {
   if (this == &other) {
     return *this;
   }
@@ -232,13 +236,13 @@ TreeNode<V, K> &TreeNode<V, K>::operator=(const TreeNode<V, K> &other) {
 
   value_ = other.value_;
   if (!left_ && other.left_) {
-    left_ = new TreeNode<V, K>;
+    left_ = new TreeNode<V, K, T>;
   }
   left_ = other.left_;
   left_->parent_ = this;
 
   if (!right_ && other.right_) {
-    right_ = new TreeNode<V, K>;
+    right_ = new TreeNode<V, K, T>;
   }
   right_ = other.right_;
   right_->parent_ = this;
@@ -246,14 +250,14 @@ TreeNode<V, K> &TreeNode<V, K>::operator=(const TreeNode<V, K> &other) {
   return *this;
 }
 
-template <class V, class K>
-TreeNode<V, K>::~TreeNode() noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T>::~TreeNode() noexcept {
   delete right_;
   delete left_;
 }
 
-template <class V, class K>
-[[nodiscard]] typename TreeNode<V, K>::size_type TreeNode<V, K>::size()
+template <class V, class K, class T>
+[[nodiscard]] typename TreeNode<V, K, T>::size_type TreeNode<V, K, T>::size()
     const noexcept {
   size_type result = 1;
   if (left_) {
@@ -265,8 +269,8 @@ template <class V, class K>
   return result;
 }
 
-template <class V, class K>
-void TreeNode<V, K>::clear() noexcept {
+template <class V, class K, class T>
+void TreeNode<V, K, T>::clear() noexcept {
   if (left_) {
     left_->clear();
   }
@@ -276,12 +280,12 @@ void TreeNode<V, K>::clear() noexcept {
   delete this;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator TreeNode<V, K>::insert(
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::insert(
     const value_type &value) {
   if (value_.key() <= value.key()) {
     if (!right_) {
-      right_ = new TreeNode<V, K>(value, this);
+      right_ = new TreeNode<V, K, T>(value, this);
       return iterator(right_);
     } else {
       return right_->insert(value);
@@ -289,15 +293,15 @@ typename TreeNode<V, K>::iterator TreeNode<V, K>::insert(
   }
 
   if (!left_) {
-    left_ = new TreeNode<V, K>(value, this);
+    left_ = new TreeNode<V, K, T>(value, this);
     return iterator(left_);
   } else {
     return left_->insert(value);
   }
 }
 
-template <class V, class K>
-void TreeNode<V, K>::erase(iterator pos) {
+template <class V, class K, class T>
+void TreeNode<V, K, T>::erase(iterator pos) {
   TreeNode **child_of = nullptr;
   if (pos.get_node()->parent_) {
     child_of = &(pos.get_node()->parent_->right_ == pos.get_node()
@@ -313,13 +317,17 @@ void TreeNode<V, K>::erase(iterator pos) {
     if (child_of) {
       *child_of = pos.get_node()->left_;
     }
-    pos.get_node()->left_->parent_ = parent_;
+    if (pos.get_node()->left_) {
+      pos.get_node()->left_->parent_ = parent_;
+    }
     delete pos.get_node();
   } else if (!pos.get_node()->right_) {
     if (child_of) {
       *child_of = pos.get_node()->right_;
     }
-    pos.get_node()->right_->parent_ = parent_;
+    if (pos.get_node()->right_) {
+      pos.get_node()->right_->parent_ = parent_;
+    }
     delete pos.get_node();
   } else {
     if (!pos.get_node()->right_->left_) {
@@ -341,8 +349,8 @@ void TreeNode<V, K>::erase(iterator pos) {
   }
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::iterator TreeNode<V, K>::find(
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::find(
     const key_type &key) noexcept {
   iterator found = find_place(key);
   if (found.get_node()->value_.key() != key) {
@@ -352,28 +360,29 @@ typename TreeNode<V, K>::iterator TreeNode<V, K>::find(
   return found;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::get_left() const noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::get_left() const noexcept {
   return left_;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::get_right() const noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::get_right() const noexcept {
   return right_;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::get_parent() const noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::get_parent() const noexcept {
   return parent_;
 }
 
-template <class V, class K>
-typename TreeNode<V, K>::value_type TreeNode<V, K>::get_value() const noexcept {
+template <class V, class K, class T>
+typename TreeNode<V, K, T>::value_type TreeNode<V, K, T>::get_value()
+    const noexcept {
   return value_;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::front() noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::front() noexcept {
   if (parent_) {
     return parent_->front();
   }
@@ -384,8 +393,8 @@ TreeNode<V, K> *TreeNode<V, K>::front() noexcept {
   return pointer;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::back() noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::back() noexcept {
   if (parent_) {
     return parent_->back();
   }
@@ -396,8 +405,8 @@ TreeNode<V, K> *TreeNode<V, K>::back() noexcept {
   return pointer;
 }
 
-template <class V, class K>
-TreeNode<V, K> *TreeNode<V, K>::find_place(const key_type &key) noexcept {
+template <class V, class K, class T>
+TreeNode<V, K, T> *TreeNode<V, K, T>::find_place(const key_type &key) noexcept {
   if (value_.key() < key && right_ != nullptr) {
     return right_->find_place(key);
   } else if (value_.key() > key && left_ != nullptr) {

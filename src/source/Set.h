@@ -15,9 +15,10 @@ class Set : public Container<V> {
  public:
   using value_type = V;
   using key_type = V;
-  using iterator = typename bstree::BSTree<KeyTreeNode, key_type>::iterator;
-  using const_iterator =
-      typename bstree::BSTree<KeyTreeNode, key_type>::const_iterator;
+  using iterator =
+      typename bstree::BSTree<KeyTreeNode, key_type, value_type>::iterator;
+  using const_iterator = typename bstree::BSTree<KeyTreeNode, key_type,
+                                                 value_type>::const_iterator;
   using reference = V &;
   using const_reference = const V &;
   using size_type = size_t;
@@ -50,16 +51,15 @@ class Set : public Container<V> {
  private:
   struct KeyTreeNode {
    public:
+    using value_type = V;
     [[nodiscard]] value_type key() const noexcept;
     KeyTreeNode() noexcept = default;
     KeyTreeNode(value_type value) noexcept;
-
-   private:
     value_type value_ = value_type();
   };
 
-  bstree::BSTree<KeyTreeNode, key_type> tree_ =
-      bstree::BSTree<KeyTreeNode, key_type>();
+  bstree::BSTree<KeyTreeNode, key_type, value_type> tree_ =
+      bstree::BSTree<KeyTreeNode, key_type, value_type>();
 };
 
 template <class V>
@@ -75,21 +75,23 @@ Set<V>::Set(Set &&other) noexcept {
 template <class V>
 Set<V> &Set<V>::operator=(const Set &s) noexcept {
   tree_ = s.tree_;
+  return *this;
 }
 
 template <class V>
 Set<V> &Set<V>::operator=(Set &&s) noexcept {
   tree_ = std::move(s.tree_);
+  return *this;
 }
 
 template <class V>
 typename Set<V>::iterator Set<V>::begin() const noexcept {
-  tree_.begin();
+  return tree_.begin();
 }
 
 template <class V>
 typename Set<V>::iterator Set<V>::end() const noexcept {
-  tree_.end();
+  return tree_.end();
 }
 
 template <class V>
@@ -124,8 +126,11 @@ void Set<V>::swap(Set &other) noexcept {
 
 template <class V>
 void Set<V>::merge(Set &other) {
-  for (auto elem : other) {
-    insert(elem);
+  for (auto elem = other.begin(); elem != other.end(); ++elem) {
+    if (!contains(*elem)) {
+      insert(*elem);
+      other.erase(elem);
+    }
   }
 }
 
