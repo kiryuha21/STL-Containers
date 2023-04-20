@@ -15,7 +15,7 @@ class Container {
   using size_type = size_t;
 
   // max_size
-  static constexpr size_type kMaxSize = size_type(-1) / sizeof(value_type);
+  static constexpr size_type kDefaultMaxSize = size_type(-1) / sizeof(value_type);
 
   // Essential functions
   virtual ~Container() noexcept = default;

@@ -184,7 +184,7 @@ typename List<T>::const_iterator List<T>::cend() const {
 
 template <class T>
 typename List<T>::size_type List<T>::max_size() const noexcept {
-  return this->kMaxSize;
+  return size_type(-1) / sizeof(BiNode<T>);
 }
 
 template <class T>
