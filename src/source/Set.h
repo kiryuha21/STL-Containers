@@ -20,9 +20,27 @@ class Set {  // TODO: public Container
   using const_reference = const V &;
   using size_type = size_t;
 
+  Set() noexcept = default;
   Set(std::initializer_list<value_type> const &items);
+  Set(const Set &other) noexcept;
+  Set(Set &&other) noexcept;
+  Set &operator=(const Set &s);
+  Set &operator=(Set &&s);
 
+  ~Set() noexcept;
+
+  iterator begin() const noexcept;
+  iterator end() const noexcept;
+
+  [[nodiscard]] bool empty() const noexcept;
+  [[nodiscard]] size_type size() const noexcept;
+  [[nodiscard]] size_type max_size() const noexcept;
+
+  void clear() noexcept;
   std::pair<iterator, bool> insert(const value_type &value);
+  void erase(iterator pos);
+  void swap(Set &other) noexcept;
+  void merge(Set &other);
 
   iterator find(const key_type &key) const noexcept;
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
