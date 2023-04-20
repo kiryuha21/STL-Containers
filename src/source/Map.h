@@ -21,9 +21,9 @@ class Map : public Container<T> {
   using reference = value_type &;
   using const_reference = const value_type &;
   using iterator =
-      typename bstree::BSTree<KeyTreeNode, key_type, mapped_type>::iterator;
+      typename bstree::BSTree<KeyTreeNode, key_type, value_type>::iterator;
   using const_iterator = typename bstree::BSTree<KeyTreeNode, key_type,
-                                                 mapped_type>::const_iterator;
+                                                 value_type>::const_iterator;
   using size_type = size_t;
 
   Map() noexcept = default;
@@ -60,21 +60,28 @@ class Map : public Container<T> {
  private:
   struct KeyTreeNode {
    public:
-    [[nodiscard]] value_type key() const noexcept;
+    [[nodiscard]] key_type key() const noexcept;
     KeyTreeNode() noexcept = default;
     KeyTreeNode(value_type value) noexcept;
     value_type value_ = value_type();
   };
 
-  bstree::BSTree<KeyTreeNode, key_type, mapped_type> tree_ =
-      bstree::BSTree<KeyTreeNode, key_type, mapped_type>();
+  bstree::BSTree<KeyTreeNode, key_type, value_type> tree_ =
+      bstree::BSTree<KeyTreeNode, key_type, value_type>();
 };
+
+template <class K, class T>
+typename Map<K, T>::size_type Map<K, T>::max_size() const noexcept {
+  return tree_.max_size();
+}
 
 template <class K, class T>
 std::pair<typename Map<K, T>::iterator, bool> Map<K, T>::insert_or_assign(
     const key_type &key, const mapped_type &obj) {
   if (contains(key)) {
-    return std::pair<iterator, bool>(tree_.find(key), false);
+    iterator res = tree_.find(key);
+    (*res).second = obj;
+    return std::pair<iterator, bool>(res, false);
   }
   return insert(key, obj);
 }
@@ -102,9 +109,10 @@ template <class K, class T>
 typename Map<K, T>::mapped_type &Map<K, T>::operator[](const key_type &key) {
   iterator found = tree_.find(key);
   if (found == end()) {
-    found = insert(mapped_type(), key);
+    found = insert(key, mapped_type()).first;
   }
-  return *found;
+
+  return (*found).second;
 }
 
 template <class K, class T>
@@ -114,7 +122,7 @@ typename Map<K, T>::mapped_type &Map<K, T>::at(const key_type &key) {
     throw std::out_of_range(
         "Container does not have an element with the specified key");
   }
-  return *found;
+  return (*found).second;
 }
 
 template <class K, class T>
@@ -203,7 +211,7 @@ Map<K, T>::~Map() noexcept {
 }
 
 template <class K, class T>
-[[nodiscard]] typename Map<K, T>::value_type Map<K, T>::KeyTreeNode::key()
+[[nodiscard]] typename Map<K, T>::key_type Map<K, T>::KeyTreeNode::key()
     const noexcept {
   return value_.first;
 }

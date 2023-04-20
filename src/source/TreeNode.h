@@ -25,7 +25,7 @@ class TreeNode {
 
   class TreeIterator {
    public:
-    obj_type operator*();
+    obj_type &operator*();
     iterator &operator--();
     iterator &operator++();
     iterator &operator-=(size_type count);
@@ -70,7 +70,7 @@ class TreeNode {
   TreeNode *get_left() const noexcept;
   TreeNode *get_right() const noexcept;
   TreeNode *get_parent() const noexcept;
-  value_type get_value() const noexcept;
+  value_type &get_value() noexcept;
 
   TreeNode *front() noexcept;
   TreeNode *back() noexcept;
@@ -85,8 +85,8 @@ class TreeNode {
 };
 
 template <class V, class K, class T>
-typename TreeNode<V, K, T>::obj_type TreeNode<V, K, T>::iterator::operator*() {
-  return end_iterator_ ? obj_type() : node_->get_value().value_;
+typename TreeNode<V, K, T>::obj_type &TreeNode<V, K, T>::iterator::operator*() {
+  return node_->get_value().value_;
 }
 
 // template <class V, class K, class T>
@@ -378,8 +378,8 @@ TreeNode<V, K, T> *TreeNode<V, K, T>::get_parent() const noexcept {
 }
 
 template <class V, class K, class T>
-typename TreeNode<V, K, T>::value_type TreeNode<V, K, T>::get_value()
-    const noexcept {
+typename TreeNode<V, K, T>::value_type &
+TreeNode<V, K, T>::get_value() noexcept {
   return value_;
 }
 
