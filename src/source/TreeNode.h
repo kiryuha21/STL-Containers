@@ -9,7 +9,7 @@
 namespace tree_node {
 template <class V, class K, class T>  // V must be class(contains node_ and
                                       // key_type key()), K - key_type
-                                      class TreeNode {
+class TreeNode {
  public:
   class TreeIterator;
   class TreeConstIterator;
@@ -315,19 +315,17 @@ void TreeNode<V, K, T>::erase(iterator pos) {
     delete pos.get_node();
   } else if (!pos.get_node()->left_) {
     if (child_of) {
-      *child_of = pos.get_node()->left_;
+      *child_of = pos.get_node()->right_;
     }
-    if (pos.get_node()->left_) {
-      pos.get_node()->left_->parent_ = parent_;
-    }
+    pos.get_node()->right_->parent_ = parent_;
+    pos.get_node()->left_ = pos.get_node()->right_ = nullptr;
     delete pos.get_node();
   } else if (!pos.get_node()->right_) {
     if (child_of) {
-      *child_of = pos.get_node()->right_;
+      *child_of = pos.get_node()->left_;
     }
-    if (pos.get_node()->right_) {
-      pos.get_node()->right_->parent_ = parent_;
-    }
+    pos.get_node()->left_->parent_ = parent_;
+    pos.get_node()->left_ = pos.get_node()->right_ = nullptr;
     delete pos.get_node();
   } else {
     if (!pos.get_node()->right_->left_) {

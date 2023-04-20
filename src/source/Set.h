@@ -126,12 +126,15 @@ void Set<V>::swap(Set &other) noexcept {
 
 template <class V>
 void Set<V>::merge(Set &other) {
+  Set<V> res;
   for (auto elem = other.begin(); elem != other.end(); ++elem) {
     if (!contains(*elem)) {
       insert(*elem);
-      other.erase(elem);
+    } else {
+      res.insert(*elem);
     }
   }
+  other = res;
 }
 
 template <class V>

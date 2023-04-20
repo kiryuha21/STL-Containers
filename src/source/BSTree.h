@@ -14,7 +14,7 @@
 namespace bstree {
 template <class V, class K, class T>  // V must be class(contain node_ and
                                       // key_type key()), K - key_type
-                                      class BSTree {
+class BSTree {
  public:
   using value_type = V;
   using key_type = K;
@@ -153,6 +153,7 @@ template <class V, class K, class T>
 template <class V, class K, class T>
 void BSTree<V, K, T>::clear() noexcept {
   delete root_;
+  root_ = nullptr;
 }
 
 template <class V, class K, class T>
