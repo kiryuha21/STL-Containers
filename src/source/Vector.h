@@ -67,8 +67,6 @@ class Vector : public Container<T> {
   size_type size_ = 0;
   size_type capacity_ = 0;
 
-  static constexpr size_type kMaxSize = (size_type(1) << 61) - 1;
-
   // Helpers
   void allocate_memory(const size_type n);
   void resize(const size_type n);
@@ -82,10 +80,6 @@ class Vector : public Container<T> {
 // Helpers
 template <class T>
 void Vector<T>::allocate_memory(const size_type n) {
-  if (n > kMaxSize) {
-    throw std::out_of_range("Vector size must be in (0; 2^61 - 1]");
-  }
-
   delete[] memory_;
 
   if (n != 0) {
@@ -286,7 +280,7 @@ typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
 
 template <class T>
 typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
-  return kMaxSize;  // TODO: CHECK
+  return this->kMaxSize;
 }
 
 template <class T>
