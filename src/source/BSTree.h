@@ -134,6 +134,9 @@ template <class V, class K>
 template <class V, class K>
 [[nodiscard]] typename BSTree<V, K>::size_type BSTree<V, K>::size()
     const noexcept {
+  if (!root_) {
+    return 0;
+  }
   return root_->size();
 }
 

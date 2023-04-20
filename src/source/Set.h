@@ -6,7 +6,7 @@
 namespace s21 {
 
 template <class V>
-class Set {  // TODO: public Container
+class Set : public Container<V> {
  private:
   class SetNodeValue;
 
@@ -24,10 +24,10 @@ class Set {  // TODO: public Container
   Set(std::initializer_list<value_type> const &items);
   Set(const Set &other) noexcept;
   Set(Set &&other) noexcept;
-  Set &operator=(const Set &s);
-  Set &operator=(Set &&s);
+  Set &operator=(const Set &s) noexcept;
+  Set &operator=(Set &&s) noexcept;
 
-  ~Set() noexcept;
+  ~Set() noexcept = default;
 
   iterator begin() const noexcept;
   iterator end() const noexcept;
@@ -59,6 +59,73 @@ class Set {  // TODO: public Container
   bstree::BSTree<SetNodeValue, key_type> tree_ =
       bstree::BSTree<SetNodeValue, key_type>();
 };
+
+template <class V>
+Set<V>::Set(const Set &other) noexcept {
+  *this = other;
+}
+
+template <class V>
+Set<V>::Set(Set &&other) noexcept {
+  *this = std::move(other);
+}
+
+template <class V>
+Set<V> &Set<V>::operator=(const Set &s) noexcept {
+  tree_ = s.tree_;
+}
+
+template <class V>
+Set<V> &Set<V>::operator=(Set &&s) noexcept {
+  tree_ = std::move(s.tree_);
+}
+
+template <class V>
+typename Set<V>::iterator Set<V>::begin() const noexcept {
+  tree_.begin();
+}
+
+template <class V>
+typename Set<V>::iterator Set<V>::end() const noexcept {
+  tree_.end();
+}
+
+template <class V>
+bool Set<V>::empty() const noexcept {
+  return size() == 0;
+}
+
+template <class V>
+typename Set<V>::size_type Set<V>::size() const noexcept {
+  return tree_.size();
+}
+
+template <class V>
+typename Set<V>::size_type Set<V>::max_size() const noexcept {
+  return tree_.max_size();
+}
+
+template <class V>
+void Set<V>::clear() noexcept {
+  tree_.clear();
+}
+
+template <class V>
+void Set<V>::erase(Set::iterator pos) {
+  tree_.erase(pos);
+}
+
+template <class V>
+void Set<V>::swap(Set &other) noexcept {
+  tree_.swap(other.tree_);
+}
+
+template <class V>
+void Set<V>::merge(Set &other) {
+  for (auto elem : other) {
+    insert(elem);
+  }
+}
 
 template <class V>
 bool Set<V>::contains(const key_type &key) const noexcept {
