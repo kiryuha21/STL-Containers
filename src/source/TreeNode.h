@@ -1,5 +1,7 @@
-#ifndef SRC_SOURCE_BSTREE_TREENODE_H
-#define SRC_SOURCE_BSTREE_TREENODE_H
+// Copyright 2023 school-21
+
+#ifndef SRC_SOURCE_TREENODE_H_
+#define SRC_SOURCE_TREENODE_H_
 
 #include <cstdlib>
 #include <utility>
@@ -406,4 +408,4 @@ TreeNode<V, K> *TreeNode<V, K>::find_place(const key_type &key) noexcept {
 
 }  // namespace tree_node
 
-#endif  // SRC_SOURCE_BSTREE_TREENODE_H
+#endif  // SRC_SOURCE_TREENODE_H_

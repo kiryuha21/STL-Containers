@@ -1,3 +1,5 @@
+// Copyright 2023 school-21
+
 #ifndef SRC_SOURCE_SET_H_
 #define SRC_SOURCE_SET_H_
 
@@ -8,14 +10,14 @@ namespace s21 {
 template <class V>
 class Set : public Container<V> {
  private:
-  class SetNodeValue;
+  struct KeyTreeNode;
 
  public:
   using value_type = V;
   using key_type = V;
-  using iterator = typename bstree::BSTree<SetNodeValue, key_type>::iterator;
+  using iterator = typename bstree::BSTree<KeyTreeNode, key_type>::iterator;
   using const_iterator =
-      typename bstree::BSTree<SetNodeValue, key_type>::const_iterator;
+      typename bstree::BSTree<KeyTreeNode, key_type>::const_iterator;
   using reference = V &;
   using const_reference = const V &;
   using size_type = size_t;
@@ -46,18 +48,18 @@ class Set : public Container<V> {
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
 
  private:
-  class SetNodeValue {
+  struct KeyTreeNode {
    public:
     [[nodiscard]] value_type key() const noexcept;
-    SetNodeValue() noexcept = default;
-    SetNodeValue(value_type value) noexcept;
+    KeyTreeNode() noexcept = default;
+    KeyTreeNode(value_type value) noexcept;
 
    private:
     value_type value_ = value_type();
   };
 
-  bstree::BSTree<SetNodeValue, key_type> tree_ =
-      bstree::BSTree<SetNodeValue, key_type>();
+  bstree::BSTree<KeyTreeNode, key_type> tree_ =
+      bstree::BSTree<KeyTreeNode, key_type>();
 };
 
 template <class V>
@@ -138,13 +140,13 @@ typename Set<V>::iterator Set<V>::find(const key_type &key) const noexcept {
 }
 
 template <class V>
-[[nodiscard]] typename Set<V>::value_type Set<V>::SetNodeValue::key()
+[[nodiscard]] typename Set<V>::value_type Set<V>::KeyTreeNode::key()
     const noexcept {
   return value_;
 }
 
 template <class V>
-Set<V>::SetNodeValue::SetNodeValue(value_type value) noexcept : value_(value) {}
+Set<V>::KeyTreeNode::KeyTreeNode(value_type value) noexcept : value_(value) {}
 
 template <class V>
 std::pair<typename Set<V>::iterator, bool> Set<V>::insert(
@@ -152,7 +154,7 @@ std::pair<typename Set<V>::iterator, bool> Set<V>::insert(
   if (!contains(value)) {
     return std::pair<iterator, bool>(tree_.insert(value), true);
   }
-  return std::make_pair<iterator, bool>(tree_.end(), false);
+  return std::pair<iterator, bool>(tree_.end(), false);
 }
 
 template <class V>

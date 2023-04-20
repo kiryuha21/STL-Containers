@@ -1,5 +1,7 @@
-#ifndef SRC_SOURCE_BSTREE_BSTREE_H_
-#define SRC_SOURCE_BSTREE_BSTREE_H_
+// Copyright 2023 school-21
+
+#ifndef SRC_SOURCE_BSTREE_H_
+#define SRC_SOURCE_BSTREE_H_
 
 #include <cstdlib>
 #include <functional>
@@ -207,4 +209,4 @@ template <class V, class K>
 }
 
 }  // namespace bstree
-#endif  // SRC_SOURCE_BSTREE_BSTREE_H_
+#endif  // SRC_SOURCE_BSTREE_H_

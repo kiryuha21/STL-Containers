@@ -3,6 +3,7 @@
 #ifndef SRC_SOURCE_VECTOR_H_
 #define SRC_SOURCE_VECTOR_H_
 
+#include <algorithm>
 #include <cmath>
 #include <initializer_list>
 #include <stdexcept>
