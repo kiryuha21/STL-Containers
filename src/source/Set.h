@@ -25,7 +25,7 @@ class Set : public Container<V> {
 
   Set() noexcept = default;
   Set(std::initializer_list<value_type> const &items);
-  Set(const Set &other) noexcept;
+  Set(const Set &other);
   Set(Set &&other) noexcept;
   Set &operator=(const Set &s) noexcept;
   Set &operator=(Set &&s) noexcept;
@@ -63,7 +63,7 @@ class Set : public Container<V> {
 };
 
 template <class V>
-Set<V>::Set(const Set &other) noexcept {
+Set<V>::Set(const Set &other) {
   *this = other;
 }
 
@@ -128,9 +128,7 @@ template <class V>
 void Set<V>::merge(Set &other) {
   Set<V> res;
   for (auto elem = other.begin(); elem != other.end(); ++elem) {
-    if (!contains(*elem)) {
-      insert(*elem);
-    } else {
+    if (!insert(*elem).second) {
       res.insert(*elem);
     }
   }

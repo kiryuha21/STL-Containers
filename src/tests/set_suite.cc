@@ -166,10 +166,8 @@ TEST(SetSuite, erase_start_test) {
 
 TEST(SetSuite, erase_end_test) {
   Set<int> a = {1, 2};
-  a.erase(a.end());
 
-  ASSERT_EQ(*a.begin(), 1);
-  ASSERT_TRUE(sets_equal(a, std::set<int>{1}));
+  ASSERT_THROW(a.erase(a.end()), std::out_of_range);
 }
 
 TEST(SetSuite, erase_mid_test) {
@@ -177,7 +175,7 @@ TEST(SetSuite, erase_mid_test) {
   a.erase(++a.begin());
 
   ASSERT_EQ(*a.begin(), 1);
-  ASSERT_EQ(*a.end(), 3);
+  ASSERT_EQ(*(--a.end()), 3);
   ASSERT_TRUE(sets_equal(a, std::set<int>{1, 3}));
 }
 
@@ -224,7 +222,7 @@ TEST(SetSuite, merge_repeating_test) {
 
   first_set.merge(second_set);
   ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3, 4}));
-  ASSERT_TRUE(sets_equal(second_set, std::set<int>{}));
+  ASSERT_TRUE(sets_equal(second_set, std::set<int>{1, 2}));
 }
 
 TEST(SetSuite, find_in_empty_test) {

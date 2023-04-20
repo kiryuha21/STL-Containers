@@ -302,31 +302,35 @@ typename TreeNode<V, K, T>::iterator TreeNode<V, K, T>::insert(
 
 template <class V, class K, class T>
 void TreeNode<V, K, T>::erase(iterator pos) {
-  TreeNode **child_of = nullptr;
-  if (pos.get_node()->parent_) {
-    child_of = &(pos.get_node()->parent_->right_ == pos.get_node()
-                     ? pos.get_node()->parent_->right_
-                     : pos.get_node()->parent_->left_);
-  }
   if (!pos.get_node()->left_ && !pos.get_node()->right_) {
-    if (child_of) {
-      *child_of = nullptr;
-    }
+    pos.get_node()->parent_ = nullptr;
     delete pos.get_node();
   } else if (!pos.get_node()->left_) {
-    if (child_of) {
-      *child_of = pos.get_node()->right_;
+    TreeNode *swap_with = pos.get_node()->right_;
+    pos.get_node()->left_ = swap_with->left_;
+    pos.get_node()->right_ = swap_with->right_;
+    if (pos.get_node()->left_) {
+      pos.get_node()->left_->parent_ = pos.get_node();
     }
-    pos.get_node()->right_->parent_ = parent_;
-    pos.get_node()->left_ = pos.get_node()->right_ = nullptr;
-    delete pos.get_node();
+    if (pos.get_node()->right_) {
+      pos.get_node()->right_->parent_ = pos.get_node();
+    }
+    pos.get_node()->value_ = swap_with->get_value();
+    swap_with->left_ = swap_with->right_ = nullptr;
+    delete swap_with;
   } else if (!pos.get_node()->right_) {
-    if (child_of) {
-      *child_of = pos.get_node()->left_;
+    TreeNode *swap_with = pos.get_node()->left_;
+    pos.get_node()->left_ = swap_with->left_;
+    pos.get_node()->right_ = swap_with->right_;
+    if (pos.get_node()->left_) {
+      pos.get_node()->left_->parent_ = pos.get_node();
     }
-    pos.get_node()->left_->parent_ = parent_;
-    pos.get_node()->left_ = pos.get_node()->right_ = nullptr;
-    delete pos.get_node();
+    if (pos.get_node()->right_) {
+      pos.get_node()->right_->parent_ = pos.get_node();
+    }
+    pos.get_node()->value_ = swap_with->get_value();
+    swap_with->left_ = swap_with->right_ = nullptr;
+    delete swap_with;
   } else {
     if (!pos.get_node()->right_->left_) {
       TreeNode *swap_with = pos.get_node()->right_;

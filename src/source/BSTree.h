@@ -171,6 +171,8 @@ template <class V, class K, class T>
 void BSTree<V, K, T>::erase(iterator pos) {
   if (!root_) {
     throw std::out_of_range("Already empty");
+  } else if (pos == end()) {
+    throw std::out_of_range("End erase");
   } else if (pos.get_node() == root_ && !root_->get_right() &&
              !root_->get_left()) {
     delete root_;
