@@ -5,6 +5,8 @@
 
 #include <cstdlib>
 
+namespace s21 {
+
 template <class T>
 class Container {
  public:
@@ -21,5 +23,7 @@ class Container {
   [[nodiscard]] virtual bool empty() const noexcept = 0;
   [[nodiscard]] virtual size_type size() const noexcept = 0;
 };
+
+}  // namespace s21
 
 #endif  // SRC_SOURCE_CONTAINER_H_

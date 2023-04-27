@@ -21,7 +21,6 @@ TEST_FILES = $(wildcard $(TEST_PATH)/*.cc)
 SRC_LIB_OBJ = $(patsubst $(SRC_LIB)/%.h, $(BUILD_PATH)/%.o, $(SRC_LIB_FILES))
 TEST_OBJ = $(patsubst $(TEST_PATH)/%.cc, $(BUILD_PATH)/%.o, $(TEST_FILES))
 
-CPPLINT = cpplint
 CLANG_FORMAT = clang-format
 
 .PHONY: all test clean style $(CLANG_FORMAT) $(VALGRIND)
@@ -49,10 +48,7 @@ test: $(TEST_TARGET)
 clean:
 	$(DELETE) $(TEST_TARGET) $(BUILD_PATH) $(VALGRIND_OUTPUT) $(LIB)
 
-style: $(CLANG_FORMAT) $(CPPLINT)
-
-$(CPPLINT):
-	$(CPPLINT) $(wildcard */*.cc *.cc */*.h *.h) || true
+style: $(CLANG_FORMAT) 
 
 $(CLANG_FORMAT):
 	$(CLANG_FORMAT) --style=Google -i $(wildcard */*.cc *.cc */*.h *.h) || true

@@ -17,10 +17,9 @@ class Set : public Container<V> {
  public:
   using value_type = V;
   using key_type = V;
-  using iterator =
-      typename bstree::BSTree<KeyTreeNode, key_type, value_type>::iterator;
-  using const_iterator = typename bstree::BSTree<KeyTreeNode, key_type,
-                                                 value_type>::const_iterator;
+  using iterator = typename BSTree<KeyTreeNode, key_type, value_type>::iterator;
+  using const_iterator =
+      typename BSTree<KeyTreeNode, key_type, value_type>::const_iterator;
   using reference = V &;
   using const_reference = const V &;
   using size_type = size_t;
@@ -60,8 +59,8 @@ class Set : public Container<V> {
     value_type value_ = value_type();
   };
 
-  bstree::BSTree<KeyTreeNode, key_type, value_type> tree_ =
-      bstree::BSTree<KeyTreeNode, key_type, value_type>();
+  BSTree<KeyTreeNode, key_type, value_type> tree_ =
+      BSTree<KeyTreeNode, key_type, value_type>();
 };
 
 template <class V>

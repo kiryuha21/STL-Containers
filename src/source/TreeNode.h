@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <utility>
 
-namespace tree_node {
+namespace s21 {
 template <class V, class K, class T>  // V must be class(contains node_ and
                                       // key_type key()), K - key_type
 class TreeNode {
@@ -47,7 +47,11 @@ class TreeNode {
   };
 
   class TreeConstIterator : public TreeIterator {
-    // value_type operator*() override; TODO
+    const obj_type &operator*() override;
+
+   private:
+    TreeNode *node_ = nullptr;
+    bool end_iterator_ = false;
   };
 
   TreeNode() noexcept = default;
@@ -89,11 +93,11 @@ typename TreeNode<V, K, T>::obj_type &TreeNode<V, K, T>::iterator::operator*() {
   return node_->get_value().value_;
 }
 
-// template <class V, class K, class T>
-// typename TreeNode<V, K, T>::value_type
-// TreeNode<V, K, T>::const_iterator::operator*() {
-//   // return end_iterator_ ? value_type() : node_->get_value(); TODO
-// }
+template <class V, class K, class T>
+const typename TreeNode<V, K, T>::obj_type &
+TreeNode<V, K, T>::TreeConstIterator::operator*() {
+  return node_->get_value().value_;
+}
 
 template <class V, class K, class T>
 typename TreeNode<V, K, T>::iterator &
@@ -423,6 +427,6 @@ TreeNode<V, K, T> *TreeNode<V, K, T>::find_place(const key_type &key) noexcept {
   return this;
 }
 
-}  // namespace tree_node
+}  // namespace s21
 
 #endif  // SRC_SOURCE_TREENODE_H_

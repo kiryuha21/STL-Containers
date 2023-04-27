@@ -20,10 +20,9 @@ class Map : public Container<T> {
   using value_type = std::pair<K, T>;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator =
-      typename bstree::BSTree<KeyTreeNode, key_type, value_type>::iterator;
-  using const_iterator = typename bstree::BSTree<KeyTreeNode, key_type,
-                                                 value_type>::const_iterator;
+  using iterator = typename BSTree<KeyTreeNode, key_type, value_type>::iterator;
+  using const_iterator =
+      typename BSTree<KeyTreeNode, key_type, value_type>::const_iterator;
   using size_type = size_t;
 
   Map() noexcept = default;
@@ -66,8 +65,8 @@ class Map : public Container<T> {
     value_type value_ = value_type();
   };
 
-  bstree::BSTree<KeyTreeNode, key_type, value_type> tree_ =
-      bstree::BSTree<KeyTreeNode, key_type, value_type>();
+  BSTree<KeyTreeNode, key_type, value_type> tree_ =
+      BSTree<KeyTreeNode, key_type, value_type>();
 };
 
 template <class K, class T>

@@ -11,7 +11,7 @@
 
 #include "TreeNode.h"
 
-namespace bstree {
+namespace s21 {
 template <class V, class K, class T>  // V must be class(contain node_ and
                                       // key_type key()), K - key_type
 class BSTree {
@@ -21,9 +21,8 @@ class BSTree {
   using obj_type = T;
   using reference = V &;
   using const_reference = const V &;
-  using iterator = typename tree_node::TreeNode<V, K, T>::TreeIterator;
-  using const_iterator =
-      typename tree_node::TreeNode<V, K, T>::TreeConstIterator;
+  using iterator = typename TreeNode<V, K, T>::TreeIterator;
+  using const_iterator = typename TreeNode<V, K, T>::TreeConstIterator;
   using size_type = size_t;
 
   BSTree() noexcept = default;
@@ -54,7 +53,7 @@ class BSTree {
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
 
  private:
-  tree_node::TreeNode<value_type, key_type, obj_type> *root_ = nullptr;
+  TreeNode<value_type, key_type, obj_type> *root_ = nullptr;
 };
 
 template <class V, class K, class T>
@@ -147,7 +146,7 @@ template <class V, class K, class T>
 template <class V, class K, class T>
 [[nodiscard]] typename BSTree<V, K, T>::size_type BSTree<V, K, T>::max_size()
     const noexcept {
-  return size_type(-1) / sizeof(tree_node::TreeNode<V, K, T>);
+  return size_type(-1) / sizeof(TreeNode<V, K, T>);
 }
 
 template <class V, class K, class T>
@@ -160,7 +159,7 @@ template <class V, class K, class T>
 typename BSTree<V, K, T>::iterator BSTree<V, K, T>::insert(
     const typename BSTree<V, K, T>::value_type &value) {
   if (!root_) {
-    root_ = new tree_node::TreeNode<value_type, key_type, obj_type>(value);
+    root_ = new TreeNode<value_type, key_type, obj_type>(value);
     return iterator(root_);
   }
 
@@ -200,7 +199,7 @@ typename BSTree<V, K, T>::iterator BSTree<V, K, T>::find(
   if (!root_) {
     return end();
   }
-  typename tree_node::TreeNode<value_type, key_type, obj_type>::iterator it =
+  typename TreeNode<value_type, key_type, obj_type>::iterator it =
       root_->find(key);
   if (it == nullptr) {
     return end();
@@ -214,5 +213,5 @@ template <class V, class K, class T>
   return find(key) != end();
 }
 
-}  // namespace bstree
+}  // namespace s21
 #endif  // SRC_SOURCE_BSTREE_H_
