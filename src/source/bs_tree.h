@@ -9,32 +9,32 @@
 #include <stdexcept>
 #include <utility>
 
-#include "TreeNode.h"
+#include "tree_node.h"
 
 namespace s21 {
 template <class V, class K, class T>  // V must be class(contain node_ and
                                       // key_type key()), K - key_type
-class BSTree {
+class bs_tree {
  public:
   using value_type = V;
   using key_type = K;
   using obj_type = T;
   using reference = V &;
   using const_reference = const V &;
-  using iterator = typename TreeNode<V, K, T>::TreeIterator;
-  using const_iterator = typename TreeNode<V, K, T>::TreeConstIterator;
+  using iterator = typename tree_node<V, K, T>::TreeIterator;
+  using const_iterator = typename tree_node<V, K, T>::TreeConstIterator;
   using size_type = size_t;
 
-  BSTree() noexcept = default;
-  BSTree(std::initializer_list<value_type> const &items);
-  BSTree(const BSTree &other);
-  BSTree(BSTree &&other) noexcept;
-  explicit BSTree(const value_type &value) noexcept;
+  bs_tree() noexcept = default;
+  bs_tree(std::initializer_list<value_type> const &items);
+  bs_tree(const bs_tree &other);
+  bs_tree(bs_tree &&other) noexcept;
+  explicit bs_tree(const value_type &value) noexcept;
 
-  ~BSTree() noexcept;
+  ~bs_tree() noexcept;
 
-  BSTree &operator=(const BSTree &other);
-  BSTree &operator=(BSTree &&other) noexcept;
+  bs_tree &operator=(const bs_tree &other);
+  bs_tree &operator=(bs_tree &&other) noexcept;
 
   iterator begin() const noexcept;
   iterator end() const noexcept;
@@ -46,45 +46,45 @@ class BSTree {
   void clear() noexcept;
   iterator insert(const value_type &value);
   void erase(iterator pos);
-  void swap(BSTree &other) noexcept;
-  void merge(BSTree &other);
+  void swap(bs_tree &other) noexcept;
+  void merge(bs_tree &other);
 
   iterator find(const key_type &key) const noexcept;
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
 
  private:
-  TreeNode<value_type, key_type, obj_type> *root_ = nullptr;
+  tree_node<value_type, key_type, obj_type> *root_ = nullptr;
 };
 
 template <class V, class K, class T>
-BSTree<V, K, T>::BSTree(std::initializer_list<value_type> const &items) {
+bs_tree<V, K, T>::bs_tree(std::initializer_list<value_type> const &items) {
   for (const auto &elem : items) {
     insert(elem);
   }
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T>::BSTree(const BSTree &other) {
+bs_tree<V, K, T>::bs_tree(const bs_tree &other) {
   *this = other;
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T>::BSTree(BSTree &&other) noexcept {
+bs_tree<V, K, T>::bs_tree(bs_tree &&other) noexcept {
   *this = std::move(other);
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T>::BSTree(const value_type &value) noexcept {
+bs_tree<V, K, T>::bs_tree(const value_type &value) noexcept {
   insert(value);
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T>::~BSTree() noexcept {
+bs_tree<V, K, T>::~bs_tree() noexcept {
   clear();
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T> &BSTree<V, K, T>::operator=(const BSTree &other) {
+bs_tree<V, K, T> &bs_tree<V, K, T>::operator=(const bs_tree &other) {
   if (this == &other) {
     return *this;
   }
@@ -99,7 +99,7 @@ BSTree<V, K, T> &BSTree<V, K, T>::operator=(const BSTree &other) {
 }
 
 template <class V, class K, class T>
-BSTree<V, K, T> &BSTree<V, K, T>::operator=(BSTree &&other) noexcept {
+bs_tree<V, K, T> &bs_tree<V, K, T>::operator=(bs_tree &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -112,7 +112,7 @@ BSTree<V, K, T> &BSTree<V, K, T>::operator=(BSTree &&other) noexcept {
 }
 
 template <class V, class K, class T>
-typename BSTree<V, K, T>::iterator BSTree<V, K, T>::begin() const noexcept {
+typename bs_tree<V, K, T>::iterator bs_tree<V, K, T>::begin() const noexcept {
   if (!root_) {
     return iterator(nullptr, true);
   }
@@ -121,7 +121,7 @@ typename BSTree<V, K, T>::iterator BSTree<V, K, T>::begin() const noexcept {
 }
 
 template <class V, class K, class T>
-typename BSTree<V, K, T>::iterator BSTree<V, K, T>::end() const noexcept {
+typename bs_tree<V, K, T>::iterator bs_tree<V, K, T>::end() const noexcept {
   if (!root_) {
     return iterator(nullptr, true);
   }
@@ -130,12 +130,12 @@ typename BSTree<V, K, T>::iterator BSTree<V, K, T>::end() const noexcept {
 }
 
 template <class V, class K, class T>
-[[nodiscard]] bool BSTree<V, K, T>::empty() const noexcept {
+[[nodiscard]] bool bs_tree<V, K, T>::empty() const noexcept {
   return root_ == nullptr;
 }
 
 template <class V, class K, class T>
-[[nodiscard]] typename BSTree<V, K, T>::size_type BSTree<V, K, T>::size()
+[[nodiscard]] typename bs_tree<V, K, T>::size_type bs_tree<V, K, T>::size()
     const noexcept {
   if (!root_) {
     return 0;
@@ -144,22 +144,22 @@ template <class V, class K, class T>
 }
 
 template <class V, class K, class T>
-[[nodiscard]] typename BSTree<V, K, T>::size_type BSTree<V, K, T>::max_size()
+[[nodiscard]] typename bs_tree<V, K, T>::size_type bs_tree<V, K, T>::max_size()
     const noexcept {
-  return size_type(-1) / sizeof(TreeNode<V, K, T>);
+  return size_type(-1) / sizeof(tree_node<V, K, T>);
 }
 
 template <class V, class K, class T>
-void BSTree<V, K, T>::clear() noexcept {
+void bs_tree<V, K, T>::clear() noexcept {
   delete root_;
   root_ = nullptr;
 }
 
 template <class V, class K, class T>
-typename BSTree<V, K, T>::iterator BSTree<V, K, T>::insert(
-    const typename BSTree<V, K, T>::value_type &value) {
+typename bs_tree<V, K, T>::iterator bs_tree<V, K, T>::insert(
+    const typename bs_tree<V, K, T>::value_type &value) {
   if (!root_) {
-    root_ = new TreeNode<value_type, key_type, obj_type>(value);
+    root_ = new tree_node<value_type, key_type, obj_type>(value);
     return iterator(root_);
   }
 
@@ -167,7 +167,7 @@ typename BSTree<V, K, T>::iterator BSTree<V, K, T>::insert(
 }
 
 template <class V, class K, class T>
-void BSTree<V, K, T>::erase(iterator pos) {
+void bs_tree<V, K, T>::erase(iterator pos) {
   if (!root_) {
     throw std::out_of_range("Already empty");
   } else if (pos == end()) {
@@ -182,24 +182,24 @@ void BSTree<V, K, T>::erase(iterator pos) {
 }
 
 template <class V, class K, class T>
-void BSTree<V, K, T>::swap(BSTree &other) noexcept {
+void bs_tree<V, K, T>::swap(bs_tree &other) noexcept {
   std::swap(root_, other.root_);
 }
 
 template <class V, class K, class T>
-void BSTree<V, K, T>::merge(BSTree &other) {
+void bs_tree<V, K, T>::merge(bs_tree &other) {
   for (iterator elem = other.begin(); elem != other.end(); ++elem) {
     insert(*elem);
   }
 }
 
 template <class V, class K, class T>
-typename BSTree<V, K, T>::iterator BSTree<V, K, T>::find(
+typename bs_tree<V, K, T>::iterator bs_tree<V, K, T>::find(
     const key_type &key) const noexcept {
   if (!root_) {
     return end();
   }
-  typename TreeNode<value_type, key_type, obj_type>::iterator it =
+  typename tree_node<value_type, key_type, obj_type>::iterator it =
       root_->find(key);
   if (it == nullptr) {
     return end();
@@ -208,7 +208,7 @@ typename BSTree<V, K, T>::iterator BSTree<V, K, T>::find(
 }
 
 template <class V, class K, class T>
-[[nodiscard]] bool BSTree<V, K, T>::contains(
+[[nodiscard]] bool bs_tree<V, K, T>::contains(
     const key_type &key) const noexcept {
   return find(key) != end();
 }

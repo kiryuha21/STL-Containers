@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <class T>
-bool queues_equal(Queue<T> first, Queue<T> second) {
+bool queues_equal(queue<T> first, queue<T> second) {
   while (!first.empty() && !second.empty()) {
     T first_elem = first.front();
     T second_elem = second.front();
@@ -28,7 +28,7 @@ bool queues_equal(Queue<T> first, Queue<T> second) {
 }
 
 template <class T>
-bool queues_equal(Queue<T> first, std::queue<T> second) {
+bool queues_equal(queue<T> first, std::queue<T> second) {
   while (!first.empty() && !second.empty()) {
     T first_elem = first.front();
     T second_elem = second.front();
@@ -48,7 +48,7 @@ bool queues_equal(Queue<T> first, std::queue<T> second) {
 
 TEST(QueueSuite, default_constructor_test) {
   std::queue<int> std_queue;
-  Queue<int> my_queue;
+  queue<int> my_queue;
 
   ASSERT_TRUE(my_queue.empty());
   ASSERT_EQ(my_queue.empty(), std_queue.empty());
@@ -66,7 +66,7 @@ TEST(QueueSuite, initializer_constructor_test) {
   std_queue.push(2);
   std_queue.push(3);
 
-  Queue<int> my_queue = {1, 2, 3};
+  queue<int> my_queue = {1, 2, 3};
 
   ASSERT_EQ(my_queue.front(), 1);
   ASSERT_EQ(std_queue.front(), my_queue.front());
@@ -88,8 +88,8 @@ TEST(QueueSuite, copy_constructor_test) {
   std_base.push(3);
   std::queue<int> std_res(std_base);
 
-  Queue<int> my_base = {1, 2, 3};
-  Queue<int> my_res(my_base);
+  queue<int> my_base = {1, 2, 3};
+  queue<int> my_res(my_base);
 
   ASSERT_TRUE(queues_equal(my_base, my_res));
   ASSERT_TRUE(queues_equal(my_res, std_res));
@@ -104,8 +104,8 @@ TEST(QueueSuite, move_constructor_test) {
   std_base.push(3);
   std::queue<int> std_res(std::move(std_base));
 
-  Queue<int> my_base = {1, 2, 3};
-  Queue<int> my_res(std::move(my_base));
+  queue<int> my_base = {1, 2, 3};
+  queue<int> my_res(std::move(my_base));
 
   ASSERT_TRUE(my_base.empty());
   ASSERT_TRUE(queues_equal(my_res, std_res));
@@ -114,7 +114,7 @@ TEST(QueueSuite, move_constructor_test) {
 }
 
 TEST(QueueSuite, present_front_test) {
-  Queue<int> my_queue = {1, 2};
+  queue<int> my_queue = {1, 2};
   std::queue<int> std_queue;
   std_queue.push(1);
   std_queue.push(2);
@@ -124,12 +124,12 @@ TEST(QueueSuite, present_front_test) {
 }
 
 TEST(QueueSuite, missing_front_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   ASSERT_THROW(my_queue.front(), std::logic_error);
 }
 
 TEST(QueueSuite, present_back_test) {
-  Queue<int> my_queue = {1, 2};
+  queue<int> my_queue = {1, 2};
   std::queue<int> std_queue;
   std_queue.push(1);
   std_queue.push(2);
@@ -139,12 +139,12 @@ TEST(QueueSuite, present_back_test) {
 }
 
 TEST(QueueSuite, missing_back_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   ASSERT_THROW(my_queue.back(), std::logic_error);
 }
 
 TEST(QueueSuite, empty_queue_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   std::queue<int> std_queue;
 
   ASSERT_TRUE(my_queue.empty());
@@ -152,7 +152,7 @@ TEST(QueueSuite, empty_queue_test) {
 }
 
 TEST(QueueSuite, non_empty_queue_test) {
-  Queue<int> my_queue = {1};
+  queue<int> my_queue = {1};
   std::queue<int> std_queue;
   std_queue.push(1);
 
@@ -161,7 +161,7 @@ TEST(QueueSuite, non_empty_queue_test) {
 }
 
 TEST(QueueSuite, non_zero_size_test) {
-  Queue<int> my_queue = {1, 2, 3};
+  queue<int> my_queue = {1, 2, 3};
   std::queue<int> std_queue;
   std_queue.push(1);
   std_queue.push(2);
@@ -172,7 +172,7 @@ TEST(QueueSuite, non_zero_size_test) {
 }
 
 TEST(QueueSuite, zero_size_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   std::queue<int> std_queue;
 
   ASSERT_EQ(my_queue.size(), 0);
@@ -180,7 +180,7 @@ TEST(QueueSuite, zero_size_test) {
 }
 
 TEST(QueueSuite, push_to_empty_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   std::queue<int> std_queue;
 
   ASSERT_THROW(my_queue.back(), std::logic_error);
@@ -197,7 +197,7 @@ TEST(QueueSuite, push_to_empty_test) {
 }
 
 TEST(QueueSuite, push_to_non_empty_test) {
-  Queue<int> my_queue = {1};
+  queue<int> my_queue = {1};
   std::queue<int> std_queue;
   std_queue.push(1);
 
@@ -212,7 +212,7 @@ TEST(QueueSuite, push_to_non_empty_test) {
 }
 
 TEST(QueueSuite, pop_non_empty_test) {
-  Queue<int> my_queue = {1, 2};
+  queue<int> my_queue = {1, 2};
   std::queue<int> std_queue;
   std_queue.push(1);
   std_queue.push(2);
@@ -230,15 +230,15 @@ TEST(QueueSuite, pop_non_empty_test) {
 }
 
 TEST(QueueSuite, pop_empty_test) {
-  Queue<int> my_queue;
+  queue<int> my_queue;
   ASSERT_THROW(my_queue.pop(), std::logic_error);
 }
 
 TEST(QueueSuite, swap_test) {
-  Queue<int> first_queue = {1, 2, 3};
-  Queue<int> second_queue = {4, 5, 6};
-  Queue<int> first_copy(first_queue);
-  Queue<int> second_copy(second_queue);
+  queue<int> first_queue = {1, 2, 3};
+  queue<int> second_queue = {4, 5, 6};
+  queue<int> first_copy(first_queue);
+  queue<int> second_copy(second_queue);
 
   first_queue.swap(second_queue);
   ASSERT_TRUE(queues_equal(first_queue, second_copy));

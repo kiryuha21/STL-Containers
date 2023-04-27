@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <class T>
-bool sets_equal(Set<T> first, std::set<T> second) {
+bool sets_equal(set<T> first, std::set<T> second) {
   if (first.size() != second.size()) {
     return false;
   }
@@ -26,7 +26,7 @@ bool sets_equal(Set<T> first, std::set<T> second) {
 }
 
 template <class T>
-bool sets_equal(Set<T> first, Set<T> second) {
+bool sets_equal(set<T> first, set<T> second) {
   if (first.size() != second.size()) {
     return false;
   }
@@ -43,29 +43,29 @@ bool sets_equal(Set<T> first, Set<T> second) {
 }
 
 TEST(SetSuite, default_contructor_test) {
-  Set<int> my_set;
+  set<int> my_set;
   std::set<int> std_set;
   ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
 TEST(SetSuite, initializer_set_constructor_test) {
-  Set<int> my_set = {4, 2, 1, 1};
+  set<int> my_set = {4, 2, 1, 1};
   std::set<int> std_set = {4, 2, 1, 1};
 
   ASSERT_TRUE(sets_equal(my_set, std_set));
 }
 
 TEST(SetSuite, copy_constructor_test) {
-  Set<int> my_set = {4, 2, 1, 1};
-  Set<int> my_copied(my_set);
+  set<int> my_set = {4, 2, 1, 1};
+  set<int> my_copied(my_set);
   std::set<int> std_set = {4, 2, 1, 1};
 
   ASSERT_TRUE(sets_equal(my_copied, std_set));
 }
 
 TEST(SetSuite, move_constructor_test) {
-  Set<int> my_set = {1, 2, 3};
-  Set<int> my_moved(std::move(my_set));
+  set<int> my_set = {1, 2, 3};
+  set<int> my_moved(std::move(my_set));
   std::set<int> std_set = {1, 2, 3};
   std::set<int> std_moved(std::move(std_set));
   ASSERT_TRUE(sets_equal(my_moved, std_moved));
@@ -73,38 +73,38 @@ TEST(SetSuite, move_constructor_test) {
 }
 
 TEST(SetSuite, begin_normal_test) {
-  Set<int> my_set = {1};
+  set<int> my_set = {1};
   ASSERT_EQ(*my_set.begin(), 1);
 }
 
 TEST(SetSuite, end_normal_test) {
-  Set<int> my_set = {1};
+  set<int> my_set = {1};
   ASSERT_EQ(*(--my_set.end()), 1);
 }
 
 TEST(SetSuite, equal_iterators_test) {
-  Set<int> my_set;
+  set<int> my_set;
   ASSERT_TRUE(my_set.begin() == my_set.end());
 }
 
 TEST(SetSuite, empty_set_test) {
-  Set<int> my_set;
+  set<int> my_set;
   ASSERT_TRUE(my_set.empty());
 }
 
 TEST(SetSuite, non_empty_set_test) {
-  Set<int> my_set = {1, 2, 3};
+  set<int> my_set = {1, 2, 3};
   ASSERT_FALSE(my_set.empty());
 }
 
 TEST(SetSuite, zero_size_test) {
-  Set<int> my_set;
+  set<int> my_set;
   ASSERT_EQ(my_set.size(), 0);
 }
 
 TEST(SetSuite, non_zero_size_test) {
   for (int i = 0; i < 10; ++i) {
-    Set<int> my_set;
+    set<int> my_set;
     for (int j = 0; j < i; ++j) {
       my_set.insert(j);
     }
@@ -113,13 +113,13 @@ TEST(SetSuite, non_zero_size_test) {
 }
 
 TEST(SetSuite, clear_empty_test) {
-  Set<int> my_set;
+  set<int> my_set;
   my_set.clear();
   ASSERT_TRUE(true);  // not sigsegv
 }
 
 TEST(SetSuite, clear_non_empty_test) {
-  Set<int> my_set = {1, 2, 3};
+  set<int> my_set = {1, 2, 3};
   my_set.clear();
 
   ASSERT_EQ(my_set.size(), 0);
@@ -128,7 +128,7 @@ TEST(SetSuite, clear_non_empty_test) {
 }
 
 TEST(SetSuite, insert_to_empty_test) {
-  Set<int> a;
+  set<int> a;
   auto res = a.insert(1);
   ASSERT_TRUE(res.second);
   ASSERT_EQ(*(res.first), 1);
@@ -136,7 +136,7 @@ TEST(SetSuite, insert_to_empty_test) {
 }
 
 TEST(SetSuite, insert_to_non_empty_test) {
-  Set<int> a = {1};
+  set<int> a = {1};
   auto res = a.insert(2);
   ASSERT_TRUE(res.second);
   ASSERT_EQ(*(res.first), 2);
@@ -144,7 +144,7 @@ TEST(SetSuite, insert_to_non_empty_test) {
 }
 
 TEST(SetSuite, fail_insert_test) {
-  Set<int> a = {1};
+  set<int> a = {1};
   auto res = a.insert(1);
   ASSERT_FALSE(res.second);
   ASSERT_EQ(res.first, a.end());
@@ -152,12 +152,12 @@ TEST(SetSuite, fail_insert_test) {
 }
 
 TEST(SetSuite, erase_empty_test) {
-  Set<int> a;
+  set<int> a;
   ASSERT_THROW(a.erase(a.begin()), std::out_of_range);
 }
 
 TEST(SetSuite, erase_start_test) {
-  Set<int> a = {1, 2};
+  set<int> a = {1, 2};
   a.erase(a.begin());
 
   ASSERT_EQ(*a.begin(), 2);
@@ -165,13 +165,13 @@ TEST(SetSuite, erase_start_test) {
 }
 
 TEST(SetSuite, erase_end_test) {
-  Set<int> a = {1, 2};
+  set<int> a = {1, 2};
 
   ASSERT_THROW(a.erase(a.end()), std::out_of_range);
 }
 
 TEST(SetSuite, erase_mid_test) {
-  Set<int> a = {1, 2, 3};
+  set<int> a = {1, 2, 3};
   a.erase(++a.begin());
 
   ASSERT_EQ(*a.begin(), 1);
@@ -180,10 +180,10 @@ TEST(SetSuite, erase_mid_test) {
 }
 
 TEST(SetSuite, swap_test) {
-  Set<int> first_set = {1, 2, 3};
-  Set<int> second_set = {4, 5, 6};
-  Set<int> first_copy(first_set);
-  Set<int> second_copy(second_set);
+  set<int> first_set = {1, 2, 3};
+  set<int> second_set = {4, 5, 6};
+  set<int> first_copy(first_set);
+  set<int> second_copy(second_set);
 
   first_set.swap(second_set);
   ASSERT_TRUE(sets_equal(first_set, second_copy));
@@ -191,16 +191,16 @@ TEST(SetSuite, swap_test) {
 }
 
 TEST(SetSuite, merge_empty_test) {
-  Set<int> first_set = {1, 2, 3};
-  Set<int> second_set;
+  set<int> first_set = {1, 2, 3};
+  set<int> second_set;
 
   first_set.merge(second_set);
   ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3}));
 }
 
 TEST(SetSuite, merge_to_empty_test) {
-  Set<int> first_set;
-  Set<int> second_set = {1, 2, 3};
+  set<int> first_set;
+  set<int> second_set = {1, 2, 3};
 
   first_set.merge(second_set);
   ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3}));
@@ -208,8 +208,8 @@ TEST(SetSuite, merge_to_empty_test) {
 }
 
 TEST(SetSuite, merge_non_repeating_test) {
-  Set<int> first_set = {4, 5, 6};
-  Set<int> second_set = {1, 2, 3};
+  set<int> first_set = {4, 5, 6};
+  set<int> second_set = {1, 2, 3};
 
   first_set.merge(second_set);
   ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3, 4, 5, 6}));
@@ -217,8 +217,8 @@ TEST(SetSuite, merge_non_repeating_test) {
 }
 
 TEST(SetSuite, merge_repeating_test) {
-  Set<int> first_set = {4, 1, 2};
-  Set<int> second_set = {1, 2, 3};
+  set<int> first_set = {4, 1, 2};
+  set<int> second_set = {1, 2, 3};
 
   first_set.merge(second_set);
   ASSERT_TRUE(sets_equal(first_set, std::set{1, 2, 3, 4}));
@@ -226,37 +226,37 @@ TEST(SetSuite, merge_repeating_test) {
 }
 
 TEST(SetSuite, find_in_empty_test) {
-  Set<int> first_set;
+  set<int> first_set;
   auto res = first_set.find(5);
   ASSERT_EQ(res, first_set.end());
 }
 
 TEST(SetSuite, find_present_test) {
-  Set<int> first_set = {1, 2, 3};
+  set<int> first_set = {1, 2, 3};
   auto res = first_set.find(2);
   ASSERT_EQ(*res, 2);
 }
 
 TEST(SetSuite, find_non_present_test) {
-  Set<int> first_set = {1, 2, 3};
+  set<int> first_set = {1, 2, 3};
   auto res = first_set.find(4);
   ASSERT_EQ(res, first_set.end());
 }
 
 TEST(SetSuite, contains_in_empty_test) {
-  Set<int> first_set;
+  set<int> first_set;
   bool res = first_set.contains(5);
   ASSERT_EQ(res, false);
 }
 
 TEST(SetSuite, contains_present_test) {
-  Set<int> first_set = {1, 2, 3};
+  set<int> first_set = {1, 2, 3};
   bool res = first_set.contains(2);
   ASSERT_EQ(res, true);
 }
 
 TEST(SetSuite, contains_non_present_test) {
-  Set<int> first_set = {1, 2, 3};
+  set<int> first_set = {1, 2, 3};
   bool res = first_set.contains(4);
   ASSERT_EQ(res, false);
 }

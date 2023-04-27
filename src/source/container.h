@@ -8,7 +8,7 @@
 namespace s21 {
 
 template <class T>
-class Container {
+class container {
  public:
   // Member type
   using value_type = T;
@@ -17,7 +17,7 @@ class Container {
   using size_type = size_t;
 
   // Essential functions
-  virtual ~Container() noexcept = default;
+  virtual ~container() noexcept = default;
 
   // Main functions
   [[nodiscard]] virtual bool empty() const noexcept = 0;

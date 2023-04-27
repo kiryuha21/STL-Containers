@@ -5,33 +5,34 @@
 
 #include <utility>
 
-#include "BSTree.h"
+#include "bs_tree.h"
 
 namespace s21 {
 
 template <class V>
-class Set : public Container<V> {
+class set : public container<V> {
  private:
   struct KeyTreeNode;
 
  public:
   using value_type = V;
   using key_type = V;
-  using iterator = typename BSTree<KeyTreeNode, key_type, value_type>::iterator;
+  using iterator =
+      typename bs_tree<KeyTreeNode, key_type, value_type>::iterator;
   using const_iterator =
-      typename BSTree<KeyTreeNode, key_type, value_type>::const_iterator;
+      typename bs_tree<KeyTreeNode, key_type, value_type>::const_iterator;
   using reference = V &;
   using const_reference = const V &;
   using size_type = size_t;
 
-  Set() noexcept = default;
-  Set(std::initializer_list<value_type> const &items);
-  Set(const Set &other);
-  Set(Set &&other) noexcept;
-  Set &operator=(const Set &s) noexcept;
-  Set &operator=(Set &&s) noexcept;
+  set() noexcept = default;
+  set(std::initializer_list<value_type> const &items);
+  set(const set &other);
+  set(set &&other) noexcept;
+  set &operator=(const set &s) noexcept;
+  set &operator=(set &&s) noexcept;
 
-  ~Set() noexcept = default;
+  ~set() noexcept = default;
 
   iterator begin() const noexcept;
   iterator end() const noexcept;
@@ -43,8 +44,8 @@ class Set : public Container<V> {
   void clear() noexcept;
   std::pair<iterator, bool> insert(const value_type &value);
   void erase(iterator pos);
-  void swap(Set &other) noexcept;
-  void merge(Set &other);
+  void swap(set &other) noexcept;
+  void merge(set &other);
 
   iterator find(const key_type &key) const noexcept;
   [[nodiscard]] bool contains(const key_type &key) const noexcept;
@@ -59,75 +60,75 @@ class Set : public Container<V> {
     value_type value_ = value_type();
   };
 
-  BSTree<KeyTreeNode, key_type, value_type> tree_ =
-      BSTree<KeyTreeNode, key_type, value_type>();
+  bs_tree<KeyTreeNode, key_type, value_type> tree_ =
+      bs_tree<KeyTreeNode, key_type, value_type>();
 };
 
 template <class V>
-Set<V>::Set(const Set &other) {
+set<V>::set(const set &other) {
   *this = other;
 }
 
 template <class V>
-Set<V>::Set(Set &&other) noexcept {
+set<V>::set(set &&other) noexcept {
   *this = std::move(other);
 }
 
 template <class V>
-Set<V> &Set<V>::operator=(const Set &s) noexcept {
+set<V> &set<V>::operator=(const set &s) noexcept {
   tree_ = s.tree_;
   return *this;
 }
 
 template <class V>
-Set<V> &Set<V>::operator=(Set &&s) noexcept {
+set<V> &set<V>::operator=(set &&s) noexcept {
   tree_ = std::move(s.tree_);
   return *this;
 }
 
 template <class V>
-typename Set<V>::iterator Set<V>::begin() const noexcept {
+typename set<V>::iterator set<V>::begin() const noexcept {
   return tree_.begin();
 }
 
 template <class V>
-typename Set<V>::iterator Set<V>::end() const noexcept {
+typename set<V>::iterator set<V>::end() const noexcept {
   return tree_.end();
 }
 
 template <class V>
-bool Set<V>::empty() const noexcept {
+bool set<V>::empty() const noexcept {
   return size() == 0;
 }
 
 template <class V>
-typename Set<V>::size_type Set<V>::size() const noexcept {
+typename set<V>::size_type set<V>::size() const noexcept {
   return tree_.size();
 }
 
 template <class V>
-typename Set<V>::size_type Set<V>::max_size() const noexcept {
+typename set<V>::size_type set<V>::max_size() const noexcept {
   return tree_.max_size();
 }
 
 template <class V>
-void Set<V>::clear() noexcept {
+void set<V>::clear() noexcept {
   tree_.clear();
 }
 
 template <class V>
-void Set<V>::erase(Set::iterator pos) {
+void set<V>::erase(set::iterator pos) {
   tree_.erase(pos);
 }
 
 template <class V>
-void Set<V>::swap(Set &other) noexcept {
+void set<V>::swap(set &other) noexcept {
   tree_.swap(other.tree_);
 }
 
 template <class V>
-void Set<V>::merge(Set &other) {
-  Set<V> res;
+void set<V>::merge(set &other) {
+  set<V> res;
   for (auto elem = other.begin(); elem != other.end(); ++elem) {
     if (!insert(*elem).second) {
       res.insert(*elem);
@@ -137,26 +138,26 @@ void Set<V>::merge(Set &other) {
 }
 
 template <class V>
-bool Set<V>::contains(const key_type &key) const noexcept {
+bool set<V>::contains(const key_type &key) const noexcept {
   return tree_.contains(key);
 }
 
 template <class V>
-typename Set<V>::iterator Set<V>::find(const key_type &key) const noexcept {
+typename set<V>::iterator set<V>::find(const key_type &key) const noexcept {
   return tree_.find(key);
 }
 
 template <class V>
-[[nodiscard]] typename Set<V>::value_type Set<V>::KeyTreeNode::key()
+[[nodiscard]] typename set<V>::value_type set<V>::KeyTreeNode::key()
     const noexcept {
   return value_;
 }
 
 template <class V>
-Set<V>::KeyTreeNode::KeyTreeNode(value_type value) noexcept : value_(value) {}
+set<V>::KeyTreeNode::KeyTreeNode(value_type value) noexcept : value_(value) {}
 
 template <class V>
-std::pair<typename Set<V>::iterator, bool> Set<V>::insert(
+std::pair<typename set<V>::iterator, bool> set<V>::insert(
     const value_type &value) {
   if (!contains(value)) {
     return std::pair<iterator, bool>(tree_.insert(value), true);
@@ -165,7 +166,7 @@ std::pair<typename Set<V>::iterator, bool> Set<V>::insert(
 }
 
 template <class V>
-Set<V>::Set(std::initializer_list<value_type> const &items) {
+set<V>::set(std::initializer_list<value_type> const &items) {
   for (auto elem : items) {
     insert(elem);
   }

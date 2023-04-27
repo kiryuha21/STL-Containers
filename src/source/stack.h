@@ -5,25 +5,25 @@
 
 #include <utility>
 
-#include "ForwardList.h"
+#include "forward_list.h"
 
 namespace s21 {
 
 template <class T>
-class Stack : public ForwardList<T> {
+class stack : public forward_list<T> {
  public:
-  using value_type = typename ForwardList<T>::value_type;
-  using reference = typename ForwardList<T>::reference;
-  using const_reference = typename ForwardList<T>::const_reference;
-  using size_type = typename ForwardList<T>::size_type;
+  using value_type = typename forward_list<T>::value_type;
+  using reference = typename forward_list<T>::reference;
+  using const_reference = typename forward_list<T>::const_reference;
+  using size_type = typename forward_list<T>::size_type;
 
-  Stack() = default;
-  Stack(std::initializer_list<value_type> const &items);
-  Stack(const Stack &q);
-  Stack(Stack &&q) noexcept;
-  ~Stack() noexcept override;
-  Stack &operator=(const Stack &q);
-  Stack &operator=(Stack &&q) noexcept;
+  stack() = default;
+  stack(std::initializer_list<value_type> const &items);
+  stack(const stack &q);
+  stack(stack &&q) noexcept;
+  ~stack() noexcept override;
+  stack &operator=(const stack &q);
+  stack &operator=(stack &&q) noexcept;
 
   const_reference top() const;
 
@@ -35,35 +35,35 @@ class Stack : public ForwardList<T> {
 };
 
 template <class T>
-Stack<T>::Stack(const std::initializer_list<value_type> &items) {
+stack<T>::stack(const std::initializer_list<value_type> &items) {
   for (const auto &i : items) {
     push(i);
   }
 }
 
 template <class T>
-Stack<T>::Stack(const Stack<T> &q) : ForwardList<T>() {
+stack<T>::stack(const stack<T> &q) : forward_list<T>() {
   *this = q;
 }
 
 template <class T>
-Stack<T>::Stack(Stack<T> &&q) noexcept {
+stack<T>::stack(stack<T> &&q) noexcept {
   *this = std::move(q);
 }
 
 template <class T>
-Stack<T>::~Stack() noexcept {
+stack<T>::~stack() noexcept {
   this->clear();
 }
 
 template <class T>
-Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
+stack<T> &stack<T>::operator=(const stack<T> &q) {
   if (this == &q) {
     return *this;
   }
 
   this->clear();
-  for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
+  for (list_node<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
     this->push_back(temp->value());
   }
 
@@ -71,7 +71,7 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &q) {
 }
 
 template <class T>
-Stack<T> &Stack<T>::operator=(Stack<T> &&q) noexcept {
+stack<T> &stack<T>::operator=(stack<T> &&q) noexcept {
   if (this == &q) {
     return *this;
   }
@@ -86,17 +86,17 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&q) noexcept {
 }
 
 template <class T>
-typename Stack<T>::const_reference Stack<T>::top() const {
+typename stack<T>::const_reference stack<T>::top() const {
   return this->front();
 }
 
 template <class T>
-void Stack<T>::push(const_reference value) {
+void stack<T>::push(const_reference value) {
   this->push_front(value);
 }
 
 template <class T>
-void Stack<T>::pop() {
+void stack<T>::pop() {
   this->pop_front();
 }
 

@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <class T>
-bool stacks_equal(Stack<T> first, Stack<T> second) {
+bool stacks_equal(stack<T> first, stack<T> second) {
   while (!first.empty() && !second.empty()) {
     T first_elem = first.top();
     T second_elem = second.top();
@@ -28,7 +28,7 @@ bool stacks_equal(Stack<T> first, Stack<T> second) {
 }
 
 template <class T>
-bool stacks_equal(Stack<T> first, std::stack<T> second) {
+bool stacks_equal(stack<T> first, std::stack<T> second) {
   while (!first.empty() && !second.empty()) {
     T first_elem = first.top();
     T second_elem = second.top();
@@ -48,7 +48,7 @@ bool stacks_equal(Stack<T> first, std::stack<T> second) {
 
 TEST(StackSuite, default_constructor_test) {
   std::stack<int> std_stack;
-  Stack<int> my_stack;
+  stack<int> my_stack;
 
   ASSERT_TRUE(my_stack.empty());
   ASSERT_EQ(my_stack.empty(), std_stack.empty());
@@ -64,7 +64,7 @@ TEST(StackSuite, initializer_constructor_test) {
   std_stack.push(1);
   std_stack.push(2);
 
-  Stack<int> my_stack = {1, 2};
+  stack<int> my_stack = {1, 2};
 
   ASSERT_EQ(my_stack.top(), 2);
   ASSERT_EQ(std_stack.top(), my_stack.top());
@@ -83,8 +83,8 @@ TEST(StackSuite, copy_constructor_test) {
   std_base.push(3);
   std::stack<int> std_res(std_base);
 
-  Stack<int> my_base = {1, 2, 3};
-  Stack<int> my_res(my_base);
+  stack<int> my_base = {1, 2, 3};
+  stack<int> my_res(my_base);
 
   ASSERT_TRUE(stacks_equal(my_base, my_res));
   ASSERT_TRUE(stacks_equal(my_res, std_res));
@@ -97,15 +97,15 @@ TEST(StackSuite, move_constructor_test) {
   std_base.push(3);
   std::stack<int> std_res(std::move(std_base));
 
-  Stack<int> my_base = {1, 2, 3};
-  Stack<int> my_res(std::move(my_base));
+  stack<int> my_base = {1, 2, 3};
+  stack<int> my_res(std::move(my_base));
 
   ASSERT_TRUE(my_base.empty());
   ASSERT_TRUE(stacks_equal(my_res, std_res));
 }
 
 TEST(StackSuite, present_top_test) {
-  Stack<int> my_stack = {1, 2};
+  stack<int> my_stack = {1, 2};
   std::stack<int> std_stack;
   std_stack.push(1);
   std_stack.push(2);
@@ -115,12 +115,12 @@ TEST(StackSuite, present_top_test) {
 }
 
 TEST(StackSuite, missing_top_test) {
-  Stack<int> my_stack;
+  stack<int> my_stack;
   ASSERT_THROW(my_stack.top(), std::logic_error);
 }
 
 TEST(StackSuite, empty_stack_test) {
-  Stack<int> my_stack;
+  stack<int> my_stack;
   std::stack<int> std_stack;
 
   ASSERT_TRUE(my_stack.empty());
@@ -128,7 +128,7 @@ TEST(StackSuite, empty_stack_test) {
 }
 
 TEST(StackSuite, non_empty_stack_test) {
-  Stack<int> my_stack = {1};
+  stack<int> my_stack = {1};
   std::stack<int> std_stack;
   std_stack.push(1);
 
@@ -137,7 +137,7 @@ TEST(StackSuite, non_empty_stack_test) {
 }
 
 TEST(StackSuite, non_zero_size_test) {
-  Stack<int> my_stack = {1, 2, 3};
+  stack<int> my_stack = {1, 2, 3};
   std::stack<int> std_stack;
   std_stack.push(1);
   std_stack.push(2);
@@ -148,7 +148,7 @@ TEST(StackSuite, non_zero_size_test) {
 }
 
 TEST(StackSuite, zero_size_test) {
-  Stack<int> my_stack;
+  stack<int> my_stack;
   std::stack<int> std_stack;
 
   ASSERT_EQ(my_stack.size(), 0);
@@ -156,7 +156,7 @@ TEST(StackSuite, zero_size_test) {
 }
 
 TEST(StackSuite, push_to_empty_test) {
-  Stack<int> my_stack;
+  stack<int> my_stack;
   std::stack<int> std_stack;
 
   ASSERT_THROW(my_stack.top(), std::logic_error);
@@ -171,7 +171,7 @@ TEST(StackSuite, push_to_empty_test) {
 }
 
 TEST(StackSuite, push_to_non_empty_test) {
-  Stack<int> my_stack = {1};
+  stack<int> my_stack = {1};
   std::stack<int> std_stack;
   std_stack.push(1);
 
@@ -184,7 +184,7 @@ TEST(StackSuite, push_to_non_empty_test) {
 }
 
 TEST(StackSuite, pop_non_empty_test) {
-  Stack<int> my_stack = {1, 2};
+  stack<int> my_stack = {1, 2};
   std::stack<int> std_stack;
   std_stack.push(1);
   std_stack.push(2);
@@ -202,15 +202,15 @@ TEST(StackSuite, pop_non_empty_test) {
 }
 
 TEST(StackSuite, pop_empty_test) {
-  Stack<int> my_stack;
+  stack<int> my_stack;
   ASSERT_THROW(my_stack.pop(), std::logic_error);
 }
 
 TEST(StackSuite, swap_test) {
-  Stack<int> first_stack = {1, 2, 3};
-  Stack<int> second_stack = {4, 5, 6};
-  Stack<int> first_copy(first_stack);
-  Stack<int> second_copy(second_stack);
+  stack<int> first_stack = {1, 2, 3};
+  stack<int> second_stack = {4, 5, 6};
+  stack<int> first_copy(first_stack);
+  stack<int> second_copy(second_stack);
 
   first_stack.swap(second_stack);
   ASSERT_TRUE(stacks_equal(first_stack, second_copy));

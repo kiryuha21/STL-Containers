@@ -9,30 +9,30 @@
 #include <stdexcept>
 #include <utility>
 
-#include "Container.h"
+#include "container.h"
 
 namespace s21 {
 
 template <class T>
-class Vector : public Container<T> {
+class vector : public container<T> {
  public:
   // Vector Member type
-  using value_type = typename Container<T>::value_type;
-  using reference = typename Container<T>::reference;
-  using const_reference = typename Container<T>::const_reference;
+  using value_type = typename container<T>::value_type;
+  using reference = typename container<T>::reference;
+  using const_reference = typename container<T>::const_reference;
   using iterator = T *;
   using const_iterator = const T *;
-  using size_type = typename Container<T>::size_type;
+  using size_type = typename container<T>::size_type;
 
   // Vector Member functions
-  Vector() noexcept = default;
-  Vector(const size_type n);
-  Vector(std::initializer_list<value_type> const &items);
-  Vector(const Vector &v);
-  Vector(Vector &&v) noexcept;
-  ~Vector() noexcept override;
-  Vector &operator=(const Vector &v);
-  Vector &operator=(Vector &&v) noexcept;
+  vector() noexcept = default;
+  vector(const size_type n);
+  vector(std::initializer_list<value_type> const &items);
+  vector(const vector &v);
+  vector(vector &&v) noexcept;
+  ~vector() noexcept override;
+  vector &operator=(const vector &v);
+  vector &operator=(vector &&v) noexcept;
 
   // Vector Element access
   reference at(const size_type pos) const;
@@ -59,7 +59,7 @@ class Vector : public Container<T> {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(Vector &other) noexcept;
+  void swap(vector &other) noexcept;
 
  private:
   // Vector Attributes
@@ -82,7 +82,7 @@ class Vector : public Container<T> {
 
 // Helpers
 template <class T>
-void Vector<T>::allocate_memory(const size_type n) {
+void vector<T>::allocate_memory(const size_type n) {
   delete[] memory_;
 
   if (n != 0) {
@@ -97,14 +97,14 @@ void Vector<T>::allocate_memory(const size_type n) {
 }
 
 template <class T>
-void Vector<T>::resize(const size_type n) {
+void vector<T>::resize(const size_type n) {
   if (n <= capacity_) {
     size_ = n;
     return;
   }
 
   if (empty()) {
-    *this = Vector(n);
+    *this = vector(n);
     return;
   }
 
@@ -113,14 +113,14 @@ void Vector<T>::resize(const size_type n) {
 }
 
 template <class T>
-void Vector<T>::recap(const size_type n) {
-  Vector<value_type> copy(*this);
+void vector<T>::recap(const size_type n) {
+  vector<value_type> copy(*this);
   allocate_memory(n);
   std::copy(copy.begin(), copy.begin() + std::min(copy.size_, n), begin());
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::calculate_capacity(
+typename vector<T>::size_type vector<T>::calculate_capacity(
     const size_type size) const noexcept {
   size_type res = std::max(capacity_, size_type(1));
   while (res < size) {
@@ -131,7 +131,7 @@ typename Vector<T>::size_type Vector<T>::calculate_capacity(
 }
 
 template <class T>
-void Vector<T>::shift_right(const size_type shift_after,
+void vector<T>::shift_right(const size_type shift_after,
                             const size_type shift_on) {
   resize(size_ + shift_on);
   for (size_type i = size_ - 1; i >= shift_after + shift_on; --i) {
@@ -143,7 +143,7 @@ void Vector<T>::shift_right(const size_type shift_after,
 }
 
 template <class T>
-void Vector<T>::shift_left(const size_type shift_after,
+void vector<T>::shift_left(const size_type shift_after,
                            const size_type shift_on) {
   if (size_ < shift_on + shift_after) {
     throw std::out_of_range("Shift left on too big value");
@@ -157,20 +157,20 @@ void Vector<T>::shift_left(const size_type shift_after,
 
 // Vector Member type
 template <class T>
-Vector<T>::Vector(const size_type n) : size_(n) {
+vector<T>::vector(const size_type n) : size_(n) {
   allocate_memory(n);
   std::fill(begin(), end(), value_type());
 }
 
 template <class T>
-Vector<T>::Vector(std::initializer_list<value_type> const &items)
+vector<T>::vector(std::initializer_list<value_type> const &items)
     : size_(items.size()) {
   allocate_memory(items.size());
   std::copy(items.begin(), items.end(), memory_);
 }
 
 template <class T>
-Vector<T> &Vector<T>::operator=(const Vector<T> &v) {
+vector<T> &vector<T>::operator=(const vector<T> &v) {
   if (this == &v) {
     return *this;
   }
@@ -183,12 +183,12 @@ Vector<T> &Vector<T>::operator=(const Vector<T> &v) {
 }
 
 template <class T>
-Vector<T>::Vector(const Vector &v) {
+vector<T>::vector(const vector &v) {
   *this = v;
 }
 
 template <class T>
-Vector<T> &Vector<T>::operator=(Vector<T> &&v) noexcept {
+vector<T> &vector<T>::operator=(vector<T> &&v) noexcept {
   if (this == &v) {
     return *this;
   }
@@ -203,18 +203,18 @@ Vector<T> &Vector<T>::operator=(Vector<T> &&v) noexcept {
 }
 
 template <class T>
-Vector<T>::Vector(Vector &&v) noexcept {
+vector<T>::vector(vector &&v) noexcept {
   *this = std::move(v);
 }
 
 template <class T>
-Vector<T>::~Vector() noexcept {
+vector<T>::~vector() noexcept {
   delete[] memory_;
 }
 
 // Vector Element access
 template <class T>
-typename Vector<T>::reference Vector<T>::at(const size_type pos) const {
+typename vector<T>::reference vector<T>::at(const size_type pos) const {
   if (pos >= size_) {
     throw std::out_of_range("Wrong position for at");
   } else if (empty()) {
@@ -225,12 +225,12 @@ typename Vector<T>::reference Vector<T>::at(const size_type pos) const {
 }
 
 template <class T>
-typename Vector<T>::reference Vector<T>::operator[](const size_type pos) const {
+typename vector<T>::reference vector<T>::operator[](const size_type pos) const {
   return at(pos);
 }
 
 template <class T>
-typename Vector<T>::const_reference Vector<T>::front() const {
+typename vector<T>::const_reference vector<T>::front() const {
   if (empty()) {
     throw std::out_of_range("Taking front of empty Vector");
   }
@@ -238,7 +238,7 @@ typename Vector<T>::const_reference Vector<T>::front() const {
 }
 
 template <class T>
-typename Vector<T>::const_reference Vector<T>::back() const {
+typename vector<T>::const_reference vector<T>::back() const {
   if (empty()) {
     throw std::out_of_range("Taking back of empty Vector");
   }
@@ -246,18 +246,18 @@ typename Vector<T>::const_reference Vector<T>::back() const {
 }
 
 template <class T>
-typename Vector<T>::iterator Vector<T>::data() const {
+typename vector<T>::iterator vector<T>::data() const {
   return memory_;
 }
 
 // Vector Iterators
 template <class T>
-typename Vector<T>::iterator Vector<T>::begin() const noexcept {
+typename vector<T>::iterator vector<T>::begin() const noexcept {
   return memory_;
 }
 
 template <class T>
-typename Vector<T>::iterator Vector<T>::end() const noexcept {
+typename vector<T>::iterator vector<T>::end() const noexcept {
   if (memory_ == nullptr) {
     return nullptr;
   }
@@ -267,32 +267,32 @@ typename Vector<T>::iterator Vector<T>::end() const noexcept {
 
 // Vector Capacity
 template <class T>
-bool Vector<T>::empty() const noexcept {
+bool vector<T>::empty() const noexcept {
   return size_ == 0;
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::size() const noexcept {
+typename vector<T>::size_type vector<T>::size() const noexcept {
   return size_;
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::capacity() const noexcept {
+typename vector<T>::size_type vector<T>::capacity() const noexcept {
   return capacity_;
 }
 
 template <class T>
-typename Vector<T>::size_type Vector<T>::max_size() const noexcept {
+typename vector<T>::size_type vector<T>::max_size() const noexcept {
   return this->kMaxSize;
 }
 
 template <class T>
-void Vector<T>::shrink_to_fit() {
+void vector<T>::shrink_to_fit() {
   recap(size_);
 }
 
 template <class T>
-void Vector<T>::reserve(const size_type size) {
+void vector<T>::reserve(const size_type size) {
   if (size > capacity_) {
     recap(size);
   }
@@ -300,23 +300,23 @@ void Vector<T>::reserve(const size_type size) {
 
 // Vector Modifiers
 template <class T>
-void Vector<T>::clear() noexcept {
+void vector<T>::clear() noexcept {
   size_ = 0;
 }
 
 template <class T>
-void Vector<T>::swap(Vector<T> &other) noexcept {
+void vector<T>::swap(vector<T> &other) noexcept {
   std::swap(*this, other);
 }
 
 template <class T>
-void Vector<T>::push_back(const_reference value) {
+void vector<T>::push_back(const_reference value) {
   resize(size_ + 1);
   *(end() - 1) = value;
 }
 
 template <class T>
-void Vector<T>::pop_back() {
+void vector<T>::pop_back() {
   if (empty()) {
     throw std::out_of_range("Pop back of empty vector");
   }
@@ -324,7 +324,7 @@ void Vector<T>::pop_back() {
 }
 
 template <class T>
-typename Vector<T>::iterator Vector<T>::insert(iterator pos,
+typename vector<T>::iterator vector<T>::insert(iterator pos,
                                                const_reference value) {
   auto res_position = size_type(pos - begin());
   if ((pos >= end() || pos < begin()) && !empty()) {
@@ -336,7 +336,7 @@ typename Vector<T>::iterator Vector<T>::insert(iterator pos,
 }
 
 template <class T>
-void Vector<T>::erase(iterator pos) {
+void vector<T>::erase(iterator pos) {
   if (empty()) {
     throw std::out_of_range("Erase of empty vector");
   } else if (pos >= end() || pos < begin()) {

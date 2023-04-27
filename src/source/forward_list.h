@@ -6,33 +6,33 @@
 #include <initializer_list>
 #include <utility>
 
-#include "Container.h"
-#include "Node.h"
+#include "container.h"
+#include "list_node.h"
 
 namespace s21 {
 
 auto constexpr kEmptyCollectionMsg = "Empty Collection!";
 
 template <class T>
-class ForwardList : public Container<T> {
+class forward_list : public container<T> {
  public:
-  using value_type = typename Container<T>::value_type;
-  using reference = typename Container<T>::reference;
-  using const_reference = typename Container<T>::const_reference;
-  using size_type = typename Container<T>::size_type;
+  using value_type = typename container<T>::value_type;
+  using reference = typename container<T>::reference;
+  using const_reference = typename container<T>::const_reference;
+  using size_type = typename container<T>::size_type;
 
-  ForwardList() = default;
-  ForwardList(std::initializer_list<value_type> const &items);
-  ForwardList(const ForwardList &q);
-  ForwardList(ForwardList &&q) noexcept;
-  ~ForwardList() noexcept override;
-  ForwardList &operator=(const ForwardList &q);
-  ForwardList &operator=(ForwardList &&q) noexcept;
+  forward_list() = default;
+  forward_list(std::initializer_list<value_type> const &items);
+  forward_list(const forward_list &q);
+  forward_list(forward_list &&q) noexcept;
+  ~forward_list() noexcept override;
+  forward_list &operator=(const forward_list &q);
+  forward_list &operator=(forward_list &&q) noexcept;
 
   [[nodiscard]] bool empty() const noexcept override;
   [[nodiscard]] size_type size() const noexcept override;
 
-  void swap(ForwardList &other);
+  void swap(forward_list &other);
 
  protected:
   const_reference front() const;
@@ -43,44 +43,44 @@ class ForwardList : public Container<T> {
   virtual void pop_back();
   virtual void pop_front();
 
-  virtual INode<T> *allocate_node(value_type value) const;
+  virtual list_node<T> *allocate_node(value_type value) const;
   void clear() noexcept;
 
-  INode<T> *head_ = nullptr;
-  INode<T> *tail_ = nullptr;
+  list_node<T> *head_ = nullptr;
+  list_node<T> *tail_ = nullptr;
   size_type size_ = 0;
 };
 
 template <class T>
-ForwardList<T>::ForwardList(const std::initializer_list<value_type> &items) {
+forward_list<T>::forward_list(const std::initializer_list<value_type> &items) {
   for (const auto &i : items) {
     this->push_back(i);  // size calculated here
   }
 }
 
 template <class T>
-ForwardList<T>::ForwardList(const ForwardList<T> &q) {
+forward_list<T>::forward_list(const forward_list<T> &q) {
   *this = q;
 }
 
 template <class T>
-ForwardList<T>::ForwardList(ForwardList<T> &&q) noexcept {
+forward_list<T>::forward_list(forward_list<T> &&q) noexcept {
   *this = std::move(q);
 }
 
 template <class T>
-ForwardList<T>::~ForwardList() noexcept {
+forward_list<T>::~forward_list() noexcept {
   this->clear();
 }
 
 template <class T>
-ForwardList<T> &ForwardList<T>::operator=(const ForwardList<T> &q) {
+forward_list<T> &forward_list<T>::operator=(const forward_list<T> &q) {
   if (this == &q) {
     return *this;
   }
 
   size_ = q.size_;
-  for (INode<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
+  for (list_node<T> *temp = q.head_; temp != nullptr; temp = temp->get_next()) {
     push(temp->value());
   }
 
@@ -88,7 +88,7 @@ ForwardList<T> &ForwardList<T>::operator=(const ForwardList<T> &q) {
 }
 
 template <class T>
-ForwardList<T> &ForwardList<T>::operator=(ForwardList<T> &&q) noexcept {
+forward_list<T> &forward_list<T>::operator=(forward_list<T> &&q) noexcept {
   if (this == &q) {
     return *this;
   }
@@ -103,22 +103,22 @@ ForwardList<T> &ForwardList<T>::operator=(ForwardList<T> &&q) noexcept {
 }
 
 template <class T>
-bool ForwardList<T>::empty() const noexcept {
+bool forward_list<T>::empty() const noexcept {
   return head_ == nullptr;
 }
 
 template <class T>
-typename ForwardList<T>::size_type ForwardList<T>::size() const noexcept {
+typename forward_list<T>::size_type forward_list<T>::size() const noexcept {
   return size_;
 }
 
 template <class T>
-void ForwardList<T>::swap(ForwardList &other) {
+void forward_list<T>::swap(forward_list &other) {
   std::swap(*this, other);
 }
 
 template <class T>
-typename ForwardList<T>::const_reference ForwardList<T>::front() const {
+typename forward_list<T>::const_reference forward_list<T>::front() const {
   if (head_ == nullptr) {
     throw std::logic_error(kEmptyCollectionMsg);
   }
@@ -126,7 +126,7 @@ typename ForwardList<T>::const_reference ForwardList<T>::front() const {
 }
 
 template <class T>
-typename ForwardList<T>::const_reference ForwardList<T>::back() const {
+typename forward_list<T>::const_reference forward_list<T>::back() const {
   if (tail_ == nullptr) {
     throw std::logic_error(kEmptyCollectionMsg);
   }
@@ -134,8 +134,8 @@ typename ForwardList<T>::const_reference ForwardList<T>::back() const {
 }
 
 template <class T>
-void ForwardList<T>::push_back(const_reference value) {
-  INode<T> *new_node = allocate_node(value);
+void forward_list<T>::push_back(const_reference value) {
+  list_node<T> *new_node = allocate_node(value);
   ++size_;
 
   if (head_ == nullptr) {
@@ -148,8 +148,8 @@ void ForwardList<T>::push_back(const_reference value) {
 }
 
 template <class T>
-void ForwardList<T>::push_front(const_reference value) {
-  INode<T> *new_node = allocate_node(value);
+void forward_list<T>::push_front(const_reference value) {
+  list_node<T> *new_node = allocate_node(value);
   ++size_;
 
   if (head_ == nullptr) {
@@ -162,13 +162,13 @@ void ForwardList<T>::push_front(const_reference value) {
 }
 
 template <class T>
-void ForwardList<T>::pop_back() {
+void forward_list<T>::pop_back() {
   if (tail_ == nullptr) {
     throw std::logic_error(kEmptyCollectionMsg);
   }
 
   --size_;
-  INode<T> *temp = head_;
+  list_node<T> *temp = head_;
   for (; temp->get_next() != tail_; temp = temp->get_next()) {
   }
   tail_ = temp;
@@ -177,23 +177,23 @@ void ForwardList<T>::pop_back() {
 }
 
 template <class T>
-void ForwardList<T>::pop_front() {
+void forward_list<T>::pop_front() {
   if (head_ == nullptr) {
     throw std::logic_error(kEmptyCollectionMsg);
   }
 
   --size_;
-  INode<T> *temp = head_;
+  list_node<T> *temp = head_;
   head_ = head_->get_next();
   delete temp;
 }
 
 template <class T>
-INode<T> *ForwardList<T>::allocate_node(value_type value) const {
-  INode<T> *new_node = nullptr;
+list_node<T> *forward_list<T>::allocate_node(value_type value) const {
+  list_node<T> *new_node = nullptr;
 
   try {
-    new_node = new UNode<T>(value);
+    new_node = new unary_node<T>(value);
   } catch (std::bad_alloc &e) {
     std::throw_with_nested(e);
   }
@@ -202,8 +202,8 @@ INode<T> *ForwardList<T>::allocate_node(value_type value) const {
 }
 
 template <class T>
-void ForwardList<T>::clear() noexcept {
-  for (INode<T> *temp = head_; temp != nullptr; temp = head_) {
+void forward_list<T>::clear() noexcept {
+  for (list_node<T> *temp = head_; temp != nullptr; temp = head_) {
     head_ = head_->get_next();
     delete temp;
   }

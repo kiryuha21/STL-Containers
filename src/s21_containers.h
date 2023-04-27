@@ -3,11 +3,11 @@
 #ifndef SRC_S21_CONTAINERS_H_
 #define SRC_S21_CONTAINERS_H_
 
-#include "source/List.h"
-#include "source/Map.h"
-#include "source/Queue.h"
-#include "source/Set.h"
-#include "source/Stack.h"
-#include "source/Vector.h"
+#include "source/list.h"
+#include "source/map.h"
+#include "source/queue.h"
+#include "source/set.h"
+#include "source/stack.h"
+#include "source/vector.h"
 
 #endif  // SRC_S21_CONTAINERS_H_

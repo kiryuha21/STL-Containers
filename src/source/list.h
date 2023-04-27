@@ -5,34 +5,34 @@
 
 #include <utility>
 
-#include "ForwardList.h"
+#include "forward_list.h"
 
 namespace s21 {
 
 template <class T>
-class List : public ForwardList<T> {
+class list : public forward_list<T> {
  public:
   class ListIterator;
   class ListConstIterator;
 
-  using value_type = typename ForwardList<T>::value_type;
-  using reference = typename ForwardList<T>::reference;
-  using const_reference = typename ForwardList<T>::const_reference;
+  using value_type = typename forward_list<T>::value_type;
+  using reference = typename forward_list<T>::reference;
+  using const_reference = typename forward_list<T>::const_reference;
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
-  using size_type = typename ForwardList<T>::size_type;
+  using size_type = typename forward_list<T>::size_type;
 
-  List() = default;
-  explicit List(size_type n);
-  List(std::initializer_list<value_type> const &items);
-  List(const List &l);
-  List(List &&l) noexcept;
-  ~List() noexcept override;
-  List &operator=(const List &l);
-  List &operator=(List &&l) noexcept;
+  list() = default;
+  explicit list(size_type n);
+  list(std::initializer_list<value_type> const &items);
+  list(const list &l);
+  list(list &&l) noexcept;
+  ~list() noexcept override;
+  list &operator=(const list &l);
+  list &operator=(list &&l) noexcept;
 
-  using ForwardList<T>::front;
-  using ForwardList<T>::back;
+  using forward_list<T>::front;
+  using forward_list<T>::back;
 
   iterator begin() const;
   iterator end() const;
@@ -42,7 +42,7 @@ class List : public ForwardList<T> {
   // inherited empty() and size()
   [[nodiscard]] size_type max_size() const noexcept;
 
-  using ForwardList<T>::clear;
+  using forward_list<T>::clear;
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference val) override;
@@ -50,8 +50,8 @@ class List : public ForwardList<T> {
   void push_front(const_reference val) override;
   void pop_front() override;
   // inherited swap()
-  void merge(List &other);
-  void splice(const_iterator pos, List &other);
+  void merge(list &other);
+  void splice(const_iterator pos, list &other);
   void reverse();
   void unique();
   void sort();
@@ -59,10 +59,10 @@ class List : public ForwardList<T> {
   class ListIterator {
    public:
     ListIterator() = default;
-    ListIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
+    ListIterator(list_node<T> *node, list_node<T> *head, list_node<T> *tail)
         : node_(node), head_(head), tail_(tail) {}
-    INode<T> *get_node() const { return node_; }
-    void set_node(INode<T> *node) { node_ = node; }
+    list_node<T> *get_node() const { return node_; }
+    void set_node(list_node<T> *node) { node_ = node; }
 
     iterator &operator--();
     iterator &operator++();
@@ -71,18 +71,19 @@ class List : public ForwardList<T> {
     reference operator*();
 
    private:
-    INode<T> *node_ = nullptr;
-    INode<T> *head_ = nullptr;
-    INode<T> *tail_ = nullptr;
+    list_node<T> *node_ = nullptr;
+    list_node<T> *head_ = nullptr;
+    list_node<T> *tail_ = nullptr;
   };
 
   class ListConstIterator {
    public:
     ListConstIterator() = default;
-    ListConstIterator(INode<T> *node, INode<T> *head, INode<T> *tail)
+    ListConstIterator(list_node<T> *node, list_node<T> *head,
+                      list_node<T> *tail)
         : node_(node), head_(head), tail_(tail) {}
-    INode<T> *get_node() const { return node_; }
-    void set_node(INode<T> *node) { node_ = node; }
+    list_node<T> *get_node() const { return node_; }
+    void set_node(list_node<T> *node) { node_ = node; }
 
     const_iterator &operator--();
     const_iterator &operator++();
@@ -91,52 +92,52 @@ class List : public ForwardList<T> {
     const_reference operator*();
 
    private:
-    INode<T> *node_ = nullptr;
-    INode<T> *head_ = nullptr;
-    INode<T> *tail_ = nullptr;
+    list_node<T> *node_ = nullptr;
+    list_node<T> *head_ = nullptr;
+    list_node<T> *tail_ = nullptr;
   };
 
  private:
-  INode<T> *allocate_node(value_type value) const override;
+  list_node<T> *allocate_node(value_type value) const override;
 };
 
 template <class T>
-List<T>::List(List::size_type n) {
+list<T>::list(list::size_type n) {
   for (size_type i = 0; i < n; ++i) {
     this->push_back({});
   }
 }
 
 template <class T>
-List<T>::List(const std::initializer_list<value_type> &items) {
+list<T>::list(const std::initializer_list<value_type> &items) {
   for (const auto &i : items) {
     this->push_back(i);
   }
 }
 
 template <class T>
-List<T>::List(const List &l) : List<T>() {
+list<T>::list(const list &l) : list<T>() {
   *this = l;
 }
 
 template <class T>
-List<T>::List(List &&l) noexcept {
+list<T>::list(list &&l) noexcept {
   *this = std::move(l);
 }
 
 template <class T>
-List<T>::~List() noexcept {
+list<T>::~list() noexcept {
   this->clear();
 }
 
 template <class T>
-List<T> &List<T>::operator=(const List &l) {
+list<T> &list<T>::operator=(const list &l) {
   if (this == &l) {
     return *this;
   }
 
   this->clear();
-  for (INode<T> *temp = l.head_; temp != nullptr; temp = temp->get_next()) {
+  for (list_node<T> *temp = l.head_; temp != nullptr; temp = temp->get_next()) {
     push_back(temp->value());
   }
 
@@ -144,7 +145,7 @@ List<T> &List<T>::operator=(const List &l) {
 }
 
 template <class T>
-List<T> &List<T>::operator=(List &&l) noexcept {
+list<T> &list<T>::operator=(list &&l) noexcept {
   if (this == &l) {
     return *this;
   }
@@ -159,12 +160,12 @@ List<T> &List<T>::operator=(List &&l) noexcept {
 }
 
 template <class T>
-typename List<T>::iterator List<T>::begin() const {
+typename list<T>::iterator list<T>::begin() const {
   return iterator(this->head_, this->head_, this->tail_);
 }
 
 template <class T>
-typename List<T>::iterator List<T>::end() const {
+typename list<T>::iterator list<T>::end() const {
   if (this->empty()) {
     return iterator(this->tail_, this->head_, this->tail_);
   }
@@ -172,12 +173,12 @@ typename List<T>::iterator List<T>::end() const {
 }
 
 template <class T>
-typename List<T>::const_iterator List<T>::cbegin() const {
+typename list<T>::const_iterator list<T>::cbegin() const {
   return const_iterator(this->head_, this->head_, this->tail_);
 }
 
 template <class T>
-typename List<T>::const_iterator List<T>::cend() const {
+typename list<T>::const_iterator list<T>::cend() const {
   if (this->empty()) {
     return const_iterator(this->tail_, this->head_, this->tail_);
   }
@@ -185,12 +186,12 @@ typename List<T>::const_iterator List<T>::cend() const {
 }
 
 template <class T>
-typename List<T>::size_type List<T>::max_size() const noexcept {
-  return size_type(-1) / sizeof(BiNode<T>);
+typename list<T>::size_type list<T>::max_size() const noexcept {
+  return size_type(-1) / sizeof(binary_node<T>);
 }
 
 template <class T>
-typename List<T>::iterator List<T>::insert(List::iterator pos,
+typename list<T>::iterator list<T>::insert(list::iterator pos,
                                            const_reference value) {
   if (pos == begin()) {
     push_front(value);
@@ -202,8 +203,8 @@ typename List<T>::iterator List<T>::insert(List::iterator pos,
     return iterator(this->tail_, this->head_, this->tail_);
   }
 
-  INode<T> *temp = pos.get_node()->get_prev();
-  INode<T> *new_node = allocate_node(value);
+  list_node<T> *temp = pos.get_node()->get_prev();
+  list_node<T> *new_node = allocate_node(value);
 
   new_node->set_next(pos.get_node());
   pos.get_node()->set_prev(new_node);
@@ -216,7 +217,7 @@ typename List<T>::iterator List<T>::insert(List::iterator pos,
 }
 
 template <class T>
-void List<T>::erase(List::iterator pos) {
+void list<T>::erase(list::iterator pos) {
   if (pos.get_node() == nullptr) {
     throw std::logic_error("attempt to delete nullptr!");
   }
@@ -231,8 +232,8 @@ void List<T>::erase(List::iterator pos) {
     return;
   }
 
-  INode<T> *next = pos.get_node()->get_next();
-  INode<T> *prev = pos.get_node()->get_prev();
+  list_node<T> *next = pos.get_node()->get_next();
+  list_node<T> *prev = pos.get_node()->get_prev();
 
   prev->set_next(next);
   next->set_prev(prev);
@@ -242,16 +243,16 @@ void List<T>::erase(List::iterator pos) {
 }
 
 template <class T>
-void List<T>::push_back(const_reference val) {
-  INode<T> *temp = this->tail_;
-  ForwardList<T>::push_back(val);
+void list<T>::push_back(const_reference val) {
+  list_node<T> *temp = this->tail_;
+  forward_list<T>::push_back(val);
   if (this->head_ != this->tail_) {
     this->tail_->set_prev(temp);
   }
 }
 
 template <class T>
-void List<T>::pop_back() {
+void list<T>::pop_back() {
   if (this->tail_ == nullptr) {
     throw std::logic_error(kEmptyCollectionMsg);
   }
@@ -263,22 +264,22 @@ void List<T>::pop_back() {
 }
 
 template <class T>
-void List<T>::push_front(const_reference val) {
-  INode<T> *temp = this->head_;
-  ForwardList<T>::push_front(val);
+void list<T>::push_front(const_reference val) {
+  list_node<T> *temp = this->head_;
+  forward_list<T>::push_front(val);
   if (this->head_ != this->tail_) {
     temp->set_prev(this->head_);
   }
 }
 
 template <class T>
-void List<T>::pop_front() {
-  ForwardList<T>::pop_front();
+void list<T>::pop_front() {
+  forward_list<T>::pop_front();
   this->head_->set_prev(nullptr);
 }
 
 template <class T>
-void List<T>::merge(List &other) {
+void list<T>::merge(list &other) {
   if (this == &other) {
     return;
   }
@@ -291,7 +292,7 @@ void List<T>::merge(List &other) {
 }
 
 template <class T>
-void List<T>::splice(List::const_iterator pos, List &other) {
+void list<T>::splice(list::const_iterator pos, list &other) {
   if (other.empty()) {
     return;
   }
@@ -308,8 +309,8 @@ void List<T>::splice(List::const_iterator pos, List &other) {
     this->head_->set_prev(other.tail_);
     this->head_ = other.head_;
   } else {
-    INode<T> *new_next = pos.get_node();
-    INode<T> *new_prev = (--pos).get_node();
+    list_node<T> *new_next = pos.get_node();
+    list_node<T> *new_prev = (--pos).get_node();
 
     other.head_->set_prev(new_prev);
     new_prev->set_next(other.head_);
@@ -325,9 +326,9 @@ void List<T>::splice(List::const_iterator pos, List &other) {
 }
 
 template <class T>
-void List<T>::reverse() {
+void list<T>::reverse() {
   for (auto i = this->head_; i != nullptr; i = i->get_prev()) {
-    INode<T> *temp = i->get_next();
+    list_node<T> *temp = i->get_next();
     i->set_next(i->get_prev());
     i->set_prev(temp);
   }
@@ -335,7 +336,7 @@ void List<T>::reverse() {
 }
 
 template <class T>
-void List<T>::unique() {
+void list<T>::unique() {
   if (this->empty()) {
     return;
   }
@@ -350,13 +351,14 @@ void List<T>::unique() {
 }
 
 template <class T>
-void List<T>::sort() {
+void list<T>::sort() {
   if (this->empty()) {
     return;
   }
 
-  for (INode<T> *i = this->head_; i->get_next() != nullptr; i = i->get_next()) {
-    for (INode<T> *j = i->get_next(); j != nullptr; j = j->get_next()) {
+  for (list_node<T> *i = this->head_; i->get_next() != nullptr;
+       i = i->get_next()) {
+    for (list_node<T> *j = i->get_next(); j != nullptr; j = j->get_next()) {
       if (i->value() > j->value()) {
         std::swap(i->value(), j->value());
       }
@@ -365,7 +367,7 @@ void List<T>::sort() {
 }
 
 template <class T>
-typename List<T>::iterator &List<T>::ListIterator::operator--() {
+typename list<T>::iterator &list<T>::ListIterator::operator--() {
   if (get_node() == nullptr) {
     set_node(tail_);
   } else {
@@ -375,7 +377,7 @@ typename List<T>::iterator &List<T>::ListIterator::operator--() {
 }
 
 template <class T>
-typename List<T>::iterator &List<T>::ListIterator::operator++() {
+typename list<T>::iterator &list<T>::ListIterator::operator++() {
   if (get_node() == nullptr) {
     set_node(head_);
   } else {
@@ -385,17 +387,17 @@ typename List<T>::iterator &List<T>::ListIterator::operator++() {
 }
 
 template <class T>
-bool List<T>::ListIterator::operator==(const iterator &other) {
+bool list<T>::ListIterator::operator==(const iterator &other) {
   return get_node() == other.get_node();
 }
 
 template <class T>
-bool List<T>::ListIterator::operator!=(const iterator &other) {
+bool list<T>::ListIterator::operator!=(const iterator &other) {
   return get_node() != other.get_node();
 }
 
 template <class T>
-typename List<T>::reference List<T>::ListIterator::operator*() {
+typename list<T>::reference list<T>::ListIterator::operator*() {
   if (get_node() == nullptr) {
     throw std::logic_error("nullptr dereference!");
   }
@@ -403,7 +405,7 @@ typename List<T>::reference List<T>::ListIterator::operator*() {
 }
 
 template <class T>
-typename List<T>::const_iterator &List<T>::ListConstIterator::operator--() {
+typename list<T>::const_iterator &list<T>::ListConstIterator::operator--() {
   if (get_node() == nullptr) {
     set_node(tail_);
   } else {
@@ -413,7 +415,7 @@ typename List<T>::const_iterator &List<T>::ListConstIterator::operator--() {
 }
 
 template <class T>
-typename List<T>::const_iterator &List<T>::ListConstIterator::operator++() {
+typename list<T>::const_iterator &list<T>::ListConstIterator::operator++() {
   if (get_node() == nullptr) {
     set_node(head_);
   } else {
@@ -423,17 +425,17 @@ typename List<T>::const_iterator &List<T>::ListConstIterator::operator++() {
 }
 
 template <class T>
-bool List<T>::ListConstIterator::operator==(const const_iterator &other) {
+bool list<T>::ListConstIterator::operator==(const const_iterator &other) {
   return get_node() == other.get_node();
 }
 
 template <class T>
-bool List<T>::ListConstIterator::operator!=(const const_iterator &other) {
+bool list<T>::ListConstIterator::operator!=(const const_iterator &other) {
   return get_node() != other.get_node();
 }
 
 template <class T>
-typename List<T>::const_reference List<T>::ListConstIterator::operator*() {
+typename list<T>::const_reference list<T>::ListConstIterator::operator*() {
   if (get_node() == nullptr) {
     throw std::logic_error("nullptr dereference!");
   }
@@ -441,11 +443,11 @@ typename List<T>::const_reference List<T>::ListConstIterator::operator*() {
 }
 
 template <class T>
-INode<T> *List<T>::allocate_node(value_type value) const {
-  INode<T> *new_node = nullptr;
+list_node<T> *list<T>::allocate_node(value_type value) const {
+  list_node<T> *new_node = nullptr;
 
   try {
-    new_node = new BiNode<T>(value);
+    new_node = new binary_node<T>(value);
   } catch (std::bad_alloc &e) {
     std::throw_with_nested(e);
   }
